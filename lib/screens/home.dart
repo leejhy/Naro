@@ -95,7 +95,7 @@ class Home extends StatelessWidget {
           ),
           backgroundColor: Colors.black,
           onPressed: () {
-            context.push('/letter');
+            context.push('/writing');
           },
           child: const Icon(Icons.add, color: Colors.white, size: 30),
         ),

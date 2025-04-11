@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/screens/home.dart';
-import 'package:naro/screens/letters.dart';
+import 'package:naro/screens/writing.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
@@ -12,7 +12,7 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/letter',
+      path: '/writing',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
