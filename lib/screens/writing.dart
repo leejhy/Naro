@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class Test extends StatelessWidget {
-  const Test({super.key});
+class WritingScreen extends StatelessWidget {
+  const WritingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +23,20 @@ class Test extends StatelessWidget {
         children: [
           NotionStyleEditor(),
         ],
+      ),
+      floatingActionButton: SizedBox(
+        width: 56,
+        height: 56,
+        child: FloatingActionButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
+          backgroundColor: Colors.black,
+          onPressed: () {
+            print('test');
+          },
+          child: const Icon(Icons.check, color: Colors.white, size: 30),
+        ),
       ),
     );
   }
@@ -54,9 +67,12 @@ class NotionStyleEditor extends StatelessWidget {
                 border: InputBorder.none,
               ),
             ),
-            Container(//SizedBox
+            SizedBox(//SizedBox
               // color: Colors.amber,
               height: 400,
+              // decoration: BoxDecoration(
+              //   border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+              // ),
               child: TextField(
                 style: const TextStyle(
                   fontFamily: 'Inter',
@@ -64,6 +80,7 @@ class NotionStyleEditor extends StatelessWidget {
                   fontSize: 16
                 ),
                 maxLength: 2000,
+                expands: true,// expands: true일때 maxLines: null 필수
                 maxLines: null, //무한 Lines
                 decoration: const InputDecoration(
                   counterText: '',
@@ -72,6 +89,14 @@ class NotionStyleEditor extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 10),
+            Divider(thickness: 1, color: Colors.grey.shade300),
+            SizedBox(height: 10),
+            Text('사진', style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            )),
           ],
         ),
     );

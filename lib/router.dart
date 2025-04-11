@@ -8,7 +8,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) {
-        return Home();
+        return HomeScreen();
       },
     ),
     GoRoute(
@@ -17,7 +17,7 @@ final GoRouter router = GoRouter(
         return CustomTransitionPage(
           key: state.pageKey,
           // transitionDuration: const Duration(milliseconds: 400),
-          child: const Test(),
+          child: const WritingScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(0, 1);
             const end = Offset.zero;
