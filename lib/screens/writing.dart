@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WritingScreen extends StatelessWidget {
   const WritingScreen({super.key});
@@ -134,7 +135,7 @@ class PhotoUpload extends StatelessWidget {
               ),
               SizedBox(width: 10),
               GestureDetector(
-                onTap: () => print('photo button2'),
+                onTap: () => context.push('/test'),
                 child: Container(
                   width: 100,
                   height: 100,
