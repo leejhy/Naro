@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class WritingScreen extends StatelessWidget {
   const WritingScreen({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +21,8 @@ class WritingScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          NotionStyleEditor(),
+          TextWriting(),
+          PhotoUpload(),
         ],
       ),
       floatingActionButton: SizedBox(
@@ -33,6 +34,10 @@ class WritingScreen extends StatelessWidget {
           ),
           backgroundColor: Colors.black,
           onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => const ConfirmDialog(),
+            );
             print('test');
           },
           child: const Icon(Icons.check, color: Colors.white, size: 30),
@@ -42,9 +47,8 @@ class WritingScreen extends StatelessWidget {
   }
 }
 
-
-class NotionStyleEditor extends StatelessWidget {
-  const NotionStyleEditor({super.key});
+class TextWriting extends StatelessWidget {
+  const TextWriting({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,16 +93,88 @@ class NotionStyleEditor extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
             Divider(thickness: 1, color: Colors.grey.shade300),
-            SizedBox(height: 10),
-            Text('사진', style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            )),
           ],
         ),
+    );
+  }
+}
+
+class PhotoUpload extends StatelessWidget {
+  const PhotoUpload({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('사진', style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          )),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () => print('photo button'),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 167, 167, 167),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade500)
+                  ),
+                  child: const Icon(Icons.camera_alt, color: Colors.black),
+                )
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () => print('photo button2'),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 167, 167, 167),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade500)
+                  ),
+                  child: const Icon(Icons.camera_alt, color: Colors.black),
+                )
+              ),
+              SizedBox(width: 10),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ConfirmDialog extends StatelessWidget {
+  const ConfirmDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('저장하시겠습니까?'),
+      content: const Text('저장 후에는 수정할 수 없습니다.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('취소'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('저장'),
+        ),
+      ],
     );
   }
 }

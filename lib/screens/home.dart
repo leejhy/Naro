@@ -189,9 +189,9 @@ class HomeBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SortingButton(label: '전체'),
-                  SizedBox(width: 10),
+                  SizedBox(width: 8),
                   SortingButton(label: '도착'),
-                  SizedBox(width: 10),
+                  SizedBox(width: 8),
                   SortingButton(label: '배송중'),
                 ],
               ),
@@ -263,7 +263,8 @@ class _SortingButtonState extends State<SortingButton> {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        minimumSize: Size(0, 0),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
