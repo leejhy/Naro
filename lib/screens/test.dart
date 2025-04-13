@@ -279,13 +279,13 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
               child: Material(
                 elevation: _isResting ? 4 : _elevationAnimation.value,
                 shadowColor: Colors.black38,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
                 child: Container(
-                  width: 80,
-                  height: 60,
+                  width: 84,
+                  height: 62,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -298,20 +298,20 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
                     children: [
                       // 편지 봉투 디자인
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(6),
                         child: CustomPaint(
-                          size: const Size(80, 60),
+                          size: const Size(84, 62),
                           painter: EnvelopePainter(),
                         ),
                       ),
                       // 하트 아이콘
-                      Center(
-                        child: Icon(
-                          Icons.favorite,
-                          size: 18,
-                          color: Colors.redAccent.withOpacity(0.8),
-                        ),
-                      ),
+                      // Center(
+                      //   child: Icon(
+                      //     Icons.favorite,
+                      //     size: 18,
+                      //     color: Colors.redAccent.withOpacity(0.8),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -414,65 +414,45 @@ class ParticlePainter extends CustomPainter {
 class EnvelopePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final width = size.width;
-    final height = size.height;
-    
-    // 봉투 바탕
-    final bgPaint = Paint()
-      ..color = Colors.white;
-    canvas.drawRect(Rect.fromLTWH(0, 0, width, height), bgPaint);
-    
-    // 봉투 테두리
-    final borderPaint = Paint()
-      ..color = Colors.grey.shade300
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    canvas.drawRect(Rect.fromLTWH(0, 0, width, height), borderPaint);
-    
-    // 봉투 뚜껑 (삼각형)
-    final flapPaint = Paint()
-      ..color = Colors.redAccent.withOpacity(0.1)
+    final paint = Paint()
+      ..color = Colors.white
       ..style = PaintingStyle.fill;
-    
     final path = Path();
+
+    final w = size.width;
+    final h = size.height;
+
     path.moveTo(0, 0);
-    path.lineTo(width / 2, height / 2);
-    path.lineTo(width, 0);
+    path.lineTo(w, 0);
+    path.lineTo(w, h);
+    path.lineTo(0, h);
     path.close();
-    
-    canvas.drawPath(path, flapPaint);
-    
-    // 봉투 뚜껑 테두리
-    final flapBorderPaint = Paint()
-      ..color = Colors.redAccent.withOpacity(0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    
-    canvas.drawPath(path, flapBorderPaint);
-    
-    // 봉투 아래 삼각형
-    final bottomPath = Path();
-    bottomPath.moveTo(0, height);
-    bottomPath.lineTo(width / 2, height / 2);
-    bottomPath.lineTo(width, height);
-    bottomPath.close();
-    
-    canvas.drawPath(bottomPath, flapPaint);
-    canvas.drawPath(bottomPath, flapBorderPaint);
-    
-    // 봉투 옆면 선
-    final sidePath1 = Path();
-    sidePath1.moveTo(0, 0);
-    sidePath1.lineTo(width / 2, height / 2);
-    sidePath1.lineTo(0, height);
-    
-    final sidePath2 = Path();
-    sidePath2.moveTo(width, 0);
-    sidePath2.lineTo(width / 2, height / 2);
-    sidePath2.lineTo(width, height);
-    
-    canvas.drawPath(sidePath1, flapBorderPaint);
-    canvas.drawPath(sidePath2, flapBorderPaint);
+    canvas.drawPath(path, paint);
+
+    final middleX = w / 2;
+    final middleY = h / 2;
+
+    // 3. 선 그리기용 paint
+    final linePaint = Paint()
+      ..color = Color(0xFFABCEDC)
+      ..strokeWidth = 6
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round  // 연결부를 둥글게 처리
+      ..style = PaintingStyle.stroke;   // 선 스타일로 그리기
+
+    // 원래 개별로 그리던 두 선을 하나의 Path로 합침으로써 연결부 적용
+    final topFlapPath = Path();
+    topFlapPath.moveTo(0, 0);
+    topFlapPath.lineTo(middleX, middleY + 6);
+    topFlapPath.lineTo(w, 0);
+    canvas.drawPath(topFlapPath, linePaint);
+  
+    final cutOffset = 10;
+    final leftEdge = Offset(middleX - cutOffset, middleY - 1);
+    final rightEdge = Offset(middleX + cutOffset, middleY - 1);
+
+    canvas.drawLine(Offset(0, h), leftEdge, linePaint);
+    canvas.drawLine(Offset(w, h), rightEdge, linePaint);
   }
 
   @override

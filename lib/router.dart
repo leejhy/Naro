@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/screens/home.dart';
+import 'package:naro/screens/setting.dart';
 import 'package:naro/screens/writing.dart';
 import 'package:naro/screens/test.dart';
+import 'package:naro/screens/result.dart';
+import 'package:naro/screens/letter.dart';
+
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
@@ -16,6 +20,24 @@ final GoRouter router = GoRouter(
       path: '/test',
       builder: (context, state) {
         return Test();
+      },
+    ),
+    GoRoute(
+      path: '/result',
+      builder: (context, state) {
+        return ResultScreen();
+      },
+    ),
+    GoRoute(
+      path: '/letter',
+      builder: (context, state) {
+        return LetterScreen();
+      },
+    ),
+    GoRoute(
+      path: '/setting',
+      builder: (context, state) {
+        return SettingScreen();
       },
     ),
     GoRoute(
