@@ -134,7 +134,12 @@ class HomeAppBar extends StatelessWidget {
               fontWeight: FontWeight.bold,
               //자간
             )),
-            IconButton(onPressed: () {print('appbar test');}, icon: Icon(Icons.settings, size: 24)),
+            IconButton(
+              onPressed: () {
+                context.push('/setting');
+                print('appbar test');
+              },
+              icon: Icon(Icons.settings, size: 24)),
           ]
         ),
       ),

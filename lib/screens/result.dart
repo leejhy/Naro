@@ -5,6 +5,18 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Result'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+      ),
+      body: Center(
+          child: const Text(
+            'Result Screen',
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+    );
   }
 }
