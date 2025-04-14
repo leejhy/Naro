@@ -71,8 +71,8 @@ final dateStyle = TextStyle(
   color: Color(0xff6B7280),
 );
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class Home extends StatelessWidget {
           ),
           backgroundColor: Colors.black,
           onPressed: () {
-            context.push('/letter');
+            context.push('/writing');
           },
           child: const Icon(Icons.add, color: Colors.white, size: 30),
         ),
@@ -134,7 +134,12 @@ class HomeAppBar extends StatelessWidget {
               fontWeight: FontWeight.bold,
               //자간
             )),
-            IconButton(onPressed: () {print('appbar test');}, icon: Icon(Icons.settings, size: 24)),
+            IconButton(
+              onPressed: () {
+                context.push('/setting');
+                print('appbar test');
+              },
+              icon: Icon(Icons.settings, size: 24)),
           ]
         ),
       ),
@@ -189,9 +194,9 @@ class HomeBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SortingButton(label: '전체'),
-                  SizedBox(width: 10),
+                  SizedBox(width: 8),
                   SortingButton(label: '도착'),
-                  SizedBox(width: 10),
+                  SizedBox(width: 8),
                   SortingButton(label: '배송중'),
                 ],
               ),
@@ -263,7 +268,8 @@ class _SortingButtonState extends State<SortingButton> {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        minimumSize: Size(0, 0),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
