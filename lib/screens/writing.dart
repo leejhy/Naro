@@ -1,12 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:naro/services/database_helper.dart';
 
 // var db = await openDatabase('assets/dbs/test.db');
-
-class WritingScreen extends StatelessWidget {
+class WritingScreen extends StatefulWidget {
   const WritingScreen({super.key});
-  
+  //부모위치에 textField controller를 두기
+
+  @override
+  State<WritingScreen> createState() => _WritingScreenState();
+}
+
+class _WritingScreenState extends State<WritingScreen> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController contentController = TextEditingController();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    super.dispose();
+  }
+
+  void insertLetter() {
+    final Map<String, Object> letter = {
+      'user_id': 1,      
+      'title': titleController.text,
+      'content': contentController.text,
+      'arrival_at': DateTime.now().add(Duration(days: 30)).toIso8601String(),
+      'created_at': DateTime.now().toIso8601String(),
+    };
+    DatabaseHelper.insertLetter(letter);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,12 +48,12 @@ class WritingScreen extends StatelessWidget {
           fontWeight: FontWeight.bold,
         )),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextWriting(),
-          PhotoUpload(),
-        ],
+      body: Container(
+        child: 
+          WritingBody(
+            titleController: titleController,
+            contentController: contentController,
+          ),
       ),
       floatingActionButton: SizedBox(
         width: 56,
@@ -42,7 +68,6 @@ class WritingScreen extends StatelessWidget {
               context: context,
               builder: (context) => const ConfirmDialog(),
             );
-            print('test');
           },
           child: const Icon(Icons.check, color: Colors.white, size: 30),
         ),
@@ -51,8 +76,38 @@ class WritingScreen extends StatelessWidget {
   }
 }
 
-class TextWriting extends StatelessWidget {
-  const TextWriting({super.key});
+class TextWriting extends StatefulWidget {
+  const TextWriting({
+    required this.titleController,
+    required this.contentController,
+    super.key
+    });
+  final TextEditingController titleController;
+  final TextEditingController contentController;
+
+  @override
+  State<TextWriting> createState() => _TextWritingState();
+}
+
+class _TextWritingState extends State<TextWriting> {
+  final _titleFocus = FocusNode();
+  final _contentFocus = FocusNode();
+  // 위 controller에 textField 값 저장됨 
+
+  @override
+  void dispose() {
+    _titleFocus.dispose();
+    _contentFocus.dispose();
+    super.dispose();
+  }
+
+  void _toggleFocus(FocusNode node) {
+    if (node.hasFocus) {
+      node.unfocus();                     // 이미 열려 있으면 → 키보드 닫기
+    } else {
+      node.requestFocus();                // 안 열려 있으면 → 키보드 열기
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +118,7 @@ class TextWriting extends StatelessWidget {
           children: [
             // 제목 입력창
             TextField(
+              controller: widget.titleController,
               maxLength: 40,
               style: const TextStyle(
                 fontFamily: 'Inter',
@@ -82,6 +138,9 @@ class TextWriting extends StatelessWidget {
               //   border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
               // ),
               child: TextField(
+                controller: widget.contentController,
+                focusNode: _contentFocus,
+                onTap: () => _toggleFocus(_contentFocus),
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.normal,
@@ -179,6 +238,32 @@ class ConfirmDialog extends StatelessWidget {
           child: const Text('저장'),
         ),
       ],
+    );
+  }
+}
+
+class WritingBody extends StatelessWidget {
+  const WritingBody({
+      required this.titleController,
+      required this.contentController,
+      super.key
+    });
+  final TextEditingController titleController;
+  final TextEditingController contentController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          TextWriting(
+            titleController: titleController,
+            contentController: contentController,
+          ),
+          PhotoUpload(),
+          SizedBox(height: 40),
+        ],
+      )
     );
   }
 }
