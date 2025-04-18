@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/widgets/common/date_dialog.dart';
+//todo
+//1. dialog for selecting arrival date
+//2. photo upload
+//3. save button
+//4. go_route to result screen
 
-// var db = await openDatabase('assets/dbs/test.db');
 class WritingScreen extends StatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
@@ -16,13 +20,63 @@ class _WritingScreenState extends State<WritingScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
+  bool _dialogShown = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_dialogShown) {
+      final route = ModalRoute.of(context);
+      final animation = route is PageRoute ? route.animation : null;
+
+      if (animation != null) {
+        // 애니메이션 상태 변화를 듣는다
+        animation.addStatusListener((status) {
+          if (status == AnimationStatus.completed && !_dialogShown) {
+            _dialogShown = true;
+            _showDateDialog();
+          }
+        });
+      } else {
+        // 애니메이션이 없으면 바로 띄우기
+        _dialogShown = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showDateDialog();
+        });
+      }
+    }
+  }
+  void _showDateDialog() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      transitionDuration: const Duration(milliseconds: 200), // ← Fade 속도 설정
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Center(
+          child: DateDialog(), // 여기에 커스텀 다이얼로그 위젯
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    ).then((pickedDate) {
+      if (pickedDate != null) {
+        print('Selected date: $pickedDate');
+      } else {
+        print('No date selected');
+      }
+    });
+  }
   @override
   void dispose() {
     titleController.dispose();
     contentController.dispose();
     super.dispose();
   }
-
   void insertLetter() {
     final Map<String, Object> letter = {
       'user_id': 1,      
@@ -256,6 +310,27 @@ class WritingBody extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          FilledButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const DateDialog(),
+              ).then((pickedDate) {
+                if (pickedDate != null) {
+                  print('Selected date: $pickedDate');
+                } else {
+                  print('No date selected');
+                }
+              });
+              print('dialog test');
+            },
+            child: const Text('modal test', style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 16,
+              color: Color.fromARGB(255, 255, 255, 255),
+            )),
+          ),
           TextWriting(
             titleController: titleController,
             contentController: contentController,

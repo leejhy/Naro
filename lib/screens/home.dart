@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:naro/services/database_helper.dart';
 
 final List<Map<String, String>> letters = [
   {
