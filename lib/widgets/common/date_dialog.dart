@@ -8,23 +8,59 @@ class DateDialog extends StatefulWidget {
 }
 
 class _DateDialogState extends State<DateDialog> {
-  static const int _minYear = 2025;
-  static const int _maxYear = 2100;
+  static const int _maxYear = 2050;
 
-  int _year = DateTime.now().year;
-  int _month = DateTime.now().month;
-  int _day = DateTime.now().day;
+  final DateTime _today = DateTime.now();
+
+  late int _year;
+  late int _month;
+  late int _day;
 
   late FixedExtentScrollController _yearCtrl;
   late FixedExtentScrollController _monthCtrl;
   late FixedExtentScrollController _dayCtrl;
 
+  List<int> get _yearList =>
+      List.generate(_maxYear - _today.year + 1, (i) => _today.year + i);
+  List<int> get _monthList {
+    if (_year == _today.year) {
+      // 오늘과 같은 해라면 오늘 달 이후만 노출
+      return List.generate(12 - _today.month + 1, (i) => _today.month + i);
+    }
+    return List<int>.generate(12, (i) => i + 1);
+  }
+
+  List<int> get _dayList {
+    final total = DateUtils.getDaysInMonth(_year, _month);
+    if (_year == _today.year && _month == _today.month) {
+      // 오늘과 같은 연·월이면 오늘 이후만 노출
+      return List.generate(total - _today.day + 1, (i) => _today.day + i);
+    }
+    return List<int>.generate(total, (i) => i + 1);
+  }
+
+  void _clampSelections() {
+    // 월·일이 리스트 범위를 벗어나면 가장 앞 값으로 보정
+    if (!_monthList.contains(_month)) {
+      _month = _monthList.first;
+      _monthCtrl.jumpToItem(0);
+    }
+    if (!_dayList.contains(_day)) {
+      _day = _dayList.first;
+      _dayCtrl.jumpToItem(0);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _yearCtrl  = FixedExtentScrollController(initialItem: _year - _minYear);
-    _monthCtrl = FixedExtentScrollController(initialItem: _month - 1);
-    _dayCtrl   = FixedExtentScrollController(initialItem: _day - 1);
+    _year  = _today.year;
+    _month = _today.month;
+    _day   = _today.day;
+
+    _yearCtrl  = FixedExtentScrollController(initialItem: 0);
+    _monthCtrl = FixedExtentScrollController(initialItem: 0);
+    _dayCtrl   = FixedExtentScrollController(initialItem: 0);
   }
 
   @override
@@ -34,11 +70,8 @@ class _DateDialogState extends State<DateDialog> {
     _dayCtrl.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
-    final daysInMonth = DateUtils.getDaysInMonth(_year, _month); // :contentReference[oaicite:1]{index=1}
-
     return AlertDialog(
       title: const Text('도착 날짜 선택'),
       content: SizedBox(
@@ -46,31 +79,27 @@ class _DateDialogState extends State<DateDialog> {
         height: 110,
         child: Row(
           children: [
-            // Year picker
+            //Year
             Expanded(
               child: CupertinoPicker(
                 scrollController: _yearCtrl,
                 itemExtent: 32,
-                looping: false,                               // no infinite loop :contentReference[oaicite:2]{index=2}
+                looping: false,
                 onSelectedItemChanged: (i) {
                   setState(() {
-                    _year = _minYear + i;
-                    // clamp day if overflow
-                    if (_day > daysInMonth) _day = daysInMonth;
-                    _dayCtrl.jumpToItem(_day - 1);
+                    _year = _yearList[i];
+                    _clampSelections();
                   });
                 },
-                children: List.generate(
-                  _maxYear - _minYear + 1,
-                  (i) => Center(child: Text('${_minYear + i} 년', style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),)),
-                ),
+                children: _yearList.map((y) => Center(
+                  child: Text('$y 년', style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400)),
+                )).toList(),
               ),
             ),
-            // Month picker
+            // Month 
             Expanded(
               child: CupertinoPicker(
                 scrollController: _monthCtrl,
@@ -78,38 +107,35 @@ class _DateDialogState extends State<DateDialog> {
                 looping: false,
                 onSelectedItemChanged: (i) {
                   setState(() {
-                    _month = i + 1;
-                    if (_day > daysInMonth) _day = daysInMonth;
-                    _dayCtrl.jumpToItem(_day - 1);
+                    _month = _monthList[i];
+                    _clampSelections();
                   });
                 },
-                children: List.generate(
-                  12,
-                  (i) => Center(child: Text('${i + 1} 월', style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),)),
-                ),
+                children: _monthList.map((m) => Center(
+                  child: Text('$m 월', style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400)),
+                ))
+                .toList(),
               ),
             ),
-            // Day picker
+            // Day 
             Expanded(
               child: CupertinoPicker(
                 scrollController: _dayCtrl,
                 itemExtent: 32,
                 looping: false,
                 onSelectedItemChanged: (i) {
-                  setState(() => _day = i + 1);
+                  setState(() => _day = _dayList[i]);
                 },
-                children: List.generate(
-                  daysInMonth,
-                  (i) => Center(child: Text('${i + 1} 일', style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),)),
-                ),
+                children: _dayList.map((d) => Center(
+                  child: Text('$d 일', style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400)),
+                ))
+                .toList(),
               ),
             ),
           ],
@@ -117,14 +143,12 @@ class _DateDialogState extends State<DateDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
           child: const Text('취소'),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, DateTime(_year, _month, _day)),
+          onPressed: () =>
+              Navigator.pop(context, DateTime(_year, _month, _day)),
           child: const Text('저장'),
         ),
       ],

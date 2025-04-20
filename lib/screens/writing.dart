@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
 import 'package:naro/widgets/common/date_dialog.dart';
+import 'package:naro/widgets/common/photo_upload.dart';
+
 //todo
-//1. dialog for selecting arrival date
-//2. photo upload
+//1. dialog for selecting arrival date - ok
+//2. photo upload - 
 //3. save button
 //4. go_route to result screen
 
@@ -17,6 +19,7 @@ class WritingScreen extends StatefulWidget {
 }
 
 class _WritingScreenState extends State<WritingScreen> {
+  final TextEditingController _dateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
@@ -35,19 +38,20 @@ class _WritingScreenState extends State<WritingScreen> {
         animation.addStatusListener((status) {
           if (status == AnimationStatus.completed && !_dialogShown) {
             _dialogShown = true;
-            _showDateDialog();
+            _showDateDialog(initial: true);
           }
         });
       } else {
         // 애니메이션이 없으면 바로 띄우기
         _dialogShown = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _showDateDialog();
+          _showDateDialog(initial: true);
         });
       }
     }
   }
-  void _showDateDialog() {
+  void _showDateDialog({bool initial = false}) {
+    final navigator = Navigator.of(context);
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -65,8 +69,12 @@ class _WritingScreenState extends State<WritingScreen> {
       },
     ).then((pickedDate) {
       if (pickedDate != null) {
+        setState(() {
+          _dateController.text = pickedDate.toString();
+        });
         print('Selected date: $pickedDate');
-      } else {
+      } else if (initial){
+        navigator.pop();
         print('No date selected');
       }
     });
@@ -75,6 +83,7 @@ class _WritingScreenState extends State<WritingScreen> {
   void dispose() {
     titleController.dispose();
     contentController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
   void insertLetter() {
@@ -95,12 +104,18 @@ class _WritingScreenState extends State<WritingScreen> {
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
-        shadowColor: Colors.black,
-        title: const Text('2024-01-01, 금요일', style: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        )),
+        shadowColor: const Color.fromARGB(50, 0, 0, 0),
+        title: GestureDetector(
+          onTap: () {
+            print('title tap');
+            _showDateDialog();
+          },
+          child: Text('도착: ${_dateController.text}', style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          )),
+        ),
       ),
       body: Container(
         child: 
@@ -217,60 +232,6 @@ class _TextWritingState extends State<TextWriting> {
   }
 }
 
-class PhotoUpload extends StatelessWidget {
-  const PhotoUpload({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('사진', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          )),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => print('photo button'),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade500)
-                  ),
-                  child: const Icon(Icons.camera_alt, color: Colors.black),
-                )
-              ),
-              SizedBox(width: 10),
-              GestureDetector(
-                onTap: () => context.push('/test'),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade500)
-                  ),
-                  child: const Icon(Icons.camera_alt, color: Colors.black),
-                )
-              ),
-              SizedBox(width: 10),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog({super.key});
@@ -287,7 +248,7 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            context.push('/test');
           },
           child: const Text('저장'),
         ),
@@ -310,27 +271,6 @@ class WritingBody extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          FilledButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => const DateDialog(),
-              ).then((pickedDate) {
-                if (pickedDate != null) {
-                  print('Selected date: $pickedDate');
-                } else {
-                  print('No date selected');
-                }
-              });
-              print('dialog test');
-            },
-            child: const Text('modal test', style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 16,
-              color: Color.fromARGB(255, 255, 255, 255),
-            )),
-          ),
           TextWriting(
             titleController: titleController,
             contentController: contentController,
