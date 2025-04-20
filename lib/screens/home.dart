@@ -269,7 +269,7 @@ class _SortingButtonState extends State<SortingButton> {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         minimumSize: Size(0, 0),
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -287,8 +287,8 @@ class _SortingButtonState extends State<SortingButton> {
         letterSpacing: -0.5,
       )),
       onPressed: () {
+        print('SortingButton pressed');
         toggleSelected();
-        print(widget.label+ ' pressed' + isSelected.toString());
       },
     );
   }
