@@ -1,10 +1,10 @@
-// lib/services/database_helper.dart
-
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'dart:math';
 
 class DatabaseHelper {
   static Database? _db;
+  static final Random _random = Random();
 
   // DB 인스턴스를 반환하는 getter
   static Future<Database> get database async {
@@ -21,40 +21,77 @@ class DatabaseHelper {
     return await openDatabase(
       path,
       version: 1,
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
       onCreate: (db, version) async {
         // DB 처음 생성될 때 실행됨
         await db.execute('''
-          CREATE TABLE notes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            content TEXT
-          )
+          CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            user_name TEXT NOT NULL
+          );
+        ''');
+        await db.insert('users', {
+          'user_name': _generateRandomUsername(16),
+        });
+        await db.execute('''
+          CREATE TABLE letters (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            arrival_at TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+          );
         ''');
       },
     );
   }
 
-  // 데이터 전체 조회
-  static Future<List<Map<String, dynamic>>> getAllNotes() async {
-    final db = await database;
-    return await db.query('notes');
+  static String _generateRandomUsername(int length) {
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    return List.generate(length, (_) => chars[_random.nextInt(chars.length)]).join();
   }
 
-  // 데이터 삽입
-  static Future<void> insertNote(Map<String, dynamic> note) async {
+  static Future<int> getUserId() async {
+    return 1;
+    // final db = await database;
+
+    // final result = await db.query('users',
+    //   columns: ['id'],
+    //   limit: 1,
+    // );
+
+    // return result.first['id'] as int;
+  }
+  // 모든 letters 조회
+  static Future<List<Map<String, Object?>>> getAllLetters() async {
     final db = await database;
-    await db.insert('notes', note);
+    return await db.query('letters');
   }
 
-  // 데이터 삭제 (id 기준)
-  static Future<void> deleteNote(int id) async {
+  // note 추가
+  // void testfunction() async {
+  //   final int user_id = await DatabaseHelper.getUserId();
+  // final letter = {
+      // user_id': user_id,  // 전달받은 user_id
+    //   'title': 'example title',
+    //   'content': 'example content',
+    //   'arrival_at': DateTime.now().add(Duration(days: 30)).toIso8601String(),
+    //   'created_at': DateTime.now().toIso8601String(),
+    // }
+    // await DatabaseHelper.insertLetter(letter);
+  //  };
+  static Future<void> insertLetter(Map<String, Object?> letter) async {
     final db = await database;
-    await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+    await db.insert('letters', letter);
   }
 
-  // 데이터 업데이트 (id 기준)
-  static Future<void> updateNote(int id, Map<String, dynamic> updatedNote) async {
+  // // 데이터 삭제 (id 기준)
+  static Future<void> deleteLetter() async {
     final db = await database;
-    await db.update('notes', updatedNote, where: 'id = ?', whereArgs: [id]);
+    await db.delete('letters');
   }
 }

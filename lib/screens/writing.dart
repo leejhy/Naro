@@ -1,12 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:naro/services/database_helper.dart';
+import 'package:naro/widgets/common/date_dialog.dart';
+import 'package:naro/widgets/common/photo_upload.dart';
 
-// var db = await openDatabase('assets/dbs/test.db');
+//todo
+//1. dialog for selecting arrival date - ok
+//2. photo upload - 
+//3. save button
+//4. go_route to result screen
 
-class WritingScreen extends StatelessWidget {
+class WritingScreen extends StatefulWidget {
   const WritingScreen({super.key});
-  
+  //부모위치에 textField controller를 두기
+
+  @override
+  State<WritingScreen> createState() => _WritingScreenState();
+}
+
+class _WritingScreenState extends State<WritingScreen> {
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController contentController = TextEditingController();
+
+  bool _dialogShown = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_dialogShown) {
+      final route = ModalRoute.of(context);
+      final animation = route is PageRoute ? route.animation : null;
+
+      if (animation != null) {
+        // 애니메이션 상태 변화를 듣는다
+        animation.addStatusListener((status) {
+          if (status == AnimationStatus.completed && !_dialogShown) {
+            _dialogShown = true;
+            _showDateDialog(initial: true);
+          }
+        });
+      } else {
+        // 애니메이션이 없으면 바로 띄우기
+        _dialogShown = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showDateDialog(initial: true);
+        });
+      }
+    }
+  }
+  void _showDateDialog({bool initial = false}) {
+    final navigator = Navigator.of(context);
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      transitionDuration: const Duration(milliseconds: 200), // ← Fade 속도 설정
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Center(
+          child: DateDialog(), // 여기에 커스텀 다이얼로그 위젯
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    ).then((pickedDate) {
+      if (pickedDate != null) {
+        setState(() {
+          _dateController.text = pickedDate.toString();
+        });
+        print('Selected date: $pickedDate');
+      } else if (initial){
+        navigator.pop();
+        print('No date selected');
+      }
+    });
+  }
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    _dateController.dispose();
+    super.dispose();
+  }
+  void insertLetter() {
+    final Map<String, Object> letter = {
+      'user_id': 1,      
+      'title': titleController.text,
+      'content': contentController.text,
+      'arrival_at': DateTime.now().add(Duration(days: 30)).toIso8601String(),
+      'created_at': DateTime.now().toIso8601String(),
+    };
+    DatabaseHelper.insertLetter(letter);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,19 +104,25 @@ class WritingScreen extends StatelessWidget {
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
-        shadowColor: Colors.black,
-        title: const Text('2024-01-01, 금요일', style: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        )),
+        shadowColor: const Color.fromARGB(50, 0, 0, 0),
+        title: GestureDetector(
+          onTap: () {
+            print('title tap');
+            _showDateDialog();
+          },
+          child: Text('도착: ${_dateController.text}', style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          )),
+        ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextWriting(),
-          PhotoUpload(),
-        ],
+      body: Container(
+        child: 
+          WritingBody(
+            titleController: titleController,
+            contentController: contentController,
+          ),
       ),
       floatingActionButton: SizedBox(
         width: 56,
@@ -42,7 +137,6 @@ class WritingScreen extends StatelessWidget {
               context: context,
               builder: (context) => const ConfirmDialog(),
             );
-            print('test');
           },
           child: const Icon(Icons.check, color: Colors.white, size: 30),
         ),
@@ -51,8 +145,38 @@ class WritingScreen extends StatelessWidget {
   }
 }
 
-class TextWriting extends StatelessWidget {
-  const TextWriting({super.key});
+class TextWriting extends StatefulWidget {
+  const TextWriting({
+    required this.titleController,
+    required this.contentController,
+    super.key
+    });
+  final TextEditingController titleController;
+  final TextEditingController contentController;
+
+  @override
+  State<TextWriting> createState() => _TextWritingState();
+}
+
+class _TextWritingState extends State<TextWriting> {
+  final _titleFocus = FocusNode();
+  final _contentFocus = FocusNode();
+  // 위 controller에 textField 값 저장됨 
+
+  @override
+  void dispose() {
+    _titleFocus.dispose();
+    _contentFocus.dispose();
+    super.dispose();
+  }
+
+  void _toggleFocus(FocusNode node) {
+    if (node.hasFocus) {
+      node.unfocus();                     // 이미 열려 있으면 → 키보드 닫기
+    } else {
+      node.requestFocus();                // 안 열려 있으면 → 키보드 열기
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +187,7 @@ class TextWriting extends StatelessWidget {
           children: [
             // 제목 입력창
             TextField(
+              controller: widget.titleController,
               maxLength: 40,
               style: const TextStyle(
                 fontFamily: 'Inter',
@@ -82,6 +207,9 @@ class TextWriting extends StatelessWidget {
               //   border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
               // ),
               child: TextField(
+                controller: widget.contentController,
+                focusNode: _contentFocus,
+                onTap: () => _toggleFocus(_contentFocus),
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.normal,
@@ -104,60 +232,6 @@ class TextWriting extends StatelessWidget {
   }
 }
 
-class PhotoUpload extends StatelessWidget {
-  const PhotoUpload({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('사진', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          )),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => print('photo button'),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade500)
-                  ),
-                  child: const Icon(Icons.camera_alt, color: Colors.black),
-                )
-              ),
-              SizedBox(width: 10),
-              GestureDetector(
-                onTap: () => context.push('/test'),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade500)
-                  ),
-                  child: const Icon(Icons.camera_alt, color: Colors.black),
-                )
-              ),
-              SizedBox(width: 10),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog({super.key});
@@ -174,11 +248,37 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            context.push('/test');
           },
           child: const Text('저장'),
         ),
       ],
+    );
+  }
+}
+
+class WritingBody extends StatelessWidget {
+  const WritingBody({
+      required this.titleController,
+      required this.contentController,
+      super.key
+    });
+  final TextEditingController titleController;
+  final TextEditingController contentController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          TextWriting(
+            titleController: titleController,
+            contentController: contentController,
+          ),
+          PhotoUpload(),
+          SizedBox(height: 40),
+        ],
+      )
     );
   }
 }
