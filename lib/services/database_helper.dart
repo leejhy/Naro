@@ -66,6 +66,15 @@ class DatabaseHelper {
 
     // return result.first['id'] as int;
   }
+  static Future<String> getUserName() async {
+    final db = await database;
+    final result = await db.query('users', columns: ['user_name']);
+    if (result.isEmpty) {
+      throw Exception('No user found');
+    }
+    final username = result[0]['user_name'] as String;
+    return username;
+  }
   // 모든 letters 조회
   static Future<List<Map<String, Object?>>> getAllLetters() async {
     final db = await database;
@@ -90,7 +99,7 @@ class DatabaseHelper {
   }
 
   // // 데이터 삭제 (id 기준)
-  static Future<void> deleteLetter() async {
+  static Future<void> deleteAllLetter() async {
     final db = await database;
     await db.delete('letters');
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// todo:
+// 1. implement letter screen view
+
 class LetterScreen extends StatelessWidget {
   const LetterScreen({super.key});
   

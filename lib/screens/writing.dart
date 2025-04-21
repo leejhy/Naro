@@ -3,13 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
 import 'package:naro/widgets/common/date_dialog.dart';
 import 'package:naro/widgets/common/photo_upload.dart';
+import 'package:intl/intl.dart';
+import 'package:sqflite/sqflite.dart';
+
 
 //todo
-//1. dialog for selecting arrival date - ok
-//2. photo upload - 
-//3. save button
-//4. go_route to result screen
-
+// 1. fix photo upload view
 class WritingScreen extends StatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
@@ -19,7 +18,7 @@ class WritingScreen extends StatefulWidget {
 }
 
 class _WritingScreenState extends State<WritingScreen> {
-  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
@@ -70,7 +69,7 @@ class _WritingScreenState extends State<WritingScreen> {
     ).then((pickedDate) {
       if (pickedDate != null) {
         setState(() {
-          _dateController.text = pickedDate.toString();
+          _arrivalDateController.text = pickedDate.toString();
         });
         print('Selected date: $pickedDate');
       } else if (initial){
@@ -83,17 +82,25 @@ class _WritingScreenState extends State<WritingScreen> {
   void dispose() {
     titleController.dispose();
     contentController.dispose();
-    _dateController.dispose();
+    _arrivalDateController.dispose();
     super.dispose();
   }
   void insertLetter() {
+    if (titleController.text.isEmpty || contentController.text.isEmpty) {
+      print('제목과 내용을 입력하세요');
+      return;
+    }
+    final username = DatabaseHelper.getUserName();
+    print('username: $username');
+    final now = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final Map<String, Object> letter = {
-      'user_id': 1,      
+      'user_id': 1,
       'title': titleController.text,
       'content': contentController.text,
-      'arrival_at': DateTime.now().add(Duration(days: 30)).toIso8601String(),
-      'created_at': DateTime.now().toIso8601String(),
+      'arrival_at': _arrivalDateController.text,
+      'created_at': now ,
     };
+    print('letter: $letter');
     DatabaseHelper.insertLetter(letter);
   }
   @override
@@ -110,7 +117,7 @@ class _WritingScreenState extends State<WritingScreen> {
             print('title tap');
             _showDateDialog();
           },
-          child: Text('도착: ${_dateController.text}', style: TextStyle(
+          child: Text('도착: ${_arrivalDateController.text}', style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -135,7 +142,11 @@ class _WritingScreenState extends State<WritingScreen> {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => const ConfirmDialog(),
+              builder: (context) => ConfirmDialog(
+                onConfirm: () {
+                  insertLetter();        // 여기가 컨트롤러 접근점
+                },
+              ),
             );
           },
           child: const Icon(Icons.check, color: Colors.white, size: 30),
@@ -172,9 +183,9 @@ class _TextWritingState extends State<TextWriting> {
 
   void _toggleFocus(FocusNode node) {
     if (node.hasFocus) {
-      node.unfocus();                     // 이미 열려 있으면 → 키보드 닫기
+      node.unfocus();// 이미 열려 있으면키보드 닫기
     } else {
-      node.requestFocus();                // 안 열려 있으면 → 키보드 열기
+      node.requestFocus();// 안 열려 있으면 → 키보드 열기
     }
   }
 
@@ -200,12 +211,8 @@ class _TextWritingState extends State<TextWriting> {
                 border: InputBorder.none,
               ),
             ),
-            SizedBox(//SizedBox
-              // color: Colors.amber,
+            SizedBox(
               height: 400,
-              // decoration: BoxDecoration(
-              //   border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-              // ),
               child: TextField(
                 controller: widget.contentController,
                 focusNode: _contentFocus,
@@ -234,7 +241,8 @@ class _TextWritingState extends State<TextWriting> {
 
 
 class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog({super.key});
+  final VoidCallback onConfirm;
+  const ConfirmDialog({super.key, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +256,9 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            context.push('/test');
+            onConfirm();
+            print('저장 버튼 클릭');
+            // context.push('/test');
           },
           child: const Text('저장'),
         ),
