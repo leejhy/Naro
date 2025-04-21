@@ -6,6 +6,9 @@ import 'package:naro/widgets/common/photo_upload.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
+
+//todo
+// 1. fix photo upload view
 class WritingScreen extends StatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기

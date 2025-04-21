@@ -99,7 +99,7 @@ class DatabaseHelper {
   }
 
   // // 데이터 삭제 (id 기준)
-  static Future<void> deleteLetter() async {
+  static Future<void> deleteAllLetter() async {
     final db = await database;
     await db.delete('letters');
   }
