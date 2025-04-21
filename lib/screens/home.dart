@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+//todo
+// 1. Add logic for categorization and D-Day display
+
+
 final List<Map<String, String>> letters = [
   {
     'title': '편지 제목 1',
