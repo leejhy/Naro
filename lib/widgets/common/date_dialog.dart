@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DateDialog extends StatefulWidget {
   const DateDialog({super.key});
@@ -7,10 +8,16 @@ class DateDialog extends StatefulWidget {
   State<DateDialog> createState() => _DateDialogState();
 }
 
+// todo
+// 1. will fix the date dialog
+//오늘이 마지막날이면 5월1일부터 렌더링되게
+
+
 class _DateDialogState extends State<DateDialog> {
   static const int _maxYear = 2050;
 
-  final DateTime _today = DateTime.now();
+  final DateTime _today = DateTime(2025, 4, 30);
+  // final DateTime _today = DateTime.now();
 
   late int _year;
   late int _month;
@@ -147,8 +154,10 @@ class _DateDialogState extends State<DateDialog> {
           child: const Text('취소'),
         ),
         TextButton(
-          onPressed: () =>
-              Navigator.pop(context, DateTime(_year, _month, _day)),
+          onPressed: () {
+            final formatted = DateFormat('yyyy-MM-dd').format(DateTime(_year, _month, _day));
+            Navigator.pop(context, formatted);
+          },
           child: const Text('저장'),
         ),
       ],

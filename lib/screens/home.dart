@@ -1,53 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:naro/services/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
 
-final List<Map<String, String>> letters = [
-  {
-    'title': '편지 제목 1',
-    'date': '2024년 1월 1일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 2',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 3',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 4',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 5',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 6',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 7',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 8',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-  {
-    'title': '편지 제목 9',
-    'date': '2024년 2월 2일',
-    'content': 'D-123',
-  },
-];
+//todo
+// 1. Add logic for categorization and D-Day display
 
 final headingStyle = TextStyle(
   fontFamily: 'Inter',
@@ -71,9 +28,30 @@ final dateStyle = TextStyle(
   color: Color(0xff6B7280),
 );
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> letters = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLetters();  // 비동기 함수 호출
+  }
+
+  Future<void> _loadLetters() async {
+    final value = await DatabaseHelper.getAllLetters();
+    setState(() {
+      letters = value;
+    });
+    print('letters $letters');
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +62,9 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Container(
         color: const Color(0xffF9FAFB),
-        child: HomeBody()
+        child: HomeBody(
+          letters: letters,
+        )
       ),
       floatingActionButton: SizedBox(
         width: 56,
@@ -147,11 +127,23 @@ class HomeAppBar extends StatelessWidget {
   }
 }
 
-class HomeBody extends StatelessWidget {
-  const HomeBody({super.key});
+class HomeBody extends StatefulWidget {
+  const HomeBody({
+    super.key,
+    required this.letters,
+    });
+  final List<Map<String,dynamic>> letters;
+
+  @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
+    final letters = widget.letters;
+    print('in build $letters');
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -286,8 +278,11 @@ class _SortingButtonState extends State<SortingButton> {
         fontWeight: FontWeight.bold,
         letterSpacing: -0.5,
       )),
-      onPressed: () {
-        print('SortingButton pressed');
+      onPressed: () async {
+        final letters = await DatabaseHelper.getAllLetters();
+        print('letters');
+        print(letters);
+        // print('SortingButton pressed');
         toggleSelected();
       },
     );
