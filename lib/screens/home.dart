@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/widgets/home/letter_card.dart';
 import 'package:sqflite/sqflite.dart';
 
 //todo
-// 1. Add logic for categorization and D-Day display
+// View
+// 1. Complete sorting button implementation
+// 2. Implement letter card UI
+// 3. Fix timestamp display issue on letter cards
+
+// Logic
+// 1. Add null-check logic and fallback placeholders
+// 2. Implement D-Day calculation logic for arrival date
 
 final headingStyle = TextStyle(
   fontFamily: 'Inter',
@@ -195,42 +203,8 @@ class _HomeBodyState extends State<HomeBody> {
             ),
           )
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-          sliver: SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 5,
-              childAspectRatio: 0.8,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final letter = letters[index];
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(letter['title']!, style: headingStyle),
-                        SizedBox(height: 8),
-                        Text('${letter['date']} 도착', style: dateStyle),
-                        SizedBox(height: 8),
-                        Text(letter['content']!, style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          letterSpacing: -0.5,
-                        )),
-                      ],
-                    ),
-                  )
-                );
-              },
-              childCount: letters.length,
-            ),
-          ),
+        LetterCard(
+          letters: letters,
         ),
         SliverToBoxAdapter(
           child: SizedBox(height: 40)

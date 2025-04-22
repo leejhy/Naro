@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
-import 'package:naro/widgets/common/date_dialog.dart';
+import 'package:naro/widgets/common/select_date_dialog.dart';
 import 'package:naro/widgets/common/photo_upload.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
@@ -57,7 +57,7 @@ class _WritingScreenState extends State<WritingScreen> {
       transitionDuration: const Duration(milliseconds: 200), // ← Fade 속도 설정
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
-          child: DateDialog(), // 여기에 커스텀 다이얼로그 위젯
+          child: SelectDateDialog(), // 여기에 커스텀 다이얼로그 위젯
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
