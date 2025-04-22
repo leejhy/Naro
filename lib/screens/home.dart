@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
-import 'package:naro/widgets/home/letter_card.dart';
+import 'package:naro/widgets/home/letter_grid.dart';
 import 'package:sqflite/sqflite.dart';
 
 //todo
@@ -12,7 +12,7 @@ import 'package:sqflite/sqflite.dart';
 
 // Logic
 // 1. Add null-check logic and fallback placeholders
-// 2. Implement D-Day calculation logic for arrival date
+// 2. Implement D-Day calculation logic for arrival date - ok
 
 final headingStyle = TextStyle(
   fontFamily: 'Inter',
@@ -203,7 +203,7 @@ class _HomeBodyState extends State<HomeBody> {
             ),
           )
         ),
-        LetterCard(
+        LetterGrid(
           letters: letters,
         ),
         SliverToBoxAdapter(
