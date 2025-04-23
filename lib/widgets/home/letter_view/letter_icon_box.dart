@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ────── New, reusable icon box ──────────────────────────────────────────────
 class LetterIconBox extends StatelessWidget {
   const LetterIconBox({
     super.key,

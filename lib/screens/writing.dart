@@ -107,21 +107,28 @@ class _WritingScreenState extends State<WritingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
-      appBar: AppBar(
+      appBar: AppBar(//todo add icon
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
         shadowColor: const Color.fromARGB(50, 0, 0, 0),
         title: GestureDetector(
-          onTap: () {
-            print('title tap');
-            _showDateDialog();
-          },
-          child: Text('도착: ${_arrivalDateController.text}', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          )),
+          onTap: () => _showDateDialog(),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '도착: ${_arrivalDateController.text}',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 6),
+              const Icon(Icons.calendar_month_rounded, size: 22),
+            ],
+          ),
         ),
       ),
       body: Container(

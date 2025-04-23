@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// todo:
+// todo:4/24
 // 1. Trigger animation when ResultScreen is opened for the first time
 // 2. Add screen to display the arrival date, phrase
 

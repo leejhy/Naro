@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,28 +14,6 @@ import 'package:sqflite/sqflite.dart';
 // Logic
 // 1. Add null-check logic and fallback placeholders
 // 2. Implement D-Day calculation logic for arrival date - ok
-
-final headingStyle = TextStyle(
-  fontFamily: 'Inter',
-  fontSize: 20,
-  fontWeight: FontWeight.bold,
-  letterSpacing: -0.5,
-);
-
-final dDayStyle = TextStyle(
-  fontFamily: 'Inter',
-  fontSize: 30,
-  fontWeight: FontWeight.bold,
-  letterSpacing: 2,
-);
-
-final dateStyle = TextStyle(
-  fontFamily: 'Inter',
-  fontSize: 16,
-  fontWeight: FontWeight.normal,
-  letterSpacing: -0.1,
-  color: Color(0xff6B7280),
-);
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -127,7 +106,8 @@ class HomeAppBar extends StatelessWidget {
                 context.push('/setting');
                 print('appbar test');
               },
-              icon: Icon(Icons.settings, size: 24)),
+              icon: Icon(Icons.settings, size: 24)
+            ),
           ]
         ),
       ),
@@ -150,56 +130,40 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
+    //todo modularization
     final letters = widget.letters;
+    final now = DateTime.now(); // added
+    final upcoming = widget.letters
+      .map((i) => DateTime.parse(i['arrival_at'] as String))
+      .where((dt) => !dt.isBefore(now))
+      .toList();
+    upcoming.sort((a, b) => a.compareTo(b));
+
+    final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
+    final dDay = nextDate.difference(now).inDays + 1;
+  
     print('in build $letters');
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
           child: SizedBox(height: 20)
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.15),
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  )
-                ]
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text( '다가오는 편지', style: headingStyle),
-                  SizedBox(height: 2),
-                  Text('D-10', style: dDayStyle),
-                  SizedBox(height: 2),
-                  Text('2024년 1월 1일 도착 예정', style: dateStyle),
-                ],
-              ),
-            ),
-          ),
+        HeaderSection(
+          dDay: dDay,
+          arrivalDate: nextDate,
         ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SortingButton(label: '전체'),
-                  SizedBox(width: 8),
-                  SortingButton(label: '도착'),
-                  SizedBox(width: 8),
-                  SortingButton(label: '배송중'),
-                ],
-              ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SortingButton(label: '전체'),
+                SizedBox(width: 8),
+                SortingButton(label: '도착'),
+                SizedBox(width: 8),
+                SortingButton(label: '배송중'),
+              ],
             ),
           )
         ),

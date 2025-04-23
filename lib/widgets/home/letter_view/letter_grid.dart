@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:naro/widgets/home/letter_card.dart';
-
+import 'package:naro/widgets/home/letter_view/letter_card.dart';
+import 'package:naro/utils.dart';
 
 class LetterGrid extends StatefulWidget {
   final List<Map<String, dynamic>> letters;
@@ -15,17 +15,6 @@ class LetterGrid extends StatefulWidget {
 }
 
 class _LetterCardState extends State<LetterGrid> {
-
-  //todo dday 계산
-  String? calculateDday(DateTime arrivalAt) {
-    DateTime now = DateTime.now();
-    Duration difference = arrivalAt.difference(now);
-    int dDay = difference.inDays;
-  
-    if (dDay < 0) return null;
-    if (dDay == 0) return 'Day';
-    return dDay.toString();
-  }
 
   @override
   Widget build(BuildContext context) {
