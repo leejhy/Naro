@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
-import 'package:naro/widgets/home/letter_grid.dart';
+import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:sqflite/sqflite.dart';
 
 //todo
