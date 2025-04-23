@@ -142,7 +142,7 @@ class _HomeBodyState extends State<HomeBody> {
     final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
     final dDay = nextDate.difference(now).inDays + 1;
   
-    print('in build $letters');
+    // print('home: in build $letters');
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
