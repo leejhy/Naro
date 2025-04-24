@@ -29,9 +29,10 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/letter',
+      path: '/letter/:id',
       builder: (context, state) {
-        return LetterScreen();
+        final id = state.pathParameters['id'];
+        return LetterScreen(letterId: id!);
       },
     ),
     GoRoute(

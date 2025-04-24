@@ -1,32 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/utils.dart';
+import 'package:naro/widgets/home/header_section.dart';
+import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:sqflite/sqflite.dart';
 
 //todo
-// 1. Add logic for categorization and D-Day display
+// View
+// 1. Complete sorting button implementation
+// 2. Implement letter card UI
+// 3. Fix timestamp display issue on letter cards
 
-final headingStyle = TextStyle(
-  fontFamily: 'Inter',
-  fontSize: 20,
-  fontWeight: FontWeight.bold,
-  letterSpacing: -0.5,
-);
-
-final dDayStyle = TextStyle(
-  fontFamily: 'Inter',
-  fontSize: 30,
-  fontWeight: FontWeight.bold,
-  letterSpacing: 2,
-);
-
-final dateStyle = TextStyle(
-  fontFamily: 'Inter',
-  fontSize: 16,
-  fontWeight: FontWeight.normal,
-  letterSpacing: -0.1,
-  color: Color(0xff6B7280),
-);
+// Logic
+// 1. Add null-check logic and fallback placeholders
+// 2. Implement D-Day calculation logic for arrival date - ok
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -119,7 +107,8 @@ class HomeAppBar extends StatelessWidget {
                 context.push('/setting');
                 print('appbar test');
               },
-              icon: Icon(Icons.settings, size: 24)),
+              icon: Icon(Icons.settings, size: 24)
+            ),
           ]
         ),
       ),
@@ -137,168 +126,133 @@ class HomeBody extends StatefulWidget {
   @override
   State<HomeBody> createState() => _HomeBodyState();
 }
+enum LetterFilter { all, arrived, inTransit }
 
 class _HomeBodyState extends State<HomeBody> {
+  LetterFilter _filter = LetterFilter.all;
 
   @override
   Widget build(BuildContext context) {
-    final letters = widget.letters;
-    print('in build $letters');
+    //todo modularization
+    final now = DateTime.now();
+
+    final upcoming = widget.letters
+      .map((i) => DateTime.parse(i['arrival_at'] as String))
+      .where((dt) => !dt.isBefore(now))
+      .toList();
+    upcoming.sort((a, b) => a.compareTo(b));
+
+    final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
+    final int dDay = calculateDday(nextDate);
+    List<Map<String, dynamic>> filtered = switch (_filter) {
+      LetterFilter.arrived =>
+        widget.letters.where((m) =>
+          DateTime.parse(m['arrival_at']).isBefore(now) ||
+          DateTime.parse(m['arrival_at']).isAtSameMomentAs(now)
+        ).toList(),
+      LetterFilter.inTransit =>
+        widget.letters.where((m) =>
+          DateTime.parse(m['arrival_at']).isAfter(now)
+        ).toList(),
+      _ => widget.letters
+    };
+    // print('home: in build $letters');
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: SizedBox(height: 20)
+        SliverToBoxAdapter(child: SizedBox(height: 20)),
+        HeaderSection(
+          dDay: dDay,
+          arrivalDate: nextDate,
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.15),
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  )
-                ]
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text( '다가오는 편지', style: headingStyle),
-                  SizedBox(height: 2),
-                  Text('D-10', style: dDayStyle),
-                  SizedBox(height: 2),
-                  Text('2024년 1월 1일 도착 예정', style: dateStyle),
-                ],
-              ),
-            ),
+        SliverToBoxAdapter(
+          child: LetterSortingButtons(
+            current: _filter,
+            onChanged: (selected) => setState(() => _filter = selected),
           ),
         ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SortingButton(label: '전체'),
-                  SizedBox(width: 8),
-                  SortingButton(label: '도착'),
-                  SizedBox(width: 8),
-                  SortingButton(label: '배송중'),
-                ],
-              ),
-            ),
-          )
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-          sliver: SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 5,
-              childAspectRatio: 0.8,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final letter = letters[index];
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(letter['title']!, style: headingStyle),
-                        SizedBox(height: 8),
-                        Text('${letter['date']} 도착', style: dateStyle),
-                        SizedBox(height: 8),
-                        Text(letter['content']!, style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          letterSpacing: -0.5,
-                        )),
-                      ],
-                    ),
-                  )
-                );
-              },
-              childCount: letters.length,
-            ),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(height: 40)
-        ),
+        LetterGrid (letters: filtered),
+        SliverToBoxAdapter(child: SizedBox(height: 40)),
       ],
     );
   }
 }
 
-class _SortingButtonState extends State<SortingButton> {
-  late bool isSelected = false;
+class LetterSortingButtons extends StatelessWidget {
+  const LetterSortingButtons({
+    super.key,
+    required this.current,
+    required this.onChanged,
+  });
 
-  @override
-  void initState() {
-    super.initState();
-    isSelected = false;
-  }
-
-  void toggleSelected() {
-    setState(() {
-      isSelected = !isSelected;
-    });
-    // widget.onTap?.call();
-  }
+  final LetterFilter current;
+  final ValueChanged<LetterFilter> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        minimumSize: Size(0, 0),
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        backgroundColor: isSelected ? Colors.black : Colors.white,
-        side: BorderSide(
-          color: isSelected ? Colors.black : Colors.grey.shade300,
-          width: 1.5,
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          SortingButton(
+            label: '전체',
+            selected: current == LetterFilter.all,
+            onTap: () => onChanged(LetterFilter.all),
+          ),
+          const SizedBox(width: 8),
+          SortingButton(
+            label: '도착',
+            selected: current == LetterFilter.arrived,
+            onTap: () => onChanged(LetterFilter.arrived),
+          ),
+          const SizedBox(width: 8),
+          SortingButton(
+            label: '배송중',
+            selected: current == LetterFilter.inTransit,
+            onTap: () => onChanged(LetterFilter.inTransit),
+          ),
+        ],
       ),
-      child: Text(widget.label, style: TextStyle(
-        color: isSelected ? Colors.white : Colors.black,
-        fontFamily: 'Inter',
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        letterSpacing: -0.5,
-      )),
-      onPressed: () async {
-        final letters = await DatabaseHelper.getAllLetters();
-        print('letters');
-        print(letters);
-        // print('SortingButton pressed');
-        toggleSelected();
-      },
     );
   }
 }
 
-class SortingButton extends StatefulWidget {
-  final String label;
-  final bool selected;
-
+class SortingButton extends StatelessWidget {
   const SortingButton({
     super.key,
     required this.label,
-    this.selected = false,
+    required this.selected,
+    required this.onTap,
   });
 
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
   @override
-  State<SortingButton> createState() => _SortingButtonState();
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onTap,
+      style: OutlinedButton.styleFrom(
+        //todo click animation
+        minimumSize: const Size(4, 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: selected ? Colors.black : Colors.white,
+        side: BorderSide(
+          color: selected ? Colors.black : Colors.grey.shade300,
+          width: 1.5,
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: selected ? Colors.white : Colors.black,
+          fontFamily: 'Inter',
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          letterSpacing: -0.5,
+        ),
+      ),
+    );
+  }
 }

@@ -80,6 +80,10 @@ class DatabaseHelper {
     final db = await database;
     return await db.query('letters');
   }
+  static Future<List<Map<String, Object?>>> getLetter(int id) async {
+    final db = await database;
+    return await db.query('letters', where: 'id = ?', whereArgs: [id]);
+  }
 
   // note 추가
   // void testfunction() async {
