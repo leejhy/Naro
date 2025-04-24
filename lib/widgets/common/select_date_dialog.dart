@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class DateDialog extends StatefulWidget {
-  const DateDialog({super.key});
+class SelectDateDialog extends StatefulWidget {
+  const SelectDateDialog({super.key});
   @override
-  State<DateDialog> createState() => _DateDialogState();
+  State<SelectDateDialog> createState() => _DateDialogState();
 }
 
 // todo
@@ -13,11 +13,11 @@ class DateDialog extends StatefulWidget {
 //오늘이 마지막날이면 5월1일부터 렌더링되게
 
 
-class _DateDialogState extends State<DateDialog> {
+class _DateDialogState extends State<SelectDateDialog> {
   static const int _maxYear = 2050;
 
-  final DateTime _today = DateTime(2025, 4, 30);
-  // final DateTime _today = DateTime.now();
+  // final DateTime _today = DateTime(2025, 4, 30);
+  final DateTime _today = DateTime.now();
 
   late int _year;
   late int _month;

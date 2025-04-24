@@ -1,14 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:naro/services/database_helper.dart';
 
 // todo:
 // 1. implement letter screen view
+class LetterScreen extends StatefulWidget {
+  final String letterId;
+  const LetterScreen({
+    super.key,
+    required this.letterId
+  });
 
-class LetterScreen extends StatelessWidget {
-  const LetterScreen({super.key});
-  
+  @override
+  State<LetterScreen> createState() => _LetterScreenState();
+}
+
+class _LetterScreenState extends State<LetterScreen> {
+  List<Map<String, Object?>>? _letter;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLetter();
+    //todo letterId null 체크
+    debugPrint('letterㅁㄴㅇId: ${widget.letterId}');
+  }
+  Future<void> _loadLetter() async {
+    final data = await DatabaseHelper.getLetter(int.parse(widget.letterId));
+    setState(() => _letter = data );
+  }
   @override
   Widget build(BuildContext context) {
+    if (_letter == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    final letterRow = _letter!.first;
+    debugPrint('letterRow: $letterRow');
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
