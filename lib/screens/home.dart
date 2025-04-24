@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:sqflite/sqflite.dart';
@@ -140,7 +141,7 @@ class _HomeBodyState extends State<HomeBody> {
     upcoming.sort((a, b) => a.compareTo(b));
 
     final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
-    final dDay = nextDate.difference(now).inDays + 1;
+    final int dDay = calculateDday(nextDate);
   
     // print('home: in build $letters');
     return CustomScrollView(

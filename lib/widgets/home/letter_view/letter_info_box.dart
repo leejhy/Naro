@@ -12,9 +12,14 @@ class LetterInfoBox extends StatelessWidget {
 
   final String title;
   final String arrivalAt;
-  final String? dDay;
+  final int dDay;
   final double? widthFactor;
   final int flex;
+  String get dDayText {
+    if (dDay < 0) return '도착완료';
+    if (dDay == 0) return 'D-Day';
+    return 'D-$dDay';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,8 @@ class LetterInfoBox extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
               ),
-              Text(dDay == null ? '도착완료' : 'D-$dDay', style: dDayStyle),
+              // Text(dDay == null ? '도착완료' : 'D-$dDay', style: dDayStyle),
+              Text(dDayText, style: dDayStyle),
             ]
           ),
         ),
