@@ -5,19 +5,20 @@ import 'package:naro/widgets/common/select_date_dialog.dart';
 import 'package:naro/widgets/common/photo_upload.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naro/services/letter_notifier.dart';
 
 //todo
 // 1. fix photo upload view
-class WritingScreen extends StatefulWidget {
+class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
 
   @override
-  State<WritingScreen> createState() => _WritingScreenState();
+  ConsumerState<WritingScreen> createState() => _WritingScreenState();
 }
 
-class _WritingScreenState extends State<WritingScreen> {
+class _WritingScreenState extends ConsumerState<WritingScreen> {
   final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
@@ -90,8 +91,8 @@ class _WritingScreenState extends State<WritingScreen> {
       print('제목과 내용을 입력하세요');
       return;
     }
-    final username = DatabaseHelper.getUserName();
-    print('username: $username');
+    // final username = DatabaseHelper.getUserName();
+    // print('username: $username');
     final now = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final Map<String, Object> letter = {
       'user_id': 1,
@@ -103,7 +104,9 @@ class _WritingScreenState extends State<WritingScreen> {
     print('letter: $letter');
     //todo: admob
     DatabaseHelper.insertLetter(letter);
+    ref.read(letterNotifierProvider.notifier).addLetter(letter);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
