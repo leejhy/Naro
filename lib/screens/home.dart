@@ -5,6 +5,8 @@ import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 //todo
 // View
