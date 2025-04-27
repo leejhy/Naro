@@ -101,6 +101,7 @@ class _WritingScreenState extends State<WritingScreen> {
       'created_at': now ,
     };
     print('letter: $letter');
+    //todo: admob
     DatabaseHelper.insertLetter(letter);
   }
   @override

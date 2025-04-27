@@ -1,47 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:naro/services/database_helper.dart';
+import 'package:naro/services/letter_notifier.dart';
 import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-//todo
-// View
-// 1. Complete sorting button implementation
-// 2. Implement letter card UI
-// 3. Fix timestamp display issue on letter cards
-
-// Logic
-// 1. Add null-check logic and fallback placeholders
-// 2. Implement D-Day calculation logic for arrival date - ok
-
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
-
+  
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Map<String, dynamic>> letters = [];
 
   @override
-  void initState() {
-    super.initState();
-    _loadLetters();  // 비동기 함수 호출
-  }
-
-  Future<void> _loadLetters() async {
-    final value = await DatabaseHelper.getAllLetters();
-    setState(() {
-      letters = value;
-    });
-    print('letters $letters');
-  }
-  
-  @override
   Widget build(BuildContext context) {
+    final letters = ref.watch(letterNotifierProvider);
     return Scaffold(
       backgroundColor: Color(0xffffffff), //background
       appBar: const PreferredSize(
@@ -50,8 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
         color: const Color(0xffF9FAFB),
-        child: HomeBody(
-          letters: letters,
+        child: letters.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('에러 발생: $error')),
+          data: (letters) => HomeBody(letters: letters),
         )
       ),
       floatingActionButton: SizedBox(
@@ -105,6 +84,7 @@ class HomeAppBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 context.push('/setting');
+                // DatabaseHelper.deleteAllLetter();
                 print('appbar test');
               },
               icon: Icon(Icons.settings, size: 24)
@@ -116,7 +96,7 @@ class HomeAppBar extends StatelessWidget {
   }
 }
 
-class HomeBody extends StatefulWidget {
+class HomeBody extends ConsumerStatefulWidget {
   const HomeBody({
     super.key,
     required this.letters,
@@ -124,11 +104,11 @@ class HomeBody extends StatefulWidget {
   final List<Map<String,dynamic>> letters;
 
   @override
-  State<HomeBody> createState() => _HomeBodyState();
+  ConsumerState<HomeBody> createState() => _HomeBodyState();
 }
 enum LetterFilter { all, arrived, inTransit }
 
-class _HomeBodyState extends State<HomeBody> {
+class _HomeBodyState extends ConsumerState<HomeBody> {
   LetterFilter _filter = LetterFilter.all;
 
   @override
@@ -163,6 +143,7 @@ class _HomeBodyState extends State<HomeBody> {
         HeaderSection(
           dDay: dDay,
           arrivalDate: nextDate,
+          letterCount: widget.letters.length,
         ),
         SliverToBoxAdapter(
           child: LetterSortingButtons(

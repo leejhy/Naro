@@ -6,7 +6,9 @@ class HeaderSection extends StatelessWidget {
     super.key,
     required this.arrivalDate,
     required this.dDay,
+    required this.letterCount,
   });
+  final int letterCount;
   final DateTime arrivalDate;
   final int dDay;
   //음수 무시
@@ -15,22 +17,22 @@ class HeaderSection extends StatelessWidget {
   //todo 조건부 렌더링 dDay < 0이면 준비된 멘트중 1개로 대체 
   @override
   Widget build(BuildContext context) {
-    //todo dday 널처리
-    if (dDay <= 0) {
-      return SliverToBoxAdapter(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            height: 135,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
-            ),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        ),
-      );
-    }
+    // todo dday 널처리
+    // if (dDay < 0) {
+    //   return SliverToBoxAdapter(
+    //     child: Padding(
+    //       padding: const EdgeInsets.symmetric(horizontal: 16),
+    //       child: Container(
+    //         height: 135,
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(8),
+    //           color: Colors.white,
+    //         ),
+    //         child: Center(child: CircularProgressIndicator()),
+    //       ),
+    //     ),
+    //   );
+    // }
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverToBoxAdapter(
@@ -90,7 +92,7 @@ class HeaderSection extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘 도착한 편지가 있어요!',
+                      '오늘 도착한 편지2222가 있어요!',
                       style: AppTextStyles.arrivalStyle,
                     ),
                   ),
