@@ -1,45 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:naro/services/database_helper.dart';
+import 'package:naro/services/letter_notifier.dart';
 import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-//todo
-// View
-// 1. Complete sorting button implementation
-// 2. Implement letter card UI
-// 3. Fix timestamp display issue on letter cards
-
-// Logic
-// 1. Add null-check logic and fallback placeholders
-// 2. Implement D-Day calculation logic for arrival date - ok
-
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
-
+  
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<Map<String, dynamic>> letters = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadLetters();  // 비동기 함수 호출
-  }
-
-  Future<void> _loadLetters() async {
-    final value = await DatabaseHelper.getAllLetters();
-    setState(() {
-      letters = value;
-    });
-    print('letters $letters');
-  }
-  
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
         color: const Color(0xffF9FAFB),
-        child: HomeBody(
-          letters: letters,
-        )
+        child: HomeBody(),
+        // child: letters.when(
+        //   loading: () => const Center(child: CircularProgressIndicator()),
+        //   error: (error, stack) => Center(child: Text('에러 발생: $error')),
+        //   data: (letters) => HomeBody(letters: letters),
+        // )
       ),
       floatingActionButton: SizedBox(
         width: 56,
@@ -105,6 +82,7 @@ class HomeAppBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 context.push('/setting');
+                // DatabaseHelper.deleteAllLetter();
                 print('appbar test');
               },
               icon: Icon(Icons.settings, size: 24)
@@ -116,64 +94,68 @@ class HomeAppBar extends StatelessWidget {
   }
 }
 
-class HomeBody extends StatefulWidget {
-  const HomeBody({
-    super.key,
-    required this.letters,
-    });
-  final List<Map<String,dynamic>> letters;
+class HomeBody extends ConsumerStatefulWidget {
+  const HomeBody({super.key,});
 
   @override
-  State<HomeBody> createState() => _HomeBodyState();
+  ConsumerState<HomeBody> createState() => _HomeBodyState();
 }
 enum LetterFilter { all, arrived, inTransit }
 
-class _HomeBodyState extends State<HomeBody> {
+class _HomeBodyState extends ConsumerState<HomeBody> {
   LetterFilter _filter = LetterFilter.all;
 
   @override
   Widget build(BuildContext context) {
     //todo modularization
-    final now = DateTime.now();
+    final letters = ref.watch(letterNotifierProvider);
 
-    final upcoming = widget.letters
-      .map((i) => DateTime.parse(i['arrival_at'] as String))
-      .where((dt) => !dt.isBefore(now))
-      .toList();
-    upcoming.sort((a, b) => a.compareTo(b));
+    return letters.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('에러 발생: $error')),
+      data: (letters) {
+        final now = DateTime.now();
+        final upcoming = letters
+          .map((i) => DateTime.parse(i['arrival_at'] as String))
+          .where((dt) => !dt.isBefore(now))
+          .toList();
+        upcoming.sort((a, b) => a.compareTo(b));
 
-    final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
-    final int dDay = calculateDday(nextDate);
-    List<Map<String, dynamic>> filtered = switch (_filter) {
-      LetterFilter.arrived =>
-        widget.letters.where((m) =>
-          DateTime.parse(m['arrival_at']).isBefore(now) ||
-          DateTime.parse(m['arrival_at']).isAtSameMomentAs(now)
-        ).toList(),
-      LetterFilter.inTransit =>
-        widget.letters.where((m) =>
-          DateTime.parse(m['arrival_at']).isAfter(now)
-        ).toList(),
-      _ => widget.letters
-    };
-    // print('home: in build $letters');
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(child: SizedBox(height: 20)),
-        HeaderSection(
-          dDay: dDay,
-          arrivalDate: nextDate,
-        ),
-        SliverToBoxAdapter(
-          child: LetterSortingButtons(
-            current: _filter,
-            onChanged: (selected) => setState(() => _filter = selected),
-          ),
-        ),
-        LetterGrid (letters: filtered),
-        SliverToBoxAdapter(child: SizedBox(height: 40)),
-      ],
+        final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
+        final int dDay = calculateDday(nextDate);
+        List<Map<String, dynamic>> filtered = switch (_filter) {
+          LetterFilter.arrived =>
+            letters.where((m) =>
+              DateTime.parse(m['arrival_at']).isBefore(now) ||
+              DateTime.parse(m['arrival_at']).isAtSameMomentAs(now)
+            ).toList(),
+          LetterFilter.inTransit =>
+            letters.where((m) =>
+              DateTime.parse(m['arrival_at']).isAfter(now)
+            ).toList(),
+          _ => letters
+        };
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: SizedBox(height: 20)),
+            HeaderSection(
+              dDay: dDay,
+              arrivalDate: nextDate,
+              letterCount: letters.length,
+            ),
+            SliverToBoxAdapter(
+              child: LetterSortingButtons(
+                current: _filter,
+                onChanged: (selected) => setState(() => _filter = selected),
+              ),
+            ),
+            LetterGrid (letters: filtered),
+            SliverToBoxAdapter(child: SizedBox(height: 40)),
+          ],
+        );
+      }
     );
+    // print('home: in build $letters');
   }
 }
 
