@@ -105,6 +105,7 @@ class HomeAppBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 context.push('/setting');
+                // DatabaseHelper.deleteAllLetter();
                 print('appbar test');
               },
               icon: Icon(Icons.settings, size: 24)
@@ -163,6 +164,7 @@ class _HomeBodyState extends State<HomeBody> {
         HeaderSection(
           dDay: dDay,
           arrivalDate: nextDate,
+          letterCount: widget.letters.length,
         ),
         SliverToBoxAdapter(
           child: LetterSortingButtons(

@@ -17,18 +17,33 @@ class LetterScreen extends StatefulWidget {
 
 class _LetterScreenState extends State<LetterScreen> {
   List<Map<String, Object?>>? _letter;
+  late final TextEditingController _titleController;
+  late final TextEditingController _contentController;
+  // List<String> _imagePaths = [];
 
   @override
   void initState() {
     super.initState();
     _loadLetter();
     //todo letterId null 체크
+    _titleController = TextEditingController();
+    _contentController = TextEditingController();
     debugPrint('letterㅁㄴㅇId: ${widget.letterId}');
   }
   Future<void> _loadLetter() async {
     final data = await DatabaseHelper.getLetter(int.parse(widget.letterId));
-    setState(() => _letter = data );
+    if (data.isNotEmpty) {
+      final row = data.first;
+      _titleController.text = row['title'] as String? ?? '';
+      _contentController.text = row['content'] as String? ?? '';
+      // final photoPath = row['photo_path'] as String?;
+      // if (photoPath != null && photoPath.isNotEmpty) {
+      //   _imagePaths = [photoPath];
+      // }
+    }
+    setState(() => _letter = data);
   }
+
   @override
   Widget build(BuildContext context) {
     if (_letter == null) {
@@ -54,81 +69,63 @@ class _LetterScreenState extends State<LetterScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextWriting(),
+          TextWriting(
+            title: _titleController.text,
+            content: _contentController.text,
+          ),
           PhotoUpload(),
         ],
-      ),
-      floatingActionButton: SizedBox(
-        width: 56,
-        height: 56,
-        child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ),
-          backgroundColor: Colors.black,
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => const ConfirmDialog(),
-            );
-            print('test');
-          },
-          child: const Icon(Icons.check, color: Colors.white, size: 30),
-        ),
       ),
     );
   }
 }
 
 class TextWriting extends StatelessWidget {
-  const TextWriting({super.key});
+  final String title;
+  final String content;
+  const TextWriting({
+    super.key,
+    required this.title,
+    required this.content,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 제목 입력창
-            TextField(
-              maxLength: 40,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-              decoration: const InputDecoration(
-                counterText: '',
-                hintText: '제목을 입력하세요',
-                border: InputBorder.none,
-              ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(//SizedBox
-              // color: Colors.amber,
-              height: 400,
-              // decoration: BoxDecoration(
-              //   border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-              // ),
-              child: TextField(
+            maxLines: 2,
+            overflow: TextOverflow.visible,
+          ),
+          const SizedBox(height: 10),
+          Container(
+            height: 400,
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.transparent),
+            ),
+            child: SingleChildScrollView(
+              child: Text(
+                content,
                 style: const TextStyle(
                   fontFamily: 'Inter',
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16
-                ),
-                maxLength: 2000,
-                expands: true,// expands: true일때 maxLines: null 필수
-                maxLines: null, //무한 Lines
-                decoration: const InputDecoration(
-                  counterText: '',
-                  hintText: '본문을 작성하세요...',
-                  border: InputBorder.none,
+                  fontSize: 17,
                 ),
               ),
             ),
-            Divider(thickness: 1, color: Colors.grey.shade300),
-          ],
-        ),
+          ),
+          Divider(thickness: 1, color: Colors.grey.shade300),
+        ],
+      ),
     );
   }
 }
@@ -184,30 +181,6 @@ class PhotoUpload extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('저장하시겠습니까?'),
-      content: const Text('저장 후에는 수정할 수 없습니다.'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('저장'),
-        ),
-      ],
     );
   }
 }
