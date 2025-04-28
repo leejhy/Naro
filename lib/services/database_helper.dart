@@ -20,7 +20,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
       },
@@ -46,6 +46,26 @@ class DatabaseHelper {
             FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
           );
         ''');
+        await db.execute('''
+          CREATE TABLE letter_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            letter_id INTEGER NOT NULL,
+            path TEXT NOT NULL,
+            FOREIGN KEY (letter_id) REFERENCES letters (id) ON DELETE CASCADE
+          );
+        ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            CREATE TABLE letter_images (
+              id INTEGER PRIMARY KEY AUTOINCREMENT, 
+              letter_id INTEGER NOT NULL,
+              path TEXT NOT NULL,
+              FOREIGN KEY (letter_id) REFERENCES letters (id) ON DELETE CASCADE
+            );
+          ''');
+        }
       },
     );
   }
@@ -55,17 +75,6 @@ class DatabaseHelper {
     return List.generate(length, (_) => chars[_random.nextInt(chars.length)]).join();
   }
 
-  static Future<int> getUserId() async {
-    return 1;
-    // final db = await database;
-
-    // final result = await db.query('users',
-    //   columns: ['id'],
-    //   limit: 1,
-    // );
-
-    // return result.first['id'] as int;
-  }
   static Future<String> getUserName() async {
     final db = await database;
     final result = await db.query('users', columns: ['user_name']);
@@ -85,24 +94,24 @@ class DatabaseHelper {
     return await db.query('letters', where: 'id = ?', whereArgs: [id]);
   }
 
-  // note 추가
-  // void testfunction() async {
-  //   final int user_id = await DatabaseHelper.getUserId();
-  // final letter = {
-      // user_id': user_id,  // 전달받은 user_id
-    //   'title': 'example title',
-    //   'content': 'example content',
-    //   'arrival_at': DateTime.now().add(Duration(days: 30)).toIso8601String(),
-    //   'created_at': DateTime.now().toIso8601String(),
-    // }
-    // await DatabaseHelper.insertLetter(letter);
-  //  };
   static Future<int> insertLetter(Map<String, Object?> letter) async {
     final db = await database;
     return await db.insert('letters', letter);
     //return id;
   }
-
+  
+  static Future<void> insertImages(int letterId, List<String> paths) async {
+    if (paths.isEmpty) return;
+    final db = await database;
+    final batch = db.batch();
+    for (final path in paths) {
+      batch.insert('letter_images', {
+        'letter_id': letterId,
+        'path': path,
+      });
+    }
+    await batch.commit(noResult: true);
+  }
   // // 데이터 삭제 (id 기준)
   static Future<void> deleteAllLetter() async {
     final db = await database;

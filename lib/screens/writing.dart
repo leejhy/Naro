@@ -6,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/letter_notifier.dart';
 import 'package:naro/controllers/image_upload_controller.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io'; 
 
 //todo
 // 1. fix image insertion view
-// 2. save image into SQlite
+// 2. save image into SQlite -> 해야함
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
@@ -88,12 +91,24 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     _arrivalDateController.dispose();
     super.dispose();
   }
-  void insertLetter() {
+
+  Future<String> saveImageToLocal(XFile image) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}';
+    final savedImage = await File(image.path).copy('${appDir.path}/$fileName.jpg');
+    return savedImage.path;
+  }
+
+  Future<void> insertLetter() async {
     //todo image
     final images = imageController.images;
-    for (final img in images) {
-      print('image path: ${img.path}');
-    }
+    final savedPaths = await Future.wait(
+      images.map((img) => saveImageToLocal(img)).toList()
+    );
+    // for (final img in images) {
+    //   saveImageToLocal(img);
+    //   print('image path: ${img.path}');
+    // }
     if (titleController.text.isEmpty || contentController.text.isEmpty) {
       print('제목과 내용을 입력하세요');
       return;
@@ -108,7 +123,8 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     };
     print('letter: $letter');
     //todo: admob
-    ref.read(letterNotifierProvider.notifier).addLetter(letter);
+    ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    //addletter여기서 한번씀
     // DatabaseHelper.insertImages();//todo
   }
 
