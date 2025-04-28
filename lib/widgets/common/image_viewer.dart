@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-class PhotoViewer extends StatelessWidget {
+class ImageViewer extends StatelessWidget {
   final String imagePath;
-  const PhotoViewer({super.key, required this.imagePath});
+  const ImageViewer({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:naro/services/database_helper.dart';
 import 'package:naro/widgets/common/select_date_dialog.dart';
-import 'package:naro/widgets/common/photo_upload.dart';
+import 'package:naro/widgets/common/image_upload.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/letter_notifier.dart';
+import 'package:naro/controllers/image_upload_controller.dart';
 
 //todo
 // 1. fix image insertion view
 // 2. save image into SQlite
+
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
@@ -17,6 +20,7 @@ class WritingScreen extends ConsumerStatefulWidget {
 }
 
 class _WritingScreenState extends ConsumerState<WritingScreen> {
+  final ImageUploadController imageController = ImageUploadController();
   final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
@@ -85,12 +89,15 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     super.dispose();
   }
   void insertLetter() {
+    //todo image
+    final images = imageController.images;
+    for (final img in images) {
+      print('image path: ${img.path}');
+    }
     if (titleController.text.isEmpty || contentController.text.isEmpty) {
       print('제목과 내용을 입력하세요');
       return;
     }
-    // final username = DatabaseHelper.getUserName();
-    // print('username: $username');
     final now = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final Map<String, Object> letter = {
       'user_id': 1,
@@ -102,6 +109,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     print('letter: $letter');
     //todo: admob
     ref.read(letterNotifierProvider.notifier).addLetter(letter);
+    // DatabaseHelper.insertImages();//todo
   }
 
   @override
@@ -137,6 +145,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
           WritingBody(
             titleController: titleController,
             contentController: contentController,
+            imageController: imageController,
           ),
       ),
       floatingActionButton: SizedBox(
@@ -151,9 +160,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
             showDialog(
               context: context,
               builder: (context) => ConfirmDialog(
-                onConfirm: () {
-                  insertLetter();        // 여기가 컨트롤러 접근점
-                },
+                onConfirm: () => insertLetter()
               ),
             );
           },
@@ -204,7 +211,6 @@ class _TextWritingState extends State<TextWriting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 제목 입력창
             TextField(
               controller: widget.titleController,
               maxLength: 40,
@@ -265,8 +271,6 @@ class ConfirmDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             onConfirm();
-            print('저장 버튼 클릭');
-            // context.push('/test');
           },
           child: const Text('저장'),
         ),
@@ -279,10 +283,12 @@ class WritingBody extends StatelessWidget {
   const WritingBody({
       required this.titleController,
       required this.contentController,
+      required this.imageController,
       super.key
     });
   final TextEditingController titleController;
   final TextEditingController contentController;
+  final ImageUploadController imageController;
 
   @override
   Widget build(BuildContext context) {
@@ -293,8 +299,10 @@ class WritingBody extends StatelessWidget {
             titleController: titleController,
             contentController: contentController,
           ),
-          PhotoUpload(),
-          SizedBox(height: 40),
+          ImageUpload(
+            imageController: imageController,
+          ),
+          const SizedBox(height: 40),
         ],
       )
     );
