@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
 import 'package:naro/widgets/common/select_date_dialog.dart';
-import 'package:naro/widgets/common/photo_upload.dart';
+import 'package:naro/widgets/common/image_upload.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/letter_notifier.dart';
+import 'package:naro/controllers/image_upload_controller.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io'; 
 
 //todo
-// 1. fix photo upload view
+// 1. fix image insertion view
+// 2. save image into SQlite -> 해야함
+
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
@@ -19,6 +23,7 @@ class WritingScreen extends ConsumerStatefulWidget {
 }
 
 class _WritingScreenState extends ConsumerState<WritingScreen> {
+  final ImageUploadController imageController = ImageUploadController();
   final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
@@ -86,13 +91,29 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     _arrivalDateController.dispose();
     super.dispose();
   }
-  void insertLetter() {
+
+  Future<String> saveImageToLocal(XFile image, int idx) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
+    final savedImage = await File(image.path).copy('${appDir.path}/$fileName.jpg');
+    return savedImage.path;
+  }
+
+  Future<void> insertLetter() async {
+    //todo image
+    final images = imageController.images;
+    final savedPaths = await Future.wait(
+      images.asMap().entries.map((entry) {
+        final idx = entry.key;
+        final img = entry.value;
+        return saveImageToLocal(img, idx);
+      }).toList()
+    );
+    print('savedPaths: $savedPaths');
     if (titleController.text.isEmpty || contentController.text.isEmpty) {
       print('제목과 내용을 입력하세요');
       return;
     }
-    // final username = DatabaseHelper.getUserName();
-    // print('username: $username');
     final now = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final Map<String, Object> letter = {
       'user_id': 1,
@@ -103,7 +124,9 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     };
     print('letter: $letter');
     //todo: admob
-    ref.read(letterNotifierProvider.notifier).addLetter(letter);
+    ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    //addletter여기서 한번씀
+    // DatabaseHelper.insertImages();//todo
   }
 
   @override
@@ -139,6 +162,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
           WritingBody(
             titleController: titleController,
             contentController: contentController,
+            imageController: imageController,
           ),
       ),
       floatingActionButton: SizedBox(
@@ -153,9 +177,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
             showDialog(
               context: context,
               builder: (context) => ConfirmDialog(
-                onConfirm: () {
-                  insertLetter();        // 여기가 컨트롤러 접근점
-                },
+                onConfirm: () => insertLetter()
               ),
             );
           },
@@ -206,7 +228,6 @@ class _TextWritingState extends State<TextWriting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 제목 입력창
             TextField(
               controller: widget.titleController,
               maxLength: 40,
@@ -267,8 +288,6 @@ class ConfirmDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             onConfirm();
-            print('저장 버튼 클릭');
-            // context.push('/test');
           },
           child: const Text('저장'),
         ),
@@ -281,10 +300,12 @@ class WritingBody extends StatelessWidget {
   const WritingBody({
       required this.titleController,
       required this.contentController,
+      required this.imageController,
       super.key
     });
   final TextEditingController titleController;
   final TextEditingController contentController;
+  final ImageUploadController imageController;
 
   @override
   Widget build(BuildContext context) {
@@ -295,8 +316,10 @@ class WritingBody extends StatelessWidget {
             titleController: titleController,
             contentController: contentController,
           ),
-          PhotoUpload(),
-          SizedBox(height: 40),
+          ImageUpload(
+            imageController: imageController,
+          ),
+          const SizedBox(height: 40),
         ],
       )
     );

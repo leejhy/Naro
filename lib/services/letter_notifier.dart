@@ -11,11 +11,22 @@ class LetterNotifier extends _$LetterNotifier {
     return await DatabaseHelper.getAllLetters();
   }
   // WritingScreen에서 편지 추가
-  Future<void> addLetter(Map<String, dynamic> letter) async {
-    await DatabaseHelper.insertLetter(letter);
+  Future<void> addLetter(
+    Map<String, dynamic> letter,
+    List<String> imagesPath
+  ) async {
+    final newId = await DatabaseHelper.insertLetter(letter);
+
+    if (imagesPath.isNotEmpty) {
+      await DatabaseHelper.insertImages(newId, imagesPath);
+    }
+    final letterWithId = {
+      'id': newId,
+      ...letter,
+    };
     state = AsyncValue.data([
       ...(state.value ?? []),
-      letter,
+      letterWithId,
     ]);
   }
   // void a() {
