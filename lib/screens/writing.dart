@@ -92,9 +92,9 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     super.dispose();
   }
 
-  Future<String> saveImageToLocal(XFile image) async {
+  Future<String> saveImageToLocal(XFile image, int idx) async {
     final appDir = await getApplicationDocumentsDirectory();
-    final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}';
+    final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
     final savedImage = await File(image.path).copy('${appDir.path}/$fileName.jpg');
     return savedImage.path;
   }
@@ -103,12 +103,13 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     //todo image
     final images = imageController.images;
     final savedPaths = await Future.wait(
-      images.map((img) => saveImageToLocal(img)).toList()
+      images.asMap().entries.map((entry) {
+        final idx = entry.key;
+        final img = entry.value;
+        return saveImageToLocal(img, idx);
+      }).toList()
     );
-    // for (final img in images) {
-    //   saveImageToLocal(img);
-    //   print('image path: ${img.path}');
-    // }
+    print('savedPaths: $savedPaths');
     if (titleController.text.isEmpty || contentController.text.isEmpty) {
       print('제목과 내용을 입력하세요');
       return;

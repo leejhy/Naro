@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
-
+import 'package:naro/widgets/common/image_upload.dart';
+import 'dart:io';
+import 'package:naro/widgets/common/image_viewer.dart';
 // todo:
 // 1. implement letter screen view
 class LetterScreen extends StatefulWidget {
@@ -19,28 +21,42 @@ class _LetterScreenState extends State<LetterScreen> {
   List<Map<String, Object?>>? _letter;
   late final TextEditingController _titleController;
   late final TextEditingController _contentController;
-  // List<String> _imagePaths = [];
+  List<String> _imagePaths = [];
 
   @override
   void initState() {
     super.initState();
-    _loadLetter();
-    //todo letterId null 체크
     _titleController = TextEditingController();
     _contentController = TextEditingController();
+  
+    _loadLetter();
     debugPrint('letterㅁㄴㅇId: ${widget.letterId}');
   }
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadLetter() async {
-    final data = await DatabaseHelper.getLetter(int.parse(widget.letterId));
+    final letterId = int.parse(widget.letterId);
+    final data = await DatabaseHelper.getLetter(letterId);
+    final imagepath = await DatabaseHelper.getImagePaths(letterId);
+
+    if (!mounted) return ;
     if (data.isNotEmpty) {
       final row = data.first;
       _titleController.text = row['title'] as String? ?? '';
       _contentController.text = row['content'] as String? ?? '';
-      // final photoPath = row['photo_path'] as String?;
-      // if (photoPath != null && photoPath.isNotEmpty) {
-      //   _imagePaths = [photoPath];
-      // }
     }
+
+
+    print('imagepath: $imagepath');
+    if (imagepath.isNotEmpty) {
+      _imagePaths = imagepath;
+    }
+
     setState(() => _letter = data);
   }
 
@@ -66,15 +82,20 @@ class _LetterScreenState extends State<LetterScreen> {
           fontWeight: FontWeight.bold,
         )),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextWriting(
-            title: _titleController.text,
-            content: _contentController.text,
-          ),
-          PhotoUpload(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextWriting(
+              title: _titleController.text,
+              content: _contentController.text,
+            ),
+            
+            ImageGridView(
+              imagePaths: _imagePaths,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -130,57 +151,78 @@ class TextWriting extends StatelessWidget {
   }
 }
 
-class PhotoUpload extends StatelessWidget {
-  const PhotoUpload({super.key});
+class ImageGridView extends StatelessWidget {
+  const ImageGridView({super.key, required this.imagePaths});
+  final List<String> imagePaths;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('사진', style: TextStyle(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+          child: Text('사진', style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 20,
             fontWeight: FontWeight.bold,
           )),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => print('photo button'),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade500)
-                  ),
-                  child: const Icon(Icons.camera_alt, color: Colors.black),
-                )
-              ),
-              SizedBox(width: 10),
-              GestureDetector(
-                onTap: () => context.push('/test'),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade500)
-                  ),
-                  child: const Icon(Icons.camera_alt, color: Colors.black),
-                )
-              ),
-              SizedBox(width: 10),
-            ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1,
+            children: List.generate(3, (index) {
+              if (index < imagePaths.length) {
+                return _buildPhotoItem(context, imagePaths[index]);
+              }
+              return Container(); // 빈 칸
+            }),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPhotoItem(BuildContext context, String imagePath) {
+    final file = File(imagePath);
+    final exists = file.existsSync();
+    if (!exists) {
+      return Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFE0E0E0),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Center(
+          child: Icon(Icons.image_not_supported_rounded, size: 30, color: Colors.white70),
+        ),
+      );
+    }
+
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ImageViewer(imagePath: imagePath),
+            ),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              image: DecorationImage(
+                image: FileImage(File(imagePath)),
+                fit: BoxFit.fill,
+              ),
+            ),
+          )
+        ),
+      ],
     );
   }
 }

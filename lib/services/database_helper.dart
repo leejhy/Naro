@@ -99,7 +99,13 @@ class DatabaseHelper {
     return await db.insert('letters', letter);
     //return id;
   }
-  
+
+  static Future<List<String>> getImagePaths(int letterId) async {
+    final db = await database;
+    final result = await db.query('letter_images', where: 'letter_id = ?', whereArgs: [letterId]);
+    return result.map((row) => row['path'] as String).toList();
+  }
+
   static Future<void> insertImages(int letterId, List<String> paths) async {
     if (paths.isEmpty) return;
     final db = await database;
