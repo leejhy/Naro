@@ -17,22 +17,8 @@ class HeaderSection extends StatelessWidget {
   //todo 조건부 렌더링 dDay < 0이면 준비된 멘트중 1개로 대체 
   @override
   Widget build(BuildContext context) {
+    print('dday : $dDay');
     // todo dday 널처리
-    // if (dDay < 0) {
-    //   return SliverToBoxAdapter(
-    //     child: Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 16),
-    //       child: Container(
-    //         height: 135,
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(8),
-    //           color: Colors.white,
-    //         ),
-    //         child: Center(child: CircularProgressIndicator()),
-    //       ),
-    //     ),
-    //   );
-    // }
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverToBoxAdapter(
@@ -71,7 +57,7 @@ class HeaderSection extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘 도착한 편지111어요!',
+                      '오늘 도착 편지',
                       style: AppTextStyles.arrivalStyle,
                     ),
                   ),
@@ -82,7 +68,7 @@ class HeaderSection extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘 도착한 222요!',
+                      '오늘도 아니고 올 편지도 편지 없음',
                       style: AppTextStyles.arrivalStyle,
                     ),
                   ),
@@ -92,7 +78,7 @@ class HeaderSection extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘 도착한 편지2222가 있어요!',
+                      '오늘도 아니고 올 편지도 편지 없음',
                       style: AppTextStyles.arrivalStyle,
                     ),
                   ),

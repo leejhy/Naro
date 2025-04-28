@@ -103,7 +103,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     };
     print('letter: $letter');
     //todo: admob
-    DatabaseHelper.insertLetter(letter);
     ref.read(letterNotifierProvider.notifier).addLetter(letter);
   }
 

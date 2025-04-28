@@ -4,6 +4,7 @@ int calculateDday(DateTime arrivalAt) {
   int dDay = difference.inDays;//하루추가
 
   if (arrivalAt == DateTime(1900)) {
+    print('no date');
     return -1;
   }
   return dDay;

@@ -5,6 +5,7 @@ import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naro/services/database_helper.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -73,6 +74,13 @@ class HomeAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            IconButton(
+              onPressed: () {
+                DatabaseHelper.deleteAllLetter();
+                print('appbar test');
+              },
+              icon: Icon(Icons.settings, size: 24)
+            ),
             Text('Naro', style: TextStyle(
               fontSize: 22,
               fontFamily: 'Inter',
@@ -115,13 +123,16 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
       error: (error, stack) => Center(child: Text('에러 발생: $error')),
       data: (letters) {
         final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
         final upcoming = letters
           .map((i) => DateTime.parse(i['arrival_at'] as String))
-          .where((dt) => !dt.isBefore(now))
+          .where((dt) => !dt.isBefore(today))
           .toList();
         upcoming.sort((a, b) => a.compareTo(b));
 
         final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
+        print('upcoming : $upcoming');
+        print('nextDate : $nextDate');
         final int dDay = calculateDday(nextDate);
         List<Map<String, dynamic>> filtered = switch (_filter) {
           LetterFilter.arrived =>
