@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:naro/services/database_helper.dart';
 import 'package:naro/widgets/common/select_date_dialog.dart';
 import 'package:naro/widgets/common/photo_upload.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/letter_notifier.dart';
 
 //todo
-// 1. fix photo upload view
+// 1. fix image insertion view
+// 2. save image into SQlite
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기

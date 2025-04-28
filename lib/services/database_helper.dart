@@ -97,9 +97,10 @@ class DatabaseHelper {
     // }
     // await DatabaseHelper.insertLetter(letter);
   //  };
-  static Future<void> insertLetter(Map<String, Object?> letter) async {
+  static Future<int> insertLetter(Map<String, Object?> letter) async {
     final db = await database;
-    await db.insert('letters', letter);
+    return await db.insert('letters', letter);
+    //return id;
   }
 
   // // 데이터 삭제 (id 기준)

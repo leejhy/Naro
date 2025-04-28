@@ -12,10 +12,14 @@ class LetterNotifier extends _$LetterNotifier {
   }
   // WritingScreen에서 편지 추가
   Future<void> addLetter(Map<String, dynamic> letter) async {
-    await DatabaseHelper.insertLetter(letter);
+    final newId = await DatabaseHelper.insertLetter(letter);
+    final letterWithId = {
+      'id': newId,
+      ...letter,
+    };
     state = AsyncValue.data([
       ...(state.value ?? []),
-      letter,
+      letterWithId,
     ]);
   }
   // void a() {
