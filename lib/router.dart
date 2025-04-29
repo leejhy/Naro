@@ -23,9 +23,10 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/result',
+      path: '/result/:id',
       builder: (context, state) {
-        return ResultScreen();
+        final id = state.pathParameters['id'];
+        return ResultScreen(letterId: id!);
       },
     ),
     GoRoute(

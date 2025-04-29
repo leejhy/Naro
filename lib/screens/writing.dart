@@ -125,9 +125,11 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     };
     print('letter: $letter');
     //todo: admob
-    ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    //todo 이거 치우기
+    final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    print('letter id: $id');
     if (mounted) {  // <<< 이거 추가
-      context.go('/result');
+      context.go('/result/$id');
     }
   }
 

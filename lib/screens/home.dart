@@ -24,13 +24,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: HomeAppBar(),
       ),
       body: Container(
-        color: const Color(0xffF9FAFB),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE3F7FF), Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment(0, 0.5),
+          ),
+        ),
         child: HomeBody(),
-        // child: letters.when(
-        //   loading: () => const Center(child: CircularProgressIndicator()),
-        //   error: (error, stack) => Center(child: Text('에러 발생: $error')),
-        //   data: (letters) => HomeBody(letters: letters),
-        // )
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 5, bottom: 5),
@@ -227,7 +228,7 @@ class SortingButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
-        //todo click animation
+        overlayColor: Color(0xFF00B6FF),
         minimumSize: const Size(4, 10),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

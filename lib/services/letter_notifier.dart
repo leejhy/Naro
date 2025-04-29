@@ -11,7 +11,7 @@ class LetterNotifier extends _$LetterNotifier {
     return await DatabaseHelper.getAllLetters();
   }
   // WritingScreen에서 편지 추가
-  Future<void> addLetter(
+  Future<int> addLetter(
     Map<String, dynamic> letter,
     List<String> imagesPath
   ) async {
@@ -28,6 +28,20 @@ class LetterNotifier extends _$LetterNotifier {
       ...(state.value ?? []),
       letterWithId,
     ]);
+    return newId;
+  }
+
+  String? getLetterArrivalDate(int letterId) {
+    final letters = state.value;
+    if (letters == null) {
+      return null;
+    }
+    final target = letters.firstWhere(
+      (letter) => letter['id'] == letterId,
+      orElse: () => {},
+    );
+    // print('getter ${target['arrival_at']}');
+    return target['arrival_at'];
   }
   // void a() {
   //   debugPrint('test a: ${state.value}');
