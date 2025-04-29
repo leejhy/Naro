@@ -32,18 +32,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         //   data: (letters) => HomeBody(letters: letters),
         // )
       ),
-      floatingActionButton: SizedBox(
-        width: 56,
-        height: 56,
-        child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 5, bottom: 5),
+        child: SizedBox(
+          width: 56,
+          height: 56,
+          child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            backgroundColor: Colors.black,
+            onPressed: () {
+              context.push('/writing');
+            },
+            child: const Icon(Icons.add, color: Colors.white, size: 30),
           ),
-          backgroundColor: Colors.black,
-          onPressed: () {
-            context.push('/writing');
-          },
-          child: const Icon(Icons.add, color: Colors.white, size: 30),
         ),
       ),
     );
