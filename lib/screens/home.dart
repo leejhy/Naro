@@ -130,7 +130,7 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
           .toList();
         upcoming.sort((a, b) => a.compareTo(b));
 
-        final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
+        final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900,1,1);
         final int dDay = calculateDday(nextDate);
         List<Map<String, dynamic>> filtered = switch (_filter) {
           LetterFilter.arrived =>

@@ -1,14 +1,8 @@
 int calculateDday(DateTime arrivalAt) {
   DateTime now = DateTime.now();
-  Duration difference = arrivalAt.difference(now) + Duration(days: 1);
+  DateTime today = DateTime(now.year, now.month, now.day);
+  Duration difference = arrivalAt.difference(today);
   int dDay = difference.inDays;//하루추가
 
-  if (arrivalAt == DateTime(1900)) {
-    print('no date');
-    return -1;
-  }
   return dDay;
-  // if (dDay < 0) return null;
-  // if (dDay == 0) return 'Day';
-  // return dDay.toString();
 }

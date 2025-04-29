@@ -17,7 +17,7 @@ class HeaderSection extends StatelessWidget {
   //todo 조건부 렌더링 dDay < 0이면 준비된 멘트중 1개로 대체 
   @override
   Widget build(BuildContext context) {
-    print('dday : $dDay');
+    print('header_section dday : $dDay');
     // todo dday 널처리
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
