@@ -5,7 +5,7 @@ import 'package:naro/controllers/image_upload_controller.dart';
 import 'package:naro/widgets/common/image_viewer.dart';
 
 class ImageUpload extends StatefulWidget {
-  final ImageUploadController imageController; // 👈 Controller 받아오기
+  final ImageUploadController imageController;
   const ImageUpload({super.key, required this.imageController});
 
   @override

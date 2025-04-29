@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:naro/services/database_helper.dart';
-import 'package:naro/widgets/common/image_upload.dart';
 import 'dart:io';
 import 'package:naro/widgets/common/image_viewer.dart';
-// todo:
-// 1. implement letter screen view
+
 class LetterScreen extends StatefulWidget {
   final String letterId;
   const LetterScreen({

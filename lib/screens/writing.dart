@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:naro/services/database_helper.dart';
 import 'package:naro/widgets/common/select_date_dialog.dart';
 import 'package:naro/widgets/common/image_upload.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +7,7 @@ import 'package:naro/services/letter_notifier.dart';
 import 'package:naro/controllers/image_upload_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:io'; 
 
 //todo
@@ -111,6 +111,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     );
     print('savedPaths: $savedPaths');
     if (titleController.text.isEmpty || contentController.text.isEmpty) {
+      //todo add: alert
       print('제목과 내용을 입력하세요');
       return;
     }
@@ -124,9 +125,12 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     };
     print('letter: $letter');
     //todo: admob
-    ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
-    //addletter여기서 한번씀
-    // DatabaseHelper.insertImages();//todo
+    //todo 이거 치우기
+    final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    print('letter id: $id');
+    if (mounted) {  // <<< 이거 추가
+      context.go('/result/$id');
+    }
   }
 
   @override
@@ -157,31 +161,31 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
           ),
         ),
       ),
-      body: Container(
-        child: 
-          WritingBody(
-            titleController: titleController,
-            contentController: contentController,
-            imageController: imageController,
-          ),
+      body: WritingBody(
+        titleController: titleController,
+        contentController: contentController,
+        imageController: imageController,
       ),
-      floatingActionButton: SizedBox(
-        width: 56,
-        height: 56,
-        child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 5, bottom: 5),
+        child: SizedBox(
+          width: 56,
+          height: 56,
+          child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            backgroundColor: Colors.black,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => ConfirmDialog(
+                  onConfirm: () => insertLetter()
+                ),
+              );
+            },
+            child: const Icon(Icons.check, color: Colors.white, size: 30),
           ),
-          backgroundColor: Colors.black,
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => ConfirmDialog(
-                onConfirm: () => insertLetter()
-              ),
-            );
-          },
-          child: const Icon(Icons.check, color: Colors.white, size: 30),
         ),
       ),
     );
@@ -287,6 +291,7 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            Navigator.pop(context);
             onConfirm();
           },
           child: const Text('저장'),
