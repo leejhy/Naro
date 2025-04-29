@@ -22,6 +22,8 @@ class _LetterCardState extends State<LetterCard> {
   Widget build(BuildContext context) {
     //todo: Move TextStyle definitions outside of build method
     final dDay = calculateDday(DateTime.parse(widget.letter['arrival_at']));
+    // print('letter dday: $dDay');
+    // print('arrivalAt: ${widget.letter['arrival_at']}');
     //dday < 0, dday == 0, dday > 0
     final bool isOpened = dDay <= 0;
     const double cardWidth = 0.72;
@@ -30,6 +32,8 @@ class _LetterCardState extends State<LetterCard> {
       shadowColor: const Color.fromARGB(82, 0, 0, 0),
       elevation: 2,
       child: InkWell(
+        splashColor: const Color(0xFFBFE6F5),
+        highlightColor: const Color.fromARGB(30, 0, 0, 0),
         borderRadius: BorderRadius.circular(8),
         onTap: () {
           context.push('/letter/${widget.letter['id']}');

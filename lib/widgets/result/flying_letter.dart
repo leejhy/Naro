@@ -3,21 +3,15 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'package:flutter/services.dart';
 
-class Test extends StatelessWidget {
-  const Test({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const FlyingLetter();
-  }
-}
-
 class FlyingLetter extends StatefulWidget {
-  const FlyingLetter({Key? key, this.onCompleted}) : super(key: key);
+  const FlyingLetter({
+    super.key,
+    required this.onCompleted,
+    });
   final VoidCallback? onCompleted;
 
   @override
-  _FlyingLetterState createState() => _FlyingLetterState();
+  State<FlyingLetter> createState() => _FlyingLetterState();
 }
 
 class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMixin {
@@ -50,9 +44,12 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
     // 메인 애니메이션 컨트롤러
     _mainController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2500),
+      // duration: const Duration(milliseconds: 1900),
+      duration: const Duration(milliseconds: 2000),
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        widget.onCompleted?.call();
+
         setState(() {
           _isResting = true;
           _showParticles = false;
@@ -224,13 +221,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text("Flying Letter", 
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -240,7 +230,7 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.white, Colors.grey.shade100],
+                colors: [Color(0xFFCAEBF7),Colors.white],
               ),
             ),
           ),
@@ -324,40 +314,40 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
           ),
           
           // 버튼
-          Positioned(
-            bottom: 50,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Material(
-                elevation: 2,
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.redAccent,
-                child: InkWell(
-                  onTap: _isResting ? startAnimation : null,
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.send, color: Colors.white, size: 20),
-                        const SizedBox(width: 8),
-                        Text(
-                          "편지 날리기",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 50,
+          //   left: 0,
+          //   right: 0,
+          //   child: Center(
+          //     child: Material(
+          //       elevation: 2,
+          //       borderRadius: BorderRadius.circular(30),
+          //       color: Colors.redAccent,
+          //       child: InkWell(
+          //         onTap: _isResting ? startAnimation : null,
+          //         borderRadius: BorderRadius.circular(30),
+          //         child: Container(
+          //           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          //           child: Row(
+          //             mainAxisSize: MainAxisSize.min,
+          //             children: [
+          //               const Icon(Icons.send, color: Colors.white, size: 20),
+          //               const SizedBox(width: 8),
+          //               Text(
+          //                 "편지 날리기",
+          //                 style: TextStyle(
+          //                   color: Colors.white,
+          //                   fontWeight: FontWeight.w600,
+          //                   fontSize: 16,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

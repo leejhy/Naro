@@ -5,6 +5,7 @@ import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naro/services/database_helper.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -23,26 +24,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: HomeAppBar(),
       ),
       body: Container(
-        color: const Color(0xffF9FAFB),
-        child: HomeBody(),
-        // child: letters.when(
-        //   loading: () => const Center(child: CircularProgressIndicator()),
-        //   error: (error, stack) => Center(child: Text('에러 발생: $error')),
-        //   data: (letters) => HomeBody(letters: letters),
-        // )
-      ),
-      floatingActionButton: SizedBox(
-        width: 56,
-        height: 56,
-        child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE3F7FF), Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment(0, 0.5),
           ),
-          backgroundColor: Colors.black,
-          onPressed: () {
-            context.push('/writing');
-          },
-          child: const Icon(Icons.add, color: Colors.white, size: 30),
+        ),
+        child: HomeBody(),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 5, bottom: 5),
+        child: SizedBox(
+          width: 56,
+          height: 56,
+          child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            backgroundColor: Colors.black,
+            onPressed: () {
+              context.push('/writing');
+            },
+            child: const Icon(Icons.add, color: Colors.white, size: 30),
+          ),
         ),
       ),
     );
@@ -73,6 +78,13 @@ class HomeAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            IconButton(
+              onPressed: () {
+                DatabaseHelper.deleteAllLetter();
+                print('appbar test');
+              },
+              icon: Icon(Icons.settings, size: 24)
+            ),
             Text('Naro', style: TextStyle(
               fontSize: 22,
               fontFamily: 'Inter',
@@ -115,13 +127,14 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
       error: (error, stack) => Center(child: Text('에러 발생: $error')),
       data: (letters) {
         final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
         final upcoming = letters
           .map((i) => DateTime.parse(i['arrival_at'] as String))
-          .where((dt) => !dt.isBefore(now))
+          .where((dt) => !dt.isBefore(today))
           .toList();
         upcoming.sort((a, b) => a.compareTo(b));
 
-        final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900);
+        final nextDate = upcoming.isNotEmpty ? upcoming.first : DateTime(1900,1,1);
         final int dDay = calculateDday(nextDate);
         List<Map<String, dynamic>> filtered = switch (_filter) {
           LetterFilter.arrived =>
@@ -215,7 +228,7 @@ class SortingButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
-        //todo click animation
+        overlayColor: Color(0xFF00B6FF),
         minimumSize: const Size(4, 10),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
