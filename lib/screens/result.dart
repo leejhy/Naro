@@ -106,7 +106,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 32),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.15),
 
               // 1) 아이콘
               FadeTransition(
@@ -114,7 +114,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                 child: SlideTransition(
                   position: _slide1,
                   child: Icon(Icons.mark_email_read_outlined,
-                      size: 64, color: Colors.brown[300]),
+                      size: 64, color: Color(0xFF4A90E2)),
                 ),
               ),
 
@@ -126,7 +126,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                 child: SlideTransition(
                   position: _slide2,
                   child: const Text('도착일',
-                      style: TextStyle(fontSize: 18, color: Colors.black54)),
+                    style: TextStyle(fontSize: 20, color: Colors.black54)),
                 ),
               ),
 
@@ -143,17 +143,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                           style: const TextStyle(
                               fontSize: 26, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 6),
-                      Text('D-$dDay',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey[300])),
+                      Text('D-$dDay', style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4A90E2))),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // 4) 멘트
               FadeTransition(
@@ -166,6 +165,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                       '이 편지를 읽을 순간이,\n벌써부터 궁금하고 기대돼요.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                        fontFamily: 'Inter',
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
                         height: 1.6,
@@ -177,10 +177,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
               ),
 
               const Spacer(),
-
               // 버튼은 고정 (애니메이션 없어도 OK)
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
@@ -198,6 +197,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

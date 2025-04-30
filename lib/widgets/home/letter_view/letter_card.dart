@@ -17,14 +17,18 @@ class LetterCard extends StatefulWidget {
 
 class _LetterCardState extends State<LetterCard> {
 
+  void onTap(bool isOpened) {
+    if (!isOpened) {
+      showAutoDismissDialog(context, "편지가 도착하려면\n조금 더 시간이 필요해요");
+      return;
+    }
+    context.push('/letter/${widget.letter['id']}');
+  }
 
   @override
   Widget build(BuildContext context) {
-    //todo: Move TextStyle definitions outside of build method
     final dDay = calculateDday(DateTime.parse(widget.letter['arrival_at']));
-    // print('letter dday: $dDay');
-    // print('arrivalAt: ${widget.letter['arrival_at']}');
-    //dday < 0, dday == 0, dday > 0
+
     final bool isOpened = dDay <= 0;
     const double cardWidth = 0.72;
     return Card(
@@ -36,7 +40,7 @@ class _LetterCardState extends State<LetterCard> {
         highlightColor: const Color.fromARGB(30, 0, 0, 0),
         borderRadius: BorderRadius.circular(8),
         onTap: () {
-          context.push('/letter/${widget.letter['id']}');
+          onTap(isOpened);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
