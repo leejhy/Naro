@@ -63,7 +63,6 @@ class HomeAppBar extends StatelessWidget {
       child: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        // color: Colors.amber,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -78,13 +77,6 @@ class HomeAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              onPressed: () {
-                DatabaseHelper.deleteAllLetter();
-                print('appbar test');
-              },
-              icon: Icon(Icons.settings, size: 24)
-            ),
             Text('Naro', style: TextStyle(
               fontSize: 22,
               fontFamily: 'Inter',
