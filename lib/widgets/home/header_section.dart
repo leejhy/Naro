@@ -1,24 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:naro/styles/text_styles.dart';
+import 'dart:math';
 
-class HeaderSection extends StatelessWidget {
+const List<String> noLetterMessages = [
+  '오고 있는 편지가 없어요.\n지금 이 순간을 담아보는건 어때요?',
+  '아직 도착 예정인 편지가 없어요.\n오늘의 마음을 기록해보는 건 어때요?',
+  '아직 편지를 보내지 않았어요.\n미래의 내가 기다리고 있을지 몰라요.',
+  '편지함이 고요해요.\n오늘의 감정을 남겨보는 건 어때요?',
+  '지금의 내가, 미래의 나에게\n가장 큰 힘이 되어줄 수 있어요.',
+  '언젠가 불안한 날의 내가\n오늘의 당신을 기억하게 될 거예요.',
+  '언젠가 힘들어할 나에게\n따뜻한 한마디를 남겨보는 건 어때요?',
+];
+
+class HeaderSection extends StatefulWidget {
   const HeaderSection({
     super.key,
     required this.arrivalDate,
     required this.dDay,
     required this.letterCount,
   });
+
   final int letterCount;
   final DateTime arrivalDate;
   final int dDay;
-  //음수 무시
-  //dDay > 0 : dday, dday + 1일
-  //dDay == 0 : dday, dday 음수 무시
-  //todo 조건부 렌더링 dDay < 0이면 준비된 멘트중 1개로 대체 
+  
+  @override
+  State<HeaderSection> createState() => _HeaderSectionState();
+}
+
+class _HeaderSectionState extends State<HeaderSection> {
+  late final String randomMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    randomMessage = noLetterMessages[Random().nextInt(noLetterMessages.length)];
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('header_section dday : $dDay');
-    // todo dday 널처리
+    final dDay = widget.dDay;
+    final arrivalDate = widget.arrivalDate;
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverToBoxAdapter(
@@ -44,6 +67,7 @@ class HeaderSection extends StatelessWidget {
               //todo dday 널처리(조건부 렌더링)
               //todo D-DAY 일때 도착멘트도 넣기
               if (dDay > 0) ... [
+                //fixed
                 Text('다가오는 편지', style: AppTextStyles.headingStyle),
                 SizedBox(height: 2),
                 Text('D-$dDay', style: AppTextStyles.dDayStyle),
@@ -68,18 +92,8 @@ class HeaderSection extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘도 아니고 올 편지도 편지 없음',
-                      style: AppTextStyles.arrivalStyle,
-                    ),
-                  ),
-                ),
-                Center(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '오늘도 아니고 올 편지도 편지 없음',
-                      style: AppTextStyles.arrivalStyle,
+                      randomMessage,
+                      style: AppTextStyles.headerSectionStyle,
                     ),
                   ),
                 ),
