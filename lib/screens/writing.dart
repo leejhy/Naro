@@ -282,19 +282,49 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: const Color.fromARGB(255, 240, 250, 255),
       title: const Text('저장하시겠습니까?'),
-      content: const Text('저장 후에는 수정할 수 없습니다.'),
+      content: const Text('저장 후에는 수정할 수 없습니다.', 
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF444444),
+        ),
+      ),
       actions: [
         TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: const Color(0xFFE0EDF4),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
           onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: const Text('취소', style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF444444),
+          )),
         ),
         TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: const Color(0xFFE0EDF4),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
           onPressed: () {
             Navigator.pop(context);
             onConfirm();
           },
-          child: const Text('저장'),
+          child: const Text('저장', style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF444444),
+          )),
         ),
       ],
     );
