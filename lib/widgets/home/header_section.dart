@@ -12,20 +12,35 @@ const List<String> noLetterMessages = [
   '언젠가 힘들어할 나에게\n따뜻한 한마디를 남겨보는 건 어때요?',
 ];
 
-class HeaderSection extends StatelessWidget {
+class HeaderSection extends StatefulWidget {
   const HeaderSection({
     super.key,
     required this.arrivalDate,
     required this.dDay,
     required this.letterCount,
   });
+
   final int letterCount;
   final DateTime arrivalDate;
   final int dDay;
+  
+  @override
+  State<HeaderSection> createState() => _HeaderSectionState();
+}
+
+class _HeaderSectionState extends State<HeaderSection> {
+  late final String randomMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    randomMessage = noLetterMessages[Random().nextInt(noLetterMessages.length)];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final String randomMessage = noLetterMessages[Random().nextInt(noLetterMessages.length)];
+    final dDay = widget.dDay;
+    final arrivalDate = widget.arrivalDate;
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
