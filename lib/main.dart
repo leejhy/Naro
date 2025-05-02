@@ -15,17 +15,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   // final dbPath = await getDatabasesPath();
   // final path = join(dbPath, 'test.db');
 
   // debugPrint('db 존재?');
   // debugPrint(await File(path).exists());
-  runApp(
-    ProviderScope(
-      child:
-        const MyApp()
-    )
-  );
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
