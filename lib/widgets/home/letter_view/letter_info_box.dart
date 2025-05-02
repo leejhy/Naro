@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naro/styles/text_styles.dart';
 
 class LetterInfoBox extends StatelessWidget {
   const LetterInfoBox({
@@ -23,28 +24,6 @@ class LetterInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 18,
-      fontWeight: FontWeight.w400,
-      letterSpacing: -0.5,
-    );
-
-    final dDayStyle = TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 1,
-    );
-
-    final arrivalDateStyle = TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      letterSpacing: -0.1,
-      color: Color(0xff6B7280),
-    );
-
     return Expanded(
       flex: flex,
       child: Padding(
@@ -55,18 +34,18 @@ class LetterInfoBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: titleStyle,
+              Text(title, style: AppTextStyles.letterCardTitleStyle,
                 maxLines: 1,
                 overflow: TextOverflow.fade,
                 softWrap: false,
               ),
-              Text('$arrivalAt 도착', style: arrivalDateStyle,
+              Text('$arrivalAt 도착', style: AppTextStyles.letterCardArrivalDateStyle,
                 maxLines: 1,
                 overflow: TextOverflow.fade,
                 softWrap: false,
               ),
-              // Text(dDay == null ? '도착완료' : 'D-$dDay', style: dDayStyle),
-              Text(dDayText, style: dDayStyle),
+              // Text(dDay == null ? '도착완료' : 'D-$dDay', style: letterCardDdayStyle),
+              Text(dDayText, style: AppTextStyles.letterCardDdayStyle),
             ]
           ),
         ),

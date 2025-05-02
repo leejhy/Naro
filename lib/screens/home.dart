@@ -5,6 +5,8 @@ import 'package:naro/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naro/services/firebase_provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +16,14 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late final FirebaseAnalytics analytics;
+
+  @override
+  void initState() {
+    super.initState();
+    analytics = ref.read(firebaseAnalyticsProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,7 +244,7 @@ class SortingButton extends StatelessWidget {
         style: TextStyle(
           color: selected ? Colors.white : Colors.black,
           fontFamily: 'Inter',
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           letterSpacing: -0.5,
         ),

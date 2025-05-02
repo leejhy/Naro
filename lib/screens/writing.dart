@@ -10,10 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io'; 
 
-//todo
-// 1. fix image insertion view
-// 2. save image into SQlite -> 해야함
-
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
@@ -27,6 +23,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
+  final FocusNode _blankFocus = FocusNode();
 
   bool _dialogShown = false;
 
@@ -55,6 +52,15 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       }
     }
   }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    _arrivalDateController.dispose();
+    _blankFocus.dispose();
+    super.dispose();
+  }
   void _showDateDialog({bool initial = false}) {
     final navigator = Navigator.of(context);
     showGeneralDialog(
@@ -77,26 +83,17 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         setState(() {
           _arrivalDateController.text = pickedDate.toString();
         });
-        print('Selected date: $pickedDate');
       } else if (initial){
         navigator.pop();
-        print('No date selected');
       }
     });
-  }
-  @override
-  void dispose() {
-    titleController.dispose();
-    contentController.dispose();
-    _arrivalDateController.dispose();
-    super.dispose();
   }
 
   Future<String> saveImageToLocal(XFile image, int idx) async {
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
-    final savedImage = await File(image.path).copy('${appDir.path}/$fileName.jpg');
-    return savedImage.path;
+    await File(image.path).copy('${appDir.path}/$fileName.jpg');
+    return '$fileName.jpg';
   }
 
   Future<void> insertLetter() async {
@@ -177,6 +174,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
             ),
             backgroundColor: Colors.black,
             onPressed: () {
+              FocusScope.of(context).requestFocus(_blankFocus);
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
