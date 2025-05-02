@@ -20,7 +20,7 @@ class SettingScreen extends StatelessWidget {
           // 알림 설정
           ListTile(
             leading: const Icon(Icons.notifications_none),
-            title: const Text('알림 설정'),
+            title: const Text('알림adsadsadss 설정'),
             trailing: Switch(
               value: true, // todo: 상태 연결
               onChanged: (value) {

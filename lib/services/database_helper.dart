@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'dart:math';
+import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
   static Database? _db;
@@ -103,8 +105,17 @@ class DatabaseHelper {
   static Future<List<String>> getImagePaths(int letterId) async {
     final db = await database;
     final result = await db.query('letter_images', where: 'letter_id = ?', whereArgs: [letterId]);
-    return result.map((row) => row['path'] as String).toList();
+    
+    final appDir = await getApplicationDocumentsDirectory();
+    final basePath = appDir.path;
+
+    return result.map((row) => p.join(basePath, row['path'] as String)).toList();
   }
+  // static Future<List<String>> getImagePaths(int letterId) async {
+  //   final db = await database;
+  //   final result = await db.query('letter_images', where: 'letter_id = ?', whereArgs: [letterId]);
+  //   return result.map((row) => row['path'] as String).toList();
+  // }
 
   static Future<void> insertImages(int letterId, List<String> paths) async {
     if (paths.isEmpty) return;

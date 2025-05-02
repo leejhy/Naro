@@ -10,10 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io'; 
 
-//todo
-// 1. fix image insertion view
-// 2. save image into SQlite -> 해야함
-
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
   //부모위치에 textField controller를 두기
@@ -95,8 +91,8 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   Future<String> saveImageToLocal(XFile image, int idx) async {
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
-    final savedImage = await File(image.path).copy('${appDir.path}/$fileName.jpg');
-    return savedImage.path;
+    await File(image.path).copy('${appDir.path}/$fileName.jpg');
+    return '$fileName.jpg';
   }
 
   Future<void> insertLetter() async {
