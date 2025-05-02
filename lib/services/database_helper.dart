@@ -18,7 +18,7 @@ class DatabaseHelper {
   // DB 초기화: 새로 생성
   static Future<Database> _initDb() async {
     final dbPath = await getDatabasesPath(); // 앱 전용 SQLite 저장 위치
-    final path = join(dbPath, 'test.db'); // 'test.db' 라는 이름으로 저장
+    final path = join(dbPath, 'naro.db');
 
     return await openDatabase(
       path,

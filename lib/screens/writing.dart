@@ -23,6 +23,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
+  final FocusNode _blankFocus = FocusNode();
 
   bool _dialogShown = false;
 
@@ -51,6 +52,15 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       }
     }
   }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    _arrivalDateController.dispose();
+    _blankFocus.dispose();
+    super.dispose();
+  }
   void _showDateDialog({bool initial = false}) {
     final navigator = Navigator.of(context);
     showGeneralDialog(
@@ -73,19 +83,10 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         setState(() {
           _arrivalDateController.text = pickedDate.toString();
         });
-        print('Selected date: $pickedDate');
       } else if (initial){
         navigator.pop();
-        print('No date selected');
       }
     });
-  }
-  @override
-  void dispose() {
-    titleController.dispose();
-    contentController.dispose();
-    _arrivalDateController.dispose();
-    super.dispose();
   }
 
   Future<String> saveImageToLocal(XFile image, int idx) async {
@@ -173,6 +174,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
             ),
             backgroundColor: Colors.black,
             onPressed: () {
+              FocusScope.of(context).requestFocus(_blankFocus);
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
