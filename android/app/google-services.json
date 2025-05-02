@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37180299423",
+    "project_id": "naro-79e84",
+    "storage_bucket": "naro-79e84.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37180299423:android:a595f50162fa6f5cca6aaa",
+        "android_client_info": {
+          "package_name": "com.example.naro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr8ehHWC61sQpTK0sfnhSieIfD1ft6Zpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

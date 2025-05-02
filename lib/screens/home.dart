@@ -234,7 +234,7 @@ class SortingButton extends StatelessWidget {
         style: TextStyle(
           color: selected ? Colors.white : Colors.black,
           fontFamily: 'Inter',
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           letterSpacing: -0.5,
         ),
