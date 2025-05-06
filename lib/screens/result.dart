@@ -5,6 +5,9 @@ import 'package:naro/utils.dart';
 import 'package:naro/widgets/result/flying_letter.dart';
 import 'package:naro/services/letter_notifier.dart';
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io';
+
 // todo:4/24
 // 1. Trigger animation when ResultScreen is opened for the first time
 // 2. Add screen to display the arrival date, phrase
@@ -23,7 +26,6 @@ class ResultScreen extends ConsumerStatefulWidget {
 class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerProviderStateMixin {
   bool _showFlyingLetter = true;
 
-
   late final AnimationController _textController;
   late final Animation<double> _fade1, _fade2, _fade3, _fade4;
   late final Animation<Offset> _slide1, _slide2, _slide3, _slide4;
@@ -31,7 +33,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-
     _textController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),

@@ -8,7 +8,8 @@ import 'package:naro/controllers/image_upload_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:io'; 
+import 'dart:io';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
@@ -26,7 +27,51 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   final FocusNode _blankFocus = FocusNode();
 
   bool _dialogShown = false;
+  RewardedAd? _rewardedAd;
 
+  // TODO: replace this test ad unit with your own ad unit.
+  final adUnitId = Platform.isAndroid
+    ? 'ca-app-pub-3940256099942544/5224354917'
+    : 'ca-app-pub-3940256099942544/1712485313';
+
+  /// Loads a rewarded ad.
+  void loadAd() {
+    RewardedAd.load(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (ad) {},
+            onAdImpression: (ad) {},
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              ad.dispose();
+              _rewardedAd = null;
+              loadAd();
+            },
+            onAdDismissedFullScreenContent: (ad) {
+              debugPrint('Ad dismissed');
+              ad.dispose();
+              _rewardedAd = null;
+              loadAd();
+            },
+            onAdClicked: (ad) {}
+          );
+          debugPrint('$ad loaded.');
+          _rewardedAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('RewardedAd failed to load: $error');
+        },
+      )
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadAd();
+  }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -178,7 +223,8 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
-                  onConfirm: () => insertLetter()
+                  onConfirm: () => insertLetter(),
+                  ads: _rewardedAd
                 ),
               );
             },
@@ -275,7 +321,12 @@ class _TextWritingState extends State<TextWriting> {
 
 class ConfirmDialog extends StatelessWidget {
   final VoidCallback onConfirm;
-  const ConfirmDialog({super.key, required this.onConfirm});
+  const ConfirmDialog({
+    super.key,
+    required this.onConfirm,
+    required this.ads,
+  });
+  final RewardedAd? ads;
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +366,16 @@ class ConfirmDialog extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.pop(context);
-            onConfirm();
+            if (ads != null) {
+              ads!.show(
+                onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+                onConfirm();
+                debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
+                },
+              );
+            } else {
+              debugPrint('Rewarded ad is not ready yet.');
+            }
           },
           child: const Text('저장', style: TextStyle(
             fontFamily: 'Inter',
