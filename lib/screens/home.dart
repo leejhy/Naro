@@ -7,6 +7,8 @@ import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -17,11 +19,51 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   late final FirebaseAnalytics analytics;
+  RewardedAd? _rewardedAd;
+
+  // TODO: replace this test ad unit with your own ad unit.
+  final adUnitId = Platform.isAndroid
+    ? 'ca-app-pub-3940256099942544/5224354917'
+    : 'ca-app-pub-3940256099942544/1712485313';
+
+  /// Loads a rewarded ad.
+  void loadAd() {
+    RewardedAd.load(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (ad) {},
+            onAdImpression: (ad) {},
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              ad.dispose();
+              _rewardedAd = null;
+              loadAd();
+            },
+            onAdDismissedFullScreenContent: (ad) {
+              debugPrint('Ad dismissed');
+              ad.dispose();
+              _rewardedAd = null;
+              loadAd();
+            },
+            onAdClicked: (ad) {}
+          );
+          debugPrint('$ad loaded.');
+          _rewardedAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('RewardedAd failed to load: $error');
+        },
+      )
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     analytics = ref.read(firebaseAnalyticsProvider);
+    loadAd();
   }
 
   @override
@@ -53,7 +95,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             backgroundColor: Colors.black,
             onPressed: () {
-              context.push('/writing');
+              if (_rewardedAd != null) {
+                _rewardedAd!.show(
+                  onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+                  // 유저가 광고를 끝까지 보면 보상 지급 로직 작성
+                  context.push('/writing');
+                  debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
+                  },
+                );
+                // loadAd(); // 다음 광고 미리 로드
+              } else {
+                debugPrint('Rewarded ad is not ready yet.');
+              }
+              // context.push('/writing');
             },
             child: const Icon(Icons.add, color: Colors.white, size: 30),
           ),
@@ -73,7 +127,7 @@ class HomeAppBar extends StatelessWidget {
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromRGBO(255, 255, 255, 0.9),
           boxShadow: [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.05),
