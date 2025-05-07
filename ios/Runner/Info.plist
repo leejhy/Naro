@@ -6,6 +6,8 @@
 	<true/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-4898947307384558~7893769013</string>
+	<!-- <key>FirebaseAppDelegateProxyEnabled</key>
+	<true/> -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

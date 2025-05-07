@@ -196,7 +196,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
                 builder: (context) => ConfirmDialog(
                   onConfirm: () => insertLetter(),
                   ads: AdManager.instance.rewardedAd,
-                  analytics: analytics,
                 ),
               );
             },
@@ -296,20 +295,17 @@ class ConfirmDialog extends StatelessWidget {
     super.key,
     required this.onConfirm,
     required this.ads,
-    required this.analytics,
   });
 
   final VoidCallback onConfirm;
   final RewardedAd? ads;
-  final FirebaseAnalytics analytics;
 
   @override
   Widget build(BuildContext context) {
-
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 240, 250, 255),
       title: const Text('저장하시겠습니까?'),
-      content: const Text('저장 후에는 수정할 수 없습니다.', 
+      content: const Text('광고가 끝난 후 편지가 저장됩니다.', 
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 17,
