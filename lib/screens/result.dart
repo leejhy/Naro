@@ -18,7 +18,6 @@ class ResultScreen extends ConsumerStatefulWidget {
 
 class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerProviderStateMixin {
   bool _showFlyingLetter = true;
-
   late final AnimationController _textController;
   late final Animation<double> _fade1, _fade2, _fade3, _fade4;
   late final Animation<Offset> _slide1, _slide2, _slide3, _slide4;
@@ -178,7 +177,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () => context.go('/'),
-                    child: const Text('나의 시간으로 돌아가기'),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.blueGrey),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -188,6 +186,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                       ),
                       foregroundColor: Colors.blueGrey[700],
                     ),
+                    child: const Text('나의 시간으로 돌아가기'),
                   ),
                 ),
               ),

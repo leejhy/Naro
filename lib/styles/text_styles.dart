@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:naro/widgets/home/header_section.dart';
 
 class AppTextStyles{
   static const headingStyle = TextStyle(

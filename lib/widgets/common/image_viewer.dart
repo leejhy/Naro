@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class ImageViewer extends StatelessWidget {
   final String imagePath;
@@ -7,6 +8,8 @@ class ImageViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.logEvent(name: 'image_viewer_opened');
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
