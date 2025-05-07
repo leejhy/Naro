@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:naro/utils.dart';
+import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/result/flying_letter.dart';
 import 'package:naro/services/letter_notifier.dart';
-
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'dart:io';
-
-// todo:4/24
-// 1. Trigger animation when ResultScreen is opened for the first time
-// 2. Add screen to display the arrival date, phrase
 
 class ResultScreen extends ConsumerStatefulWidget {
   final String letterId;

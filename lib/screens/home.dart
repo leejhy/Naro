@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/letter_notifier.dart';
-import 'package:naro/utils.dart';
+import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'dart:io';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -237,8 +235,8 @@ class SortingButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: selected ? Colors.black : Colors.white,
         side: BorderSide(
-          color: selected ? Colors.black : Colors.grey.shade300,
-          width: 1.5,
+          color: selected ? Colors.black : Colors.grey.shade200,
+          width: 1,
         ),
       ),
       child: Text(

@@ -10,10 +10,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:naro/utils/ad_manager.dart';
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
-  //부모위치에 textField controller를 두기
 
   @override
   ConsumerState<WritingScreen> createState() => _WritingScreenState();
@@ -27,50 +27,11 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   final FocusNode _blankFocus = FocusNode();
 
   bool _dialogShown = false;
-  RewardedAd? _rewardedAd;
-
-  // TODO: replace this test ad unit with your own ad unit.
-  final adUnitId = Platform.isAndroid
-    ? 'ca-app-pub-3940256099942544/5224354917'
-    : 'ca-app-pub-3940256099942544/1712485313';
-
-  /// Loads a rewarded ad.
-  void loadAd() {
-    RewardedAd.load(
-      adUnitId: adUnitId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdShowedFullScreenContent: (ad) {},
-            onAdImpression: (ad) {},
-            onAdFailedToShowFullScreenContent: (ad, err) {
-              ad.dispose();
-              _rewardedAd = null;
-              loadAd();
-            },
-            onAdDismissedFullScreenContent: (ad) {
-              debugPrint('Ad dismissed');
-              ad.dispose();
-              _rewardedAd = null;
-              loadAd();
-            },
-            onAdClicked: (ad) {}
-          );
-          debugPrint('$ad loaded.');
-          _rewardedAd = ad;
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          debugPrint('RewardedAd failed to load: $error');
-        },
-      )
-    );
-  }
 
   @override
   void initState() {
     super.initState();
-    loadAd();
+    AdManager.instance.loadRewardedAd();
   }
   @override
   void didChangeDependencies() {
@@ -89,7 +50,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
           }
         });
       } else {
-        // 애니메이션이 없으면 바로 띄우기
         _dialogShown = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showDateDialog(initial: true);
@@ -111,7 +71,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      transitionDuration: const Duration(milliseconds: 200), // ← Fade 속도 설정
+      transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
           child: SelectDateDialog(), // 여기에 커스텀 다이얼로그 위젯
@@ -224,7 +184,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
                 context: context,
                 builder: (context) => ConfirmDialog(
                   onConfirm: () => insertLetter(),
-                  ads: _rewardedAd
+                  ads: AdManager.instance.rewardedAd,
                 ),
               );
             },

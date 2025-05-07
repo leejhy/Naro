@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/widgets/home/letter_view/letter_icon_box.dart';
 import 'package:naro/widgets/home/letter_view/letter_info_box.dart';
-import 'package:naro/utils.dart';
+import 'package:naro/utils/utils.dart';
 
 class LetterCard extends StatefulWidget {
   const LetterCard({
