@@ -18,6 +18,7 @@ final GoRouter router = GoRouter(
       path: '/',
       name: 'HomeScreen',
       builder: (context, state) {
+        // FirebaseAnalytics.instance.logScreenView(screenName: 'SettingScreen');
         return HomeScreen();
       },
     ),

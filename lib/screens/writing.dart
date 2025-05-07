@@ -8,11 +8,15 @@ import 'package:naro/controllers/image_upload_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:io'; 
+import 'dart:io';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:naro/utils/ad_manager.dart';
+import 'package:naro/services/firebase_provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:naro/services/database_helper.dart';
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
-  //부모위치에 textField controller를 두기
 
   @override
   ConsumerState<WritingScreen> createState() => _WritingScreenState();
@@ -24,9 +28,15 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final FocusNode _blankFocus = FocusNode();
-
+  late final FirebaseAnalytics analytics;
   bool _dialogShown = false;
 
+  @override
+  void initState() {
+    super.initState();
+    AdManager.instance.loadRewardedAd();
+    analytics = ref.read(firebaseAnalyticsProvider);
+  }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -44,7 +54,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
           }
         });
       } else {
-        // 애니메이션이 없으면 바로 띄우기
         _dialogShown = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showDateDialog(initial: true);
@@ -66,7 +75,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      transitionDuration: const Duration(milliseconds: 200), // ← Fade 속도 설정
+      transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
           child: SelectDateDialog(), // 여기에 커스텀 다이얼로그 위젯
@@ -97,7 +106,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   }
 
   Future<void> insertLetter() async {
-    //todo image
     final images = imageController.images;
     final savedPaths = await Future.wait(
       images.asMap().entries.map((entry) {
@@ -106,6 +114,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         return saveImageToLocal(img, idx);
       }).toList()
     );
+    
     print('savedPaths: $savedPaths');
     if (titleController.text.isEmpty || contentController.text.isEmpty) {
       //todo add: alert
@@ -124,6 +133,12 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     //todo: admob
     //todo 이거 치우기
     final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    final username = await DatabaseHelper.getUserName();
+    analytics.logEvent(name: 'writing_confirm', parameters: {
+      'username': username,
+      'letter_id': id,
+    });
+
     print('letter id: $id');
     if (mounted) {  // <<< 이거 추가
       context.go('/result/$id');
@@ -132,6 +147,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(//todo add icon
@@ -140,7 +156,10 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         elevation: 1,
         shadowColor: const Color.fromARGB(50, 0, 0, 0),
         title: GestureDetector(
-          onTap: () => _showDateDialog(),
+          onTap: () {
+            analytics.logEvent(name: 'select_date_writing');
+            _showDateDialog();
+          },
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -178,7 +197,9 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
-                  onConfirm: () => insertLetter()
+                  onConfirm: () => insertLetter(),
+                  ads: AdManager.instance.rewardedAd,
+                  analytics: analytics,
                 ),
               );
             },
@@ -274,11 +295,20 @@ class _TextWritingState extends State<TextWriting> {
 
 
 class ConfirmDialog extends StatelessWidget {
+  const ConfirmDialog({
+    super.key,
+    required this.onConfirm,
+    required this.ads,
+    required this.analytics,
+  });
+
   final VoidCallback onConfirm;
-  const ConfirmDialog({super.key, required this.onConfirm});
+  final RewardedAd? ads;
+  final FirebaseAnalytics analytics;
 
   @override
   Widget build(BuildContext context) {
+
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 240, 250, 255),
       title: const Text('저장하시겠습니까?'),
@@ -315,7 +345,16 @@ class ConfirmDialog extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.pop(context);
-            onConfirm();
+            if (ads != null) {
+              ads!.show(
+                onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+                onConfirm();
+                debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
+                },
+              );
+            } else {
+              debugPrint('Rewarded ad is not ready yet.');
+            }
           },
           child: const Text('저장', style: TextStyle(
             fontFamily: 'Inter',

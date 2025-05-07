@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:naro/widgets/home/letter_view/letter_card.dart';
-import 'package:naro/utils.dart';
 
 class LetterGrid extends StatefulWidget {
   final List<Map<String, dynamic>> letters;
