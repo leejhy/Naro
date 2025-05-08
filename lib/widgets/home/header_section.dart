@@ -3,8 +3,8 @@ import 'package:naro/styles/text_styles.dart';
 import 'dart:math';
 
 const List<String> noLetterMessages = [
-  '오고 있는 편지가 없어요.\n지금 이 순간을 담아보는건 어때요?',
-  '아직 도착 예정인 편지가 없어요.\n오늘의 마음을 기록해보는 건 어때요?',
+  '오고 있는 편지가 없어요.\n지금 이 순간을 담아보는 건 어때요?',
+  '아직 도착 예정인 편지가 없어요.\n오늘의 마음을 기록해 보는 건 어때요?',
   '아직 편지를 보내지 않았어요.\n미래의 내가 기다리고 있을지 몰라요.',
   '편지함이 고요해요.\n오늘의 감정을 남겨보는 건 어때요?',
   '지금의 내가, 미래의 나에게\n가장 큰 힘이 되어줄 수 있어요.',
@@ -46,7 +46,7 @@ class _HeaderSectionState extends State<HeaderSection> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverToBoxAdapter(
         child: Container(
-          height: 135,
+          height: 124,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -64,10 +64,7 @@ class _HeaderSectionState extends State<HeaderSection> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              //todo dday 널처리(조건부 렌더링)
-              //todo D-DAY 일때 도착멘트도 넣기
               if (dDay > 0) ... [
-                //fixed
                 Text('다가오는 편지', style: AppTextStyles.headingStyle),
                 SizedBox(height: 2),
                 Text('D-$dDay', style: AppTextStyles.dDayStyle),
@@ -81,13 +78,14 @@ class _HeaderSectionState extends State<HeaderSection> {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘 도착 편지',
+                      '오늘 도착한 편지한 편지가 있어요',
                       style: AppTextStyles.arrivalStyle,
                     ),
                   ),
                 ),
               ] else ... [
-                Center(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,

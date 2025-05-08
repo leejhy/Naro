@@ -8,15 +8,16 @@ import 'package:naro/controllers/image_upload_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:io'; 
-
-//todo
-// 1. fix image insertion view
-// 2. save image into SQlite -> 해야함
+import 'dart:io';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:naro/utils/ad_manager.dart';
+import 'package:naro/services/firebase_provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:naro/services/database_helper.dart';
+import 'package:naro/utils/utils.dart';
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
-  //부모위치에 textField controller를 두기
 
   @override
   ConsumerState<WritingScreen> createState() => _WritingScreenState();
@@ -27,9 +28,16 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   final TextEditingController _arrivalDateController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
-
+  final FocusNode _blankFocus = FocusNode();
+  late final FirebaseAnalytics analytics;
   bool _dialogShown = false;
 
+  @override
+  void initState() {
+    super.initState();
+    AdManager.instance.loadRewardedAd();
+    analytics = ref.read(firebaseAnalyticsProvider);
+  }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -47,7 +55,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
           }
         });
       } else {
-        // 애니메이션이 없으면 바로 띄우기
         _dialogShown = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showDateDialog(initial: true);
@@ -55,12 +62,21 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       }
     }
   }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    _arrivalDateController.dispose();
+    _blankFocus.dispose();
+    super.dispose();
+  }
   void _showDateDialog({bool initial = false}) {
     final navigator = Navigator.of(context);
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      transitionDuration: const Duration(milliseconds: 200), // ← Fade 속도 설정
+      transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
           child: SelectDateDialog(), // 여기에 커스텀 다이얼로그 위젯
@@ -77,30 +93,20 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         setState(() {
           _arrivalDateController.text = pickedDate.toString();
         });
-        print('Selected date: $pickedDate');
       } else if (initial){
         navigator.pop();
-        print('No date selected');
       }
     });
-  }
-  @override
-  void dispose() {
-    titleController.dispose();
-    contentController.dispose();
-    _arrivalDateController.dispose();
-    super.dispose();
   }
 
   Future<String> saveImageToLocal(XFile image, int idx) async {
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
-    final savedImage = await File(image.path).copy('${appDir.path}/$fileName.jpg');
-    return savedImage.path;
+    await File(image.path).copy('${appDir.path}/$fileName.jpg');
+    return '$fileName.jpg';
   }
 
   Future<void> insertLetter() async {
-    //todo image
     final images = imageController.images;
     final savedPaths = await Future.wait(
       images.asMap().entries.map((entry) {
@@ -109,12 +115,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         return saveImageToLocal(img, idx);
       }).toList()
     );
-    print('savedPaths: $savedPaths');
-    if (titleController.text.isEmpty || contentController.text.isEmpty) {
-      //todo add: alert
-      print('제목과 내용을 입력하세요');
-      return;
-    }
     final now = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final Map<String, Object> letter = {
       'user_id': 1,
@@ -123,10 +123,15 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       'arrival_at': _arrivalDateController.text,
       'created_at': now ,
     };
-    print('letter: $letter');
     //todo: admob
     //todo 이거 치우기
     final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
+    final username = await DatabaseHelper.getUserName();
+    analytics.logEvent(name: 'writing_confirm', parameters: {
+      'username': username,
+      'letter_id': id,
+    });
+
     print('letter id: $id');
     if (mounted) {  // <<< 이거 추가
       context.go('/result/$id');
@@ -135,6 +140,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(//todo add icon
@@ -143,7 +149,10 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         elevation: 1,
         shadowColor: const Color.fromARGB(50, 0, 0, 0),
         title: GestureDetector(
-          onTap: () => _showDateDialog(),
+          onTap: () {
+            analytics.logEvent(name: 'select_date_writing');
+            _showDateDialog();
+          },
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -177,10 +186,16 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
             ),
             backgroundColor: Colors.black,
             onPressed: () {
+              if (titleController.text.isEmpty || contentController.text.isEmpty) {
+                showAutoDismissDialog(context, '제목과 내용을 입력해주세요');
+                return;
+              }
+              FocusScope.of(context).requestFocus(_blankFocus);
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
-                  onConfirm: () => insertLetter()
+                  onConfirm: () => insertLetter(),
+                  ads: AdManager.instance.rewardedAd,
                 ),
               );
             },
@@ -276,15 +291,21 @@ class _TextWritingState extends State<TextWriting> {
 
 
 class ConfirmDialog extends StatelessWidget {
+  const ConfirmDialog({
+    super.key,
+    required this.onConfirm,
+    required this.ads,
+  });
+
   final VoidCallback onConfirm;
-  const ConfirmDialog({super.key, required this.onConfirm});
+  final RewardedAd? ads;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 240, 250, 255),
       title: const Text('저장하시겠습니까?'),
-      content: const Text('저장 후에는 수정할 수 없습니다.', 
+      content: const Text('광고가 끝난 후 편지가 저장됩니다.', 
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 17,
@@ -317,7 +338,16 @@ class ConfirmDialog extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.pop(context);
-            onConfirm();
+            if (ads != null) {
+              ads!.show(
+                onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+                onConfirm();
+                debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
+                },
+              );
+            } else {
+              debugPrint('Rewarded ad is not ready yet.');
+            }
           },
           child: const Text('저장', style: TextStyle(
             fontFamily: 'Inter',

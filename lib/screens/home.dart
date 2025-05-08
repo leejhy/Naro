@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/services/letter_notifier.dart';
-import 'package:naro/utils.dart';
+import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/home/header_section.dart';
 import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naro/services/firebase_provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +16,14 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late final FirebaseAnalytics analytics;
+
+  @override
+  void initState() {
+    super.initState();
+    analytics = ref.read(firebaseAnalyticsProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +73,7 @@ class HomeAppBar extends StatelessWidget {
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromRGBO(255, 255, 255, 0.9),
           boxShadow: [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.05),
@@ -225,8 +235,8 @@ class SortingButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: selected ? Colors.black : Colors.white,
         side: BorderSide(
-          color: selected ? Colors.black : Colors.grey.shade300,
-          width: 1.5,
+          color: selected ? Colors.black : Colors.grey.shade200,
+          width: 1,
         ),
       ),
       child: Text(
@@ -234,7 +244,7 @@ class SortingButton extends StatelessWidget {
         style: TextStyle(
           color: selected ? Colors.white : Colors.black,
           fontFamily: 'Inter',
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           letterSpacing: -0.5,
         ),

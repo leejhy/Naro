@@ -13,11 +13,11 @@ class Test extends StatelessWidget {
 }
 
 class FlyingLetter extends StatefulWidget {
-  const FlyingLetter({Key? key, this.onCompleted}) : super(key: key);
+  const FlyingLetter({super.key, this.onCompleted});
   final VoidCallback? onCompleted;
 
   @override
-  _FlyingLetterState createState() => _FlyingLetterState();
+  State<FlyingLetter> createState() => _FlyingLetterState();
 }
 
 class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMixin {

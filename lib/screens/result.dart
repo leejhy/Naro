@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:naro/utils.dart';
+import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/result/flying_letter.dart';
 import 'package:naro/services/letter_notifier.dart';
-
-// todo:4/24
-// 1. Trigger animation when ResultScreen is opened for the first time
-// 2. Add screen to display the arrival date, phrase
 
 class ResultScreen extends ConsumerStatefulWidget {
   final String letterId;
@@ -22,8 +18,6 @@ class ResultScreen extends ConsumerStatefulWidget {
 
 class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerProviderStateMixin {
   bool _showFlyingLetter = true;
-
-
   late final AnimationController _textController;
   late final Animation<double> _fade1, _fade2, _fade3, _fade4;
   late final Animation<Offset> _slide1, _slide2, _slide3, _slide4;
@@ -31,7 +25,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-
     _textController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -184,7 +177,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () => context.go('/'),
-                    child: const Text('나의 시간으로 돌아가기'),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.blueGrey),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -194,6 +186,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                       ),
                       foregroundColor: Colors.blueGrey[700],
                     ),
+                    child: const Text('나의 시간으로 돌아가기'),
                   ),
                 ),
               ),

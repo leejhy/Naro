@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:naro/analytics_observer.dart';
 import 'package:naro/screens/home.dart';
 import 'package:naro/screens/setting.dart';
 import 'package:naro/screens/writing.dart';
 import 'package:naro/screens/test.dart';
 import 'package:naro/screens/result.dart';
 import 'package:naro/screens/letter.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 
 final GoRouter router = GoRouter(
+  observers: [AnalyticsRouteObserver(FirebaseAnalytics.instance)],
+  initialLocation: '/',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
+      name: 'HomeScreen',
       builder: (context, state) {
+        // FirebaseAnalytics.instance.logScreenView(screenName: 'SettingScreen');
         return HomeScreen();
       },
     ),
@@ -24,6 +30,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/result/:id',
+      name: 'ResultScreen',
       builder: (context, state) {
         final id = state.pathParameters['id'];
         return ResultScreen(letterId: id!);
@@ -31,6 +38,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/letter/:id',
+      name: 'LetterScreen',
       builder: (context, state) {
         final id = state.pathParameters['id'];
         return LetterScreen(letterId: id!);
@@ -38,12 +46,14 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/setting',
+      name: 'SettingScreen',
       builder: (context, state) {
         return SettingScreen();
       },
     ),
     GoRoute(
       path: '/writing',
+      name: 'WritingScreen',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
