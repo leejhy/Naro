@@ -1,76 +1,302 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:naro/utils/utils.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
+  // 모달 시트 표시 함수
+  void showDialog(context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => const ContactModal(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
-        title: const Text('설정'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: Color(0xffffffff),
+        surfaceTintColor: Color(0xffffffff),
         elevation: 1,
+        shadowColor: const Color.fromARGB(50, 0, 0, 0),
+        title: const Text(
+          '설정',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: ListView(
         children: [
           const SizedBox(height: 12),
-          
-          // 알림 설정
           ListTile(
-            leading: const Icon(Icons.notifications_none),
-            title: const Text('알림adsadsadss 설정'),
-            trailing: Switch(
-              value: true, // todo: 상태 연결
-              onChanged: (value) {
-                // TODO: 알림 설정 토글 로직
-              },
-            ),
+            leading: const Icon(Icons.mail_outline),
+            title: const Text('의견 보내기'),
+            onTap: () => showDialog(context),
           ),
           const Divider(),
-
-          // 테마 설정
           ListTile(
-            leading: const Icon(Icons.dark_mode_outlined),
-            title: const Text('다크 모드'),
-            trailing: Switch(
-              value: false, // todo: 상태 연결
-              onChanged: (value) {
-                // TODO: 다크모드 토글 로직
-              },
-            ),
+            leading: const Icon(Icons.description_outlined),
+            title: const Text('개인정보 처리방침'),
+            onTap: () {
+              print('개인정보 처리방침');
+              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc8020a124e763947e8f78?pvs=73');
+              launchUrl(url,
+              mode: LaunchMode.inAppBrowserView);
+            },
           ),
           const Divider(),
-
-          // 앱 정보
+          ListTile(
+            leading: const Icon(Icons.description_outlined),
+            title: const Text('이용약관'),
+            onTap: () {
+              print('개인정보 처리방침');
+              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc807f8be2deb132ca0495');
+              launchUrl(url,
+              mode: LaunchMode.inAppBrowserView
+              );
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('앱 정보'),
             onTap: () {
-              // TODO: 앱 버전 다이얼로그 띄우기
+              showTextDialog(
+                context,
+                '앱정보: v1.0.0'
+              );
             },
           ),
-          const Divider(),
+        ],
+      ),
+    );
+  }
+}
 
-          // 문의하기
-          ListTile(
-            leading: const Icon(Icons.mail_outline),
-            title: const Text('문의하기'),
-            onTap: () {
-              // TODO: 이메일 또는 외부 링크 연결
-            },
-          ),
-          const Divider(),
+class ContactModal extends StatefulWidget {
+  const ContactModal({super.key});
 
-          // 약관
-          ListTile(
-            leading: const Icon(Icons.description_outlined),
-            title: const Text('이용약관 및 개인정보 처리방침'),
-            onTap: () {
-              // TODO: 약관 화면 띄우기
-            },
+  @override
+  State<ContactModal> createState() => _ContactModalState();
+}
+
+class _ContactModalState extends State<ContactModal> with SingleTickerProviderStateMixin {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Widget inputTitle(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+  Widget settingTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required int maxLines,
+    required int maxLength,
+    }) {
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      maxLength: maxLength,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.normal,
+        fontSize: 16
+      ),
+      decoration: InputDecoration(
+        counterText: '',
+        hintText: hintText,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue),
+        ),
+      ),
+    );
+  }
+  Future<void> submitFeedback(String contact, String message) async {
+    final now = DateTime.now().toUtc();
+    final formattedDate = '${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}:${now.second}';
+    final feedback = {
+      'contact': contact,
+      'content': message,
+      'createdAt': formattedDate,
+    };
+    await FirebaseFirestore.instance.collection('feedback').add(feedback);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.9,
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFCAEBF7),Colors.white],
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Stack(
+        children: [
+          AnimatedPadding(
+            duration: const Duration(milliseconds: 200),
+            padding: EdgeInsets.only(bottom: bottomInset),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    padding: const EdgeInsets.only(left: 8),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.close_rounded),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: const Text(
+                            '의견 보내기',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        inputTitle('contact'),
+                        const SizedBox(height: 8),
+                        settingTextField(
+                          controller: _emailController,
+                          hintText: 'example@email.com',
+                          maxLines: 1,
+                          maxLength: 40,
+                        ),
+                        const SizedBox(height: 16),
+                        inputTitle('message'),
+                        const SizedBox(height: 8),
+                        settingTextField(
+                          controller: _messageController,
+                          hintText: '피드백, 버그, 제안 등',
+                          maxLines: 10,
+                          maxLength: 300,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
           ),
+          Positioned(
+            bottom: bottomInset,
+            right: MediaQuery.of(context).size.width * 0.24,
+            left: MediaQuery.of(context).size.width * 0.24,
+              child: SizedBox(
+                height: 56,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final contact = _emailController.text.trim();
+                    final message = _messageController.text.trim();
+                    if (contact.isEmpty || message.isEmpty) {
+                      showAutoDismissDialog(context, '모든 항목을 입력해주세요.');
+                      return ;
+                    }
+                    try {
+                      await submitFeedback(contact, message);
+                    } catch (e) {
+                      showAutoDismissDialog(context, '오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                      return;
+                    }
+                    if (!mounted) return;
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        Future.delayed(const Duration(milliseconds: 1200), () {
+                          Navigator.of(context).pop(); // 닫기
+                          Navigator.of(context).pop(); // 모달 닫기
+                        });
+                        return AlertDialog(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(
+                                Icons.check_circle_outline_rounded,
+                                color: Color(0xFF4A90E2),
+                                size: 48,
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                '의견이 전송되었습니다!',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+
+                  // onPressed: () {
+                  //   submitFeedback(_emailController.text, _messageController.text);
+                  //   debugPrint('contact: ${_emailController.text}');
+                  //   debugPrint('message: ${_messageController.text}');
+                  // },
+                  backgroundColor: const Color(0xFFCAEBF7),
+                  child: const Text(
+                    '전송',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ),
+              ),
+            ),
         ],
       ),
     );

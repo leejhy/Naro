@@ -14,6 +14,7 @@ import 'package:naro/utils/ad_manager.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/utils/utils.dart';
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
@@ -114,13 +115,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         return saveImageToLocal(img, idx);
       }).toList()
     );
-    
-    print('savedPaths: $savedPaths');
-    if (titleController.text.isEmpty || contentController.text.isEmpty) {
-      //todo add: alert
-      print('제목과 내용을 입력하세요');
-      return;
-    }
     final now = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final Map<String, Object> letter = {
       'user_id': 1,
@@ -129,7 +123,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       'arrival_at': _arrivalDateController.text,
       'created_at': now ,
     };
-    print('letter: $letter');
     //todo: admob
     //todo 이거 치우기
     final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
@@ -193,13 +186,16 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
             ),
             backgroundColor: Colors.black,
             onPressed: () {
+              if (titleController.text.isEmpty || contentController.text.isEmpty) {
+                showAutoDismissDialog(context, '제목과 내용을 입력해주세요');
+                return;
+              }
               FocusScope.of(context).requestFocus(_blankFocus);
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
                   onConfirm: () => insertLetter(),
                   ads: AdManager.instance.rewardedAd,
-                  analytics: analytics,
                 ),
               );
             },
@@ -299,20 +295,17 @@ class ConfirmDialog extends StatelessWidget {
     super.key,
     required this.onConfirm,
     required this.ads,
-    required this.analytics,
   });
 
   final VoidCallback onConfirm;
   final RewardedAd? ads;
-  final FirebaseAnalytics analytics;
 
   @override
   Widget build(BuildContext context) {
-
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 240, 250, 255),
       title: const Text('저장하시겠습니까?'),
-      content: const Text('저장 후에는 수정할 수 없습니다.', 
+      content: const Text('광고가 끝난 후 편지가 저장됩니다.', 
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 17,
