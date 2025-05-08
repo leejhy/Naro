@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:naro/services/database_helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:naro/utils/utils.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -18,11 +18,20 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
-        title: const Text('설정'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffffffff),
+        surfaceTintColor: Color(0xffffffff),
         elevation: 1,
+        shadowColor: const Color.fromARGB(50, 0, 0, 0),
+        title: const Text(
+          '설정',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: ListView(
         children: [
@@ -34,15 +43,37 @@ class SettingScreen extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('앱 정보'),
-            onTap: () {},
+            leading: const Icon(Icons.description_outlined),
+            title: const Text('개인정보 처리방침'),
+            onTap: () {
+              print('개인정보 처리방침');
+              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc8020a124e763947e8f78?pvs=73');
+              launchUrl(url,
+              mode: LaunchMode.inAppBrowserView);
+            },
           ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.description_outlined),
-            title: const Text('개인정보 처리방침'),
-            onTap: () {},
+            title: const Text('이용약관'),
+            onTap: () {
+              print('개인정보 처리방침');
+              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc807f8be2deb132ca0495');
+              launchUrl(url,
+              mode: LaunchMode.inAppBrowserView
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('앱 정보'),
+            onTap: () {
+              showTextDialog(
+                context,
+                '앱정보: v1.0.0'
+              );
+            },
           ),
         ],
       ),
@@ -60,22 +91,10 @@ class ContactModal extends StatefulWidget {
 class _ContactModalState extends State<ContactModal> with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
-  late AnimationController _shakeController;
-  late Animation<double> _shakeAnimation;
 
-  @override
-  void initState() {
-    super.initState();
-    _shakeController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _shakeAnimation = Tween<double>(begin: 0, end: 24).chain(CurveTween(curve: Curves.elasticIn)).animate(_shakeController);
-  }
 
   @override
   void dispose() {
-    _shakeController.dispose();
     _emailController.dispose();
     _messageController.dispose();
     super.dispose();
@@ -155,64 +174,57 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
           AnimatedPadding(
             duration: const Duration(milliseconds: 200),
             padding: EdgeInsets.only(bottom: bottomInset),
-            child: AnimatedBuilder(
-              animation: _shakeController,
-              builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(_shakeAnimation.value, 0),
-                  child: child,
-                );
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      padding: const EdgeInsets.only(left: 8),
-                      onPressed: () {},
-                      icon: Icon(Icons.close_rounded),
-                    ),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              '의견 보내기',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    padding: const EdgeInsets.only(left: 8),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.close_rounded),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: const Text(
+                            '의견 보내기',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          inputTitle('contact'),
-                          const SizedBox(height: 8),
-                          settingTextField(
-                            controller: _emailController,
-                            hintText: 'example@email.com',
-                            maxLines: 1,
-                            maxLength: 40,
-                          ),
-                          const SizedBox(height: 16),
-                          inputTitle('message'),
-                          const SizedBox(height: 8),
-                          settingTextField(
-                            controller: _messageController,
-                            hintText: '피드백, 버그, 제안 등',
-                            maxLines: 10,
-                            maxLength: 300,
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 16),
+                        inputTitle('contact'),
+                        const SizedBox(height: 8),
+                        settingTextField(
+                          controller: _emailController,
+                          hintText: 'example@email.com',
+                          maxLines: 1,
+                          maxLength: 40,
+                        ),
+                        const SizedBox(height: 16),
+                        inputTitle('message'),
+                        const SizedBox(height: 8),
+                        settingTextField(
+                          controller: _messageController,
+                          hintText: '피드백, 버그, 제안 등',
+                          maxLines: 10,
+                          maxLength: 300,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
               ),
             ),
           ),
@@ -226,12 +238,16 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                   onPressed: () async {
                     final contact = _emailController.text.trim();
                     final message = _messageController.text.trim();
-
                     if (contact.isEmpty || message.isEmpty) {
                       showAutoDismissDialog(context, '모든 항목을 입력해주세요.');
                       return ;
                     }
-                    await submitFeedback(contact, message);
+                    try {
+                      await submitFeedback(contact, message);
+                    } catch (e) {
+                      showAutoDismissDialog(context, '오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                      return;
+                    }
                     if (!mounted) return;
                     showDialog(
                       context: context,
