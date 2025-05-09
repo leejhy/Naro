@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:naro/utils/utils.dart';
+import 'package:naro/const.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -46,9 +47,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: const Text('개인정보 처리방침'),
             onTap: () {
-              print('개인정보 처리방침');
-              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc8020a124e763947e8f78?pvs=73');
-              launchUrl(url,
+              launchUrl(PRIVACY_URL_KR,
               mode: LaunchMode.inAppBrowserView);
             },
           ),
@@ -57,9 +56,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: const Text('이용약관'),
             onTap: () {
-              print('개인정보 처리방침');
-              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc807f8be2deb132ca0495');
-              launchUrl(url,
+              launchUrl(TERMS_URL_KR,
               mode: LaunchMode.inAppBrowserView
               );
             },

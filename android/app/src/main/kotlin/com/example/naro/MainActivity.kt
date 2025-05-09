@@ -1,4 +1,4 @@
-package com.example.naro
+package com.juhy.naro
 
 import io.flutter.embedding.android.FlutterActivity
 
