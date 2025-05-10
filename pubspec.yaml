@@ -53,6 +53,7 @@ dependencies:
   firebase_auth: ^5.5.3
   flutter_inappwebview: ^6.1.5
   url_launcher: ^6.3.1
+  device_info_plus: ^11.4.0
 
 dev_dependencies:
   flutter_test:

@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:naro/controllers/image_upload_controller.dart';
+import 'package:naro/utils/permisson_manager.dart';
 import 'package:naro/widgets/common/image_viewer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ImageUpload extends StatefulWidget {
   final ImageUploadController imageController;
@@ -59,6 +61,11 @@ class _PhotoUploadState extends State<ImageUpload> {
   Widget _buildUploadButton() {
     return GestureDetector(
       onTap: () async {
+        final isGranted = await PermissionManager().requestCameraPermission(context);
+        if (!isGranted) {
+          openAppSettings();
+          return;
+        }
         final picked = await _picker.pickMultiImage(limit: 3);
         if (picked.isNotEmpty) {
           setState(() {
