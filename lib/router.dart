@@ -57,6 +57,7 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
+          name: 'WritingScreen',
           // transitionDuration: const Duration(milliseconds: 400),
           child: const WritingScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

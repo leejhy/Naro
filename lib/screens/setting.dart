@@ -72,6 +72,8 @@ class SettingScreen extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
+          //todo about us 추가
         ],
       ),
     );
@@ -213,7 +215,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                         const SizedBox(height: 8),
                         settingTextField(
                           controller: _messageController,
-                          hintText: '피드백, 버그, 제안 등',
+                          hintText: '피드백, 버그, 제안, 인사 등',
                           maxLines: 10,
                           maxLength: 300,
                         ),

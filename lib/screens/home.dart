@@ -238,7 +238,7 @@ class SortingButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: selected ? Colors.black : Colors.white,
         side: BorderSide(
-          color: selected ? Colors.black : Colors.grey.shade200,
+          color: selected ? Colors.black : Color.fromRGBO(191, 191, 191, 0.5),
           width: 1,
         ),
       ),
