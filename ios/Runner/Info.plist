@@ -13,6 +13,8 @@
   </array>
 	<!-- <key>FirebaseAppDelegateProxyEnabled</key>
 	<true/> -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We need to track your activity to provide personalized ads.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

@@ -22,12 +22,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     analytics = ref.read(firebaseAnalyticsProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initAppTracking();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffffffff), //background
+      backgroundColor: Color(0xffffffff),
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(56),
         child: HomeAppBar(),

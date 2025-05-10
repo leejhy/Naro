@@ -125,10 +125,10 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
         counterText: '',
         hintText: hintText,
         filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
+        fillColor: const Color.fromRGBO(255, 255, 255, 0.9),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Color.fromRGBO(191, 191, 191, 0.5)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -157,9 +157,9 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
+          colors: [Color(0xFFE3F7FF),Colors.white],
           begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFFCAEBF7),Colors.white],
+          end: Alignment(0, 0.5),
         ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -282,7 +282,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                   //   debugPrint('contact: ${_emailController.text}');
                   //   debugPrint('message: ${_messageController.text}');
                   // },
-                  backgroundColor: const Color(0xFFCAEBF7),
+                  backgroundColor: const Color(0xFFE3F7FF),
                   child: const Text(
                     '전송',
                     style: TextStyle(
