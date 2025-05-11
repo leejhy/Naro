@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'dart:io';
 
 int calculateDday(DateTime arrivalAt) {
   DateTime now = DateTime.now();
@@ -145,4 +147,15 @@ Future<void> showTextDialog(BuildContext context, String message, {int durationM
       );
     },
   );
+}
+
+Future<void> initAppTracking() async {
+  if (!Platform.isIOS) {
+    return;
+  }
+  final TrackingStatus status =
+      await AppTrackingTransparency.trackingAuthorizationStatus;
+  if (status == TrackingStatus.notDetermined) {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+  }
 }

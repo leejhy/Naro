@@ -47,7 +47,7 @@ class _HeaderSectionState extends State<HeaderSection> {
       sliver: SliverToBoxAdapter(
         child: Container(
           height: 124,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -66,9 +66,8 @@ class _HeaderSectionState extends State<HeaderSection> {
             children: [
               if (dDay > 0) ... [
                 Text('다가오는 편지', style: AppTextStyles.headingStyle),
-                SizedBox(height: 2),
                 Text('D-$dDay', style: AppTextStyles.dDayStyle),
-                SizedBox(height: 2),
+                SizedBox(height: 4),
                 Text('${arrivalDate.year}년 '
                 '${arrivalDate.month}월 '
                 '${arrivalDate.day}일 도착 예정', style: AppTextStyles.dateStyle),

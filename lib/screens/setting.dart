@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:naro/utils/utils.dart';
+import 'package:naro/const.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -46,9 +47,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: const Text('개인정보 처리방침'),
             onTap: () {
-              print('개인정보 처리방침');
-              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc8020a124e763947e8f78?pvs=73');
-              launchUrl(url,
+              launchUrl(PRIVACY_URL_KR,
               mode: LaunchMode.inAppBrowserView);
             },
           ),
@@ -57,9 +56,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: const Text('이용약관'),
             onTap: () {
-              print('개인정보 처리방침');
-              final Uri url = Uri.parse('https://mulberry-keeper-061.notion.site/1ed42bc57ddc807f8be2deb132ca0495');
-              launchUrl(url,
+              launchUrl(TERMS_URL_KR,
               mode: LaunchMode.inAppBrowserView
               );
             },
@@ -75,6 +72,8 @@ class SettingScreen extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
+          //todo about us 추가
         ],
       ),
     );
@@ -128,10 +127,10 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
         counterText: '',
         hintText: hintText,
         filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
+        fillColor: const Color.fromRGBO(255, 255, 255, 0.9),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Color.fromRGBO(191, 191, 191, 0.5)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -160,9 +159,9 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
+          colors: [Color(0xFFE3F7FF),Colors.white],
           begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFFCAEBF7),Colors.white],
+          end: Alignment(0, 0.5),
         ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -216,7 +215,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                         const SizedBox(height: 8),
                         settingTextField(
                           controller: _messageController,
-                          hintText: '피드백, 버그, 제안 등',
+                          hintText: '피드백, 버그, 제안, 인사 등',
                           maxLines: 10,
                           maxLength: 300,
                         ),
@@ -285,7 +284,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                   //   debugPrint('contact: ${_emailController.text}');
                   //   debugPrint('message: ${_messageController.text}');
                   // },
-                  backgroundColor: const Color(0xFFCAEBF7),
+                  backgroundColor: const Color(0xFFE3F7FF),
                   child: const Text(
                     '전송',
                     style: TextStyle(
