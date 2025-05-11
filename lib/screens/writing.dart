@@ -98,7 +98,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       }
     });
   }
-
   Future<String> saveImageToLocal(XFile image, int idx) async {
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
@@ -129,11 +128,11 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       'username': username,
       'letter_id': id,
     });
-    return id;
-    // print('letter id: $id');
     // if (mounted) {  // <<< 이거 추가
     //   context.go('/result/$id');
     // }
+    return id;
+    // print('letter id: $id');
   }
 
   @override
@@ -192,7 +191,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
-                  onConfirm: insertLetter,
+                  insertLetter: insertLetter,
                   ads: AdManager.instance.rewardedAd,
                 ),
               );
@@ -291,11 +290,11 @@ class _TextWritingState extends State<TextWriting> {
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog({
     super.key,
-    required this.onConfirm,
+    required this.insertLetter,
     required this.ads,
   });
 
-  final Future<int> Function() onConfirm;
+  final Future<int> Function() insertLetter;
   final RewardedAd? ads;
 
   @override
@@ -335,23 +334,26 @@ class ConfirmDialog extends StatelessWidget {
             ),
           ),
           onPressed: () async {
-            Navigator.pop(context);
-            final id = await onConfirm();
-            if (ads != null) {
-              ads!.show(
-                onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-                if (context.mounted) {
-                  context.go('/result/$id');
-                }
-                debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
-                },
-              );
-            } else {
+            final id = await insertLetter();
+            
+            if (ads == null) {
+              print('광고가 없을때.');
               if (context.mounted) {
+                Navigator.pop(context);
                 context.go('/result/$id');
               }
-              debugPrint('Rewarded ad is not ready yet.');
+              return ;
             }
+            ads!.show(
+              onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+              debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
+              if (context.mounted) {
+                Navigator.pop(context);
+                context.go('/result/$id');
+              }
+              },
+            );
+            debugPrint('Rewarded ad is not ready yet.');
           },
           child: const Text('저장', style: TextStyle(
             fontFamily: 'Inter',

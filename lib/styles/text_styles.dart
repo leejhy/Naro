@@ -36,14 +36,14 @@ class AppTextStyles{
   static const letterCardTitleStyle = TextStyle(
     fontFamily: 'Inter',
     fontSize: 16,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     letterSpacing: -0.5,
   );
   static const letterCardDdayStyle = TextStyle(
     fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   );
   static const letterCardArrivalDateStyle = TextStyle(
     fontFamily: 'Inter',
