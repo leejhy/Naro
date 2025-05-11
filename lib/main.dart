@@ -15,11 +15,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAuth.instance.signInAnonymously();
-  // final dbPath = await getDatabasesPath();
-  // final path = join(dbPath, 'test.db');
-
-  // debugPrint('db 존재?');
-  // debugPrint(await File(path).exists());
   runApp(ProviderScope(child: const MyApp()));
 }
 
