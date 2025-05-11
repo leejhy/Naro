@@ -106,7 +106,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     return '$fileName.jpg';
   }
 
-  Future<void> insertLetter() async {
+  Future<int> insertLetter() async {
     final images = imageController.images;
     final savedPaths = await Future.wait(
       images.asMap().entries.map((entry) {
@@ -123,19 +123,17 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       'arrival_at': _arrivalDateController.text,
       'created_at': now ,
     };
-    //todo: admob
-    //todo 이거 치우기
     final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
     final username = await DatabaseHelper.getUserName();
     analytics.logEvent(name: 'writing_confirm', parameters: {
       'username': username,
       'letter_id': id,
     });
-
-    print('letter id: $id');
-    if (mounted) {  // <<< 이거 추가
-      context.go('/result/$id');
-    }
+    return id;
+    // print('letter id: $id');
+    // if (mounted) {  // <<< 이거 추가
+    //   context.go('/result/$id');
+    // }
   }
 
   @override
@@ -194,7 +192,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
-                  onConfirm: () => insertLetter(),
+                  onConfirm: insertLetter,
                   ads: AdManager.instance.rewardedAd,
                 ),
               );
@@ -297,7 +295,7 @@ class ConfirmDialog extends StatelessWidget {
     required this.ads,
   });
 
-  final VoidCallback onConfirm;
+  final Future<int> Function() onConfirm;
   final RewardedAd? ads;
 
   @override
@@ -336,16 +334,22 @@ class ConfirmDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          onPressed: () {
+          onPressed: () async {
             Navigator.pop(context);
+            final id = await onConfirm();
             if (ads != null) {
               ads!.show(
                 onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-                onConfirm();
+                if (context.mounted) {
+                  context.go('/result/$id');
+                }
                 debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
                 },
               );
             } else {
+              if (context.mounted) {
+                context.go('/result/$id');
+              }
               debugPrint('Rewarded ad is not ready yet.');
             }
           },
