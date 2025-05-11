@@ -11,16 +11,14 @@ class AdManager {
 
   void loadRewardedAd() {
     RewardedAd.load(
-      adUnitId: testAdUnitId,
+      adUnitId: adUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
-          debugPrint('RewardedAd loaded');
           rewardedAd = ad;
           _setCallbacks(ad);
         },
         onAdFailedToLoad: (LoadAdError error) {
-          debugPrint('RewardedAd failed to load: $error');
           rewardedAd = null;
         },
       ),
@@ -29,21 +27,19 @@ class AdManager {
 
   void _setCallbacks(RewardedAd ad) {
     ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (ad) => debugPrint('Ad shown'),
-      onAdImpression: (ad) => debugPrint('Ad impression'),
+      onAdShowedFullScreenContent: (ad) => {},
+      onAdImpression: (ad) => {},
       onAdDismissedFullScreenContent: (ad) {
-        debugPrint('Ad dismissed');
         ad.dispose();
         rewardedAd = null;
         loadRewardedAd();
       },
       onAdFailedToShowFullScreenContent: (ad, err) {
-        debugPrint('Ad failed to show: $err');
         ad.dispose();
         rewardedAd = null;
         loadRewardedAd();
       },
-      onAdClicked: (ad) => debugPrint('Ad clicked'),
+      onAdClicked: (ad) => {},
     );
   }
 
@@ -51,12 +47,10 @@ class AdManager {
     if (rewardedAd != null) {
       rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-          debugPrint('Reward earned: ${reward.amount} ${reward.type}');
           onRewardEarned();
         },
       );
     } else {
-      debugPrint('RewardedAd not ready yet.');
     }
   }
 }

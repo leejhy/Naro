@@ -27,7 +27,6 @@ class _LetterScreenState extends State<LetterScreen> {
     _contentController = TextEditingController();
   
     _loadLetter();
-    debugPrint('letterㅁㄴㅇId: ${widget.letterId}');
   }
   @override
   void dispose() {
@@ -48,8 +47,6 @@ class _LetterScreenState extends State<LetterScreen> {
       _contentController.text = row['content'] as String? ?? '';
     }
 
-
-    print('imagepath: $imagepath');
     if (imagepath.isNotEmpty) {
       _imagePaths = imagepath;
     }
@@ -64,8 +61,6 @@ class _LetterScreenState extends State<LetterScreen> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    final letterRow = _letter!.first;
-    debugPrint('letterRow: $letterRow');
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
@@ -178,7 +173,7 @@ class ImageGridView extends StatelessWidget {
               if (index < imagePaths.length) {
                 return _buildPhotoItem(context, imagePaths[index]);
               }
-              return Container(); // 빈 칸
+              return Container();
             }),
           ),
         ),

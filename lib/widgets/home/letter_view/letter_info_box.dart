@@ -44,7 +44,6 @@ class LetterInfoBox extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
               ),
-              // Text(dDay == null ? '도착완료' : 'D-$dDay', style: letterCardDdayStyle),
               Text(dDayText, style: AppTextStyles.letterCardDdayStyle),
             ]
           ),

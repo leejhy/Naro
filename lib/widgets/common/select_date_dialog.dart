@@ -8,15 +8,8 @@ class SelectDateDialog extends StatefulWidget {
   State<SelectDateDialog> createState() => _DateDialogState();
 }
 
-// todo
-// 1. will fix the date dialog
-//오늘이 마지막날이면 5월1일부터 렌더링되게
-
-
 class _DateDialogState extends State<SelectDateDialog> {
   static const int _maxYear = 2050;
-
-  // final DateTime _today = DateTime(2025, 4, 30);
   final DateTime _today = DateTime.now();
 
   late int _year;
@@ -31,7 +24,6 @@ class _DateDialogState extends State<SelectDateDialog> {
       List.generate(_maxYear - _today.year + 1, (i) => _today.year + i);
   List<int> get _monthList {
     if (_year == _today.year) {
-      // 오늘과 같은 해라면 오늘 달 이후만 노출
       return List.generate(12 - _today.month + 1, (i) => _today.month + i);
     }
     return List<int>.generate(12, (i) => i + 1);
@@ -40,14 +32,12 @@ class _DateDialogState extends State<SelectDateDialog> {
   List<int> get _dayList {
     final total = DateUtils.getDaysInMonth(_year, _month);
     if (_year == _today.year && _month == _today.month) {
-      // 오늘과 같은 연·월이면 오늘 이후만 노출
       return List.generate(total - _today.day + 1, (i) => _today.day + i);
     }
     return List<int>.generate(total, (i) => i + 1);
   }
 
   void _clampSelections() {
-    // 월·일이 리스트 범위를 벗어나면 가장 앞 값으로 보정
     if (!_monthList.contains(_month)) {
       _month = _monthList.first;
       _monthCtrl.jumpToItem(0);
@@ -87,7 +77,6 @@ class _DateDialogState extends State<SelectDateDialog> {
         height: 110,
         child: Row(
           children: [
-            //Year
             Expanded(
               child: CupertinoPicker(
                 scrollController: _yearCtrl,
@@ -110,7 +99,6 @@ class _DateDialogState extends State<SelectDateDialog> {
                 )).toList(),
               ),
             ),
-            // Month 
             Expanded(
               child: CupertinoPicker(
                 scrollController: _monthCtrl,
@@ -133,7 +121,6 @@ class _DateDialogState extends State<SelectDateDialog> {
                 .toList(),
               ),
             ),
-            // Day 
             Expanded(
               child: CupertinoPicker(
                 scrollController: _dayCtrl,

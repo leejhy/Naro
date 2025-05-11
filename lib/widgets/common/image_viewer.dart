@@ -15,11 +15,11 @@ class ImageViewer extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false, // ← 기본 뒤로가기 제거
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.close, color: Colors.white),
-            onPressed: () => Navigator.pop(context), // ← 닫기 동작
+            onPressed: () => Navigator.pop(context),
           ),
         ],
       ),

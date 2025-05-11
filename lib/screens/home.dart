@@ -93,13 +93,10 @@ class HomeAppBar extends StatelessWidget {
               fontSize: 22,
               fontFamily: 'Inter',
               fontWeight: FontWeight.bold,
-              //자간
             )),
             IconButton(
               onPressed: () {
                 context.push('/setting');
-                // DatabaseHelper.deleteAllLetter();
-                print('appbar test');
               },
               icon: Icon(Icons.settings, size: 24)
             ),
@@ -123,7 +120,6 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    //todo modularization
     final letters = ref.watch(letterNotifierProvider);
 
     return letters.when(
@@ -172,7 +168,6 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
         );
       }
     );
-    // print('home: in build $letters');
   }
 }
 

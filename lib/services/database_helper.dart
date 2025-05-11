@@ -8,16 +8,14 @@ class DatabaseHelper {
   static Database? _db;
   static final Random _random = Random();
 
-  // DB 인스턴스를 반환하는 getter
   static Future<Database> get database async {
     if (_db != null) return _db!;
     _db = await _initDb();
     return _db!;
   }
 
-  // DB 초기화: 새로 생성
   static Future<Database> _initDb() async {
-    final dbPath = await getDatabasesPath(); // 앱 전용 SQLite 저장 위치
+    final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'naro.db');
 
     return await openDatabase(
@@ -27,7 +25,6 @@ class DatabaseHelper {
         await db.execute('PRAGMA foreign_keys = ON');
       },
       onCreate: (db, version) async {
-        // DB 처음 생성될 때 실행됨
         await db.execute('''
           CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -86,7 +83,6 @@ class DatabaseHelper {
     final username = result[0]['user_name'] as String;
     return username;
   }
-  // 모든 letters 조회
   static Future<List<Map<String, Object?>>> getAllLetters() async {
     final db = await database;
     return await db.query('letters');

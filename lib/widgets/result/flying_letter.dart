@@ -19,21 +19,17 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   late AnimationController _pulseController;
   late AnimationController _particleController;
   
-  // 편지 애니메이션
   late Animation<Offset> _positionAnimation;
   late Animation<double> _opacityAnimation;
   late Animation<double> _rotationAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
   
-  // 파티클 효과용 랜덤 생성기
   final Random _random = math.Random();
   
-  // 파티클 리스트
   final List<Particle> _particles = [];
   final int _particleCount = 15;
   
-  // 편지 상태
   bool _isResting = true;
   bool _showParticles = false;
 
@@ -41,10 +37,8 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   void initState() {
     super.initState();
 
-    // 메인 애니메이션 컨트롤러
     _mainController = AnimationController(
       vsync: this,
-      // duration: const Duration(milliseconds: 1900),
       duration: const Duration(milliseconds: 2000),
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -60,19 +54,16 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startAnimation();
     });
-    // 맥박 효과 컨트롤러 (대기 상태에서 미세하게 움직임)
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
     
-    // 파티클 효과 컨트롤러
     _particleController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     );
 
-    // 베지어 곡선을 사용한 자연스러운 경로 애니메이션
     _positionAnimation = TweenSequence<Offset>([
       TweenSequenceItem(
         tween: Tween<Offset>(
@@ -97,7 +88,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
 
-    // 투명도 애니메이션 (끝에서 점점 투명하게)
     _opacityAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 1.0, end: 1.0)
@@ -111,7 +101,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
 
-    // 회전 애니메이션 (자연스러운 회전)
     _rotationAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 0.0, end: 0.1)
@@ -130,7 +119,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
 
-    // 크기 애니메이션 (처음에 약간 커졌다가 날아가면서 작아짐)
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 1.0, end: 1.1)
@@ -149,7 +137,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
     
-    // 그림자 높이 애니메이션
     _elevationAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 2.0, end: 15.0)
@@ -163,7 +150,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
     
-    // 파티클 초기화
     _initializeParticles();
   }
   
@@ -185,24 +171,24 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   
   Color _getRandomColor() {
     final List<Color> colors = [
-      Colors.redAccent.withOpacity(0.8),
-      Colors.pinkAccent.withOpacity(0.8),
-      Colors.purpleAccent.withOpacity(0.8),
-      Colors.orangeAccent.withOpacity(0.8),
-      Colors.amberAccent.withOpacity(0.8),
+      Color.fromRGBO(255, 82, 82, 0.8),
+      Color.fromRGBO(255, 64, 129, 0.8),
+      Color.fromRGBO(224, 64, 251, 0.8),
+      Color.fromRGBO(255, 171, 64, 0.8),
+      Color.fromRGBO(255, 215, 64, 0.8),
     ];
     return colors[_random.nextInt(colors.length)];
   }
 
   void startAnimation() {
-    HapticFeedback.mediumImpact(); // 햅틱 피드백 추가
+    HapticFeedback.mediumImpact();
     
     setState(() {
       _isResting = false;
       _showParticles = true;
     });
     
-    _initializeParticles();//?
+    _initializeParticles();
     _mainController.reset();
     _mainController.forward();
     _particleController.reset();
@@ -224,7 +210,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 배경 그라데이션
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -235,7 +220,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
             ),
           ),
           
-          // 파티클 효과
           if (_showParticles)
             AnimatedBuilder(
               animation: _particleController,
@@ -249,7 +233,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
               },
             ),
           
-          // 메인 편지 애니메이션
           Center(
             child: AnimatedBuilder(
               animation: Listenable.merge([_mainController, _pulseController]),
@@ -282,7 +265,7 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
                         blurRadius: 10,
                         spreadRadius: 1,
                       ),
@@ -290,7 +273,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
                   ),
                   child: Stack(
                     children: [
-                      // 편지 봉투 디자인
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: CustomPaint(
@@ -298,14 +280,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
                           painter: EnvelopePainter(),
                         ),
                       ),
-                      // 하트 아이콘
-                      // Center(
-                      //   child: Icon(
-                      //     Icons.favorite,
-                      //     size: 18,
-                      //     color: Colors.redAccent.withOpacity(0.8),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -313,54 +287,18 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
             ),
           ),
           
-          // 버튼
-          // Positioned(
-          //   bottom: 50,
-          //   left: 0,
-          //   right: 0,
-          //   child: Center(
-          //     child: Material(
-          //       elevation: 2,
-          //       borderRadius: BorderRadius.circular(30),
-          //       color: Colors.redAccent,
-          //       child: InkWell(
-          //         onTap: _isResting ? startAnimation : null,
-          //         borderRadius: BorderRadius.circular(30),
-          //         child: Container(
-          //           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          //           child: Row(
-          //             mainAxisSize: MainAxisSize.min,
-          //             children: [
-          //               const Icon(Icons.send, color: Colors.white, size: 20),
-          //               const SizedBox(width: 8),
-          //               Text(
-          //                 "편지 날리기",
-          //                 style: TextStyle(
-          //                   color: Colors.white,
-          //                   fontWeight: FontWeight.w600,
-          //                   fontSize: 16,
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
   }
 }
 
-// 파티클 클래스
 class Particle {
   Offset position;
   Offset velocity;
   Color color;
   double size;
-  double lifespan; // 0.0 ~ 1.0
+  double lifespan;
 
   Particle({
     required this.position,
@@ -371,7 +309,6 @@ class Particle {
   });
 }
 
-// 파티클 페인터
 class ParticlePainter extends CustomPainter {
   final List<Particle> particles;
   final double progress;
@@ -381,13 +318,11 @@ class ParticlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (var particle in particles) {
-      // 파티클 위치 계산
       final x = size.width / 2 + particle.velocity.dx * progress * size.width * 0.5;
       final y = size.height / 2 + 
           (particle.velocity.dy * progress * size.height * 0.5) + 
-          (2.0 * progress * progress * size.height * 0.3); // 중력 효과
+          (2.0 * progress * progress * size.height * 0.3);
       
-      // 파티클 크기와 투명도 계산 (시간에 따라 감소)
       final particleProgress = math.min(1.0, progress / particle.lifespan);
       final opacity = math.max(0.0, 1.0 - particleProgress);
       final currentSize = particle.size * (1.0 - particleProgress * 0.5);
@@ -404,7 +339,6 @@ class ParticlePainter extends CustomPainter {
   bool shouldRepaint(ParticlePainter oldDelegate) => true;
 }
 
-// 편지 봉투 디자인 페인터
 class EnvelopePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -426,15 +360,13 @@ class EnvelopePainter extends CustomPainter {
     final middleX = w / 2;
     final middleY = h / 2;
 
-    // 3. 선 그리기용 paint
     final linePaint = Paint()
       ..color = Color(0xFFABCEDC)
       ..strokeWidth = 6
       ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round  // 연결부를 둥글게 처리
-      ..style = PaintingStyle.stroke;   // 선 스타일로 그리기
+      ..strokeJoin = StrokeJoin.round
+      ..style = PaintingStyle.stroke;
 
-    // 원래 개별로 그리던 두 선을 하나의 Path로 합침으로써 연결부 적용
     final topFlapPath = Path();
     topFlapPath.moveTo(0, 0);
     topFlapPath.lineTo(middleX, middleY + 6);

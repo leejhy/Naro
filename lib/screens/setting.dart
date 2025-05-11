@@ -7,7 +7,6 @@ import 'package:naro/const.dart';
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
-  // 모달 시트 표시 함수
   void showDialog(context) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -73,7 +72,6 @@ class SettingScreen extends StatelessWidget {
             },
           ),
           const Divider(),
-          //todo about us 추가
         ],
       ),
     );
@@ -253,8 +251,8 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                       barrierDismissible: false,
                       builder: (context) {
                         Future.delayed(const Duration(milliseconds: 1200), () {
-                          Navigator.of(context).pop(); // 닫기
-                          Navigator.of(context).pop(); // 모달 닫기
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         });
                         return AlertDialog(
                           backgroundColor: Colors.white,
@@ -279,11 +277,6 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                     );
                   },
 
-                  // onPressed: () {
-                  //   submitFeedback(_emailController.text, _messageController.text);
-                  //   debugPrint('contact: ${_emailController.text}');
-                  //   debugPrint('message: ${_messageController.text}');
-                  // },
                   backgroundColor: const Color(0xFFE3F7FF),
                   child: const Text(
                     '전송',

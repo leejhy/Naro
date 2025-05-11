@@ -7,7 +7,7 @@ int calculateDday(DateTime arrivalAt) {
   DateTime now = DateTime.now();
   DateTime today = DateTime(now.year, now.month, now.day);
   Duration difference = arrivalAt.difference(today);
-  int dDay = difference.inDays;//하루추가
+  int dDay = difference.inDays;
 
   return dDay;
 }
@@ -59,7 +59,7 @@ Future<void> showAutoDismissDialog(BuildContext context, String message, {int du
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF444444),
                     fontFamily: 'Inter',
-                    decoration: TextDecoration.none,//
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ],
@@ -125,7 +125,7 @@ Future<void> showTextDialog(BuildContext context, String message, {int durationM
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF444444),
                     fontFamily: 'Inter',
-                    decoration: TextDecoration.none,//
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ],

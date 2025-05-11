@@ -47,7 +47,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       final animation = route is PageRoute ? route.animation : null;
 
       if (animation != null) {
-        // 애니메이션 상태 변화를 듣는다
         animation.addStatusListener((status) {
           if (status == AnimationStatus.completed && !_dialogShown) {
             _dialogShown = true;
@@ -79,7 +78,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
-          child: SelectDateDialog(), // 여기에 커스텀 다이얼로그 위젯
+          child: SelectDateDialog(),
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
@@ -128,11 +127,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       'username': username,
       'letter_id': id,
     });
-    // if (mounted) {  // <<< 이거 추가
-    //   context.go('/result/$id');
-    // }
     return id;
-    // print('letter id: $id');
   }
 
   @override
@@ -140,7 +135,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
 
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
-      appBar: AppBar(//todo add icon
+      appBar: AppBar(
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
@@ -220,7 +215,6 @@ class TextWriting extends StatefulWidget {
 class _TextWritingState extends State<TextWriting> {
   final _titleFocus = FocusNode();
   final _contentFocus = FocusNode();
-  // 위 controller에 textField 값 저장됨 
 
   @override
   void dispose() {
@@ -231,9 +225,9 @@ class _TextWritingState extends State<TextWriting> {
 
   void _toggleFocus(FocusNode node) {
     if (node.hasFocus) {
-      node.unfocus();// 이미 열려 있으면키보드 닫기
+      node.unfocus();
     } else {
-      node.requestFocus();// 안 열려 있으면 → 키보드 열기
+      node.requestFocus();
     }
   }
 
@@ -270,8 +264,8 @@ class _TextWritingState extends State<TextWriting> {
                   fontSize: 16
                 ),
                 maxLength: 2000,
-                expands: true,// expands: true일때 maxLines: null 필수
-                maxLines: null, //무한 Lines
+                expands: true,
+                maxLines: null,
                 decoration: const InputDecoration(
                   counterText: '',
                   hintText: '본문을 작성하세요...',
@@ -337,7 +331,6 @@ class ConfirmDialog extends StatelessWidget {
             final id = await insertLetter();
             
             if (ads == null) {
-              print('광고가 없을때.');
               if (context.mounted) {
                 Navigator.pop(context);
                 context.go('/result/$id');
@@ -346,14 +339,12 @@ class ConfirmDialog extends StatelessWidget {
             }
             ads!.show(
               onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-              debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
               if (context.mounted) {
                 Navigator.pop(context);
                 context.go('/result/$id');
               }
               },
             );
-            debugPrint('Rewarded ad is not ready yet.');
           },
           child: const Text('저장', style: TextStyle(
             fontFamily: 'Inter',

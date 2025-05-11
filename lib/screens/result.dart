@@ -46,7 +46,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
     _textController.dispose();
     super.dispose();
   }
-//------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     ref.watch(letterNotifierProvider);
@@ -72,7 +72,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
             FlyingLetter(
               onCompleted: () {
                 setState(() => _showFlyingLetter = false );
-                _textController.forward(from: 0.0);//애니메이션 실행
+                _textController.forward(from: 0.0);
               },
             ),
         ],
@@ -101,7 +101,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.15),
 
-              // 1) 아이콘
               FadeTransition(
                 opacity: _fade1,
                 child: SlideTransition(
@@ -113,7 +112,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
 
               const SizedBox(height: 16),
 
-              // 2) “도착일”
               FadeTransition(
                 opacity: _fade2,
                 child: SlideTransition(
@@ -125,7 +123,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
 
               const SizedBox(height: 4),
 
-              // 3) 날짜 + D-Day
               FadeTransition(
                 opacity: _fade3,
                 child: SlideTransition(
@@ -147,7 +144,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
 
               const SizedBox(height: 20),
 
-              // 4) 멘트
               FadeTransition(
                 opacity: _fade4,
                 child: SlideTransition(
@@ -170,7 +166,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
               ),
 
               const Spacer(),
-              // 버튼은 고정 (애니메이션 없어도 OK)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: SizedBox(
