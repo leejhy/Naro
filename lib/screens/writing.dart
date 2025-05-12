@@ -35,7 +35,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   @override
   void initState() {
     super.initState();
-    AdManager.instance.loadRewardedAd();
     analytics = ref.read(firebaseAnalyticsProvider);
   }
   @override

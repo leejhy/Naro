@@ -7,6 +7,7 @@ import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:naro/utils/ad_manager.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -22,8 +23,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     analytics = ref.read(firebaseAnalyticsProvider);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initAppTracking();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await initAppTracking();
+      AdManager.instance.loadRewardedAd();
     });
   }
 
