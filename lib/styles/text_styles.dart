@@ -29,7 +29,7 @@ class AppTextStyles{
   static const headerSectionStyle = TextStyle(
     fontFamily: 'Inter',
     fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w600,
     letterSpacing: -0.5,
     height: 1.2,
   );

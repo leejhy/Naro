@@ -243,11 +243,16 @@ class _TextWritingState extends State<TextWriting> {
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 22,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
               ),
               decoration: const InputDecoration(
                 counterText: '',
                 hintText: '제목을 입력하세요',
+                hintStyle: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF797979),
+                ),
                 border: InputBorder.none,
               ),
             ),
@@ -259,7 +264,7 @@ class _TextWritingState extends State<TextWriting> {
                 onTap: () => _toggleFocus(_contentFocus),
                 style: const TextStyle(
                   fontFamily: 'Inter',
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.w400,
                   fontSize: 16
                 ),
                 maxLength: 2000,
@@ -268,6 +273,11 @@ class _TextWritingState extends State<TextWriting> {
                 decoration: const InputDecoration(
                   counterText: '',
                   hintText: '본문을 작성하세요...',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF797979),
+                  ),
                   border: InputBorder.none,
                 ),
               ),

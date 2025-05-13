@@ -91,11 +91,7 @@ class HomeAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Naro', style: TextStyle(
-              fontSize: 22,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.bold,
-            )),
+            Image.asset('assets/logo/home_icon.png', width: 58, height: 38),
             IconButton(
               onPressed: () {
                 context.push('/setting');

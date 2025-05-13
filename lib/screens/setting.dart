@@ -118,12 +118,19 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
       maxLength: maxLength,
       style: const TextStyle(
         fontFamily: 'Inter',
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w300,
+        color: Colors.black,
         fontSize: 16
       ),
       decoration: InputDecoration(
         counterText: '',
         hintText: hintText,
+        hintStyle: const TextStyle(
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w300,
+          color: Color(0xFF797979),
+          fontSize: 16
+        ),
         filled: true,
         fillColor: const Color.fromRGBO(255, 255, 255, 0.9),
         enabledBorder: OutlineInputBorder(
@@ -194,8 +201,9 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                             '의견 보내기',
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              fontFamily: 'Inter',
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
@@ -281,9 +289,10 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                   child: const Text(
                     '전송',
                     style: TextStyle(
+                      fontFamily: 'Inter',
                       color: Colors.black,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   )
                 ),
