@@ -76,6 +76,7 @@ class _LetterScreenState extends State<LetterScreen> {
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
