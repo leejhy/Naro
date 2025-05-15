@@ -135,6 +135,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
@@ -289,8 +290,7 @@ class _TextWritingState extends State<TextWriting> {
   }
 }
 
-
-class ConfirmDialog extends StatelessWidget {
+class ConfirmDialog extends StatefulWidget {
   const ConfirmDialog({
     super.key,
     required this.insertLetter,
@@ -299,6 +299,35 @@ class ConfirmDialog extends StatelessWidget {
 
   final Future<int> Function() insertLetter;
   final RewardedAd? ads;
+
+  @override
+  State<ConfirmDialog> createState() => _ConfirmDialogState();
+}
+
+class _ConfirmDialogState extends State<ConfirmDialog> {
+  bool _isSubmitting = false;
+
+  void _handleSubmit() async {
+    if (_isSubmitting) return;
+    setState(() => _isSubmitting = true);
+    final id = await widget.insertLetter();
+
+    if (widget.ads == null) {
+      if (mounted) {
+        Navigator.pop(context);
+        context.go('/result/$id');
+      }
+      return ;
+    }
+    widget.ads!.show(
+      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        if (mounted) {
+          Navigator.pop(context);
+          context.go('/result/$id');
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,30 +365,14 @@ class ConfirmDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          onPressed: () async {
-            final id = await insertLetter();
-            
-            if (ads == null) {
-              if (context.mounted) {
-                Navigator.pop(context);
-                context.go('/result/$id');
-              }
-              return ;
-            }
-            ads!.show(
-              onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-              if (context.mounted) {
-                Navigator.pop(context);
-                context.go('/result/$id');
-              }
-              },
-            );
-          },
-          child: const Text('저장', style: TextStyle(
+          onPressed: _handleSubmit,
+          child: _isSubmitting ? 
+            const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+          : const Text('저장', style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF444444),
+            color: Color.fromARGB(255, 17, 12, 12),
           )),
         ),
       ],

@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      title: 'Flutter Demo',
+      title: 'Naro - 미래의 나에게 쓰는 편지',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
