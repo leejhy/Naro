@@ -6,6 +6,7 @@ import 'package:naro/services/firebase_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:naro/utils/ad_manager.dart';
 import 'package:naro/styles/colors.dart';
+import 'package:naro/widgets/common/icon_fab.dart';
 import 'package:naro/widgets/home/app_bar.dart';
 import 'package:naro/widgets/home/body.dart';
 
@@ -35,22 +36,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: UIColors.white,
       appBar: HomeAppBar(),
       body: HomeBody(),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 5, bottom: 5),
-        child: SizedBox(
-          width: 56,
-          height: 56,
-          child: FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-            backgroundColor: UIColors.black,
-            onPressed: () {
-              context.push('/writing');
-            },
-            child: const Icon(Icons.add, color: UIColors.white, size: 30),
-          ),
-        ),
+      floatingActionButton: IconFab(
+        icon: const Icon(Icons.add, color: UIColors.white, size: 30),
+        onPressed: () => context.push('/writing'),
       ),
     );
   }

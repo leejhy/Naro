@@ -11,7 +11,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 1,
+      elevation: 3,
       shadowColor: UIColors.appbarShadow,
       color: UIColors.white,
       child: SafeArea(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naro/styles/colors.dart';
 
 class LetterIconBox extends StatelessWidget {
   const LetterIconBox({
@@ -26,7 +27,7 @@ class LetterIconBox extends StatelessWidget {
           child: Icon(
             isOpened ? Icons.drafts_rounded : Icons.mail_rounded,
             size: 34,
-            color: Colors.black,
+            color: UIColors.black,
           ),
         ),
       ),
