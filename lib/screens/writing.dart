@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naro/styles/colors.dart';
 import 'package:naro/widgets/common/select_date_dialog.dart';
 import 'package:naro/widgets/common/image_upload.dart';
 import 'package:intl/intl.dart';
@@ -136,10 +137,10 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xffffffff),
-        surfaceTintColor: Color(0xffffffff),
+        backgroundColor: UIColors.white,
+        surfaceTintColor: UIColors.white,
         elevation: 1,
-        shadowColor: const Color.fromARGB(50, 0, 0, 0),
+        shadowColor: const Color.fromRGBO(0, 0, 0, 0.2),
         title: GestureDetector(
           onTap: () {
             analytics.logEvent(name: 'select_date_writing');
