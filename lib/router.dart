@@ -18,7 +18,6 @@ final GoRouter router = GoRouter(
       path: '/',
       name: 'HomeScreen',
       builder: (context, state) {
-        // FirebaseAnalytics.instance.logScreenView(screenName: 'SettingScreen');
         return HomeScreen();
       },
     ),
@@ -57,7 +56,7 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
-          // transitionDuration: const Duration(milliseconds: 400),
+          name: 'WritingScreen',
           child: const WritingScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(0, 1);

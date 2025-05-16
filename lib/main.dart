@@ -15,11 +15,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAuth.instance.signInAnonymously();
-  // final dbPath = await getDatabasesPath();
-  // final path = join(dbPath, 'test.db');
-
-  // debugPrint('db 존재?');
-  // debugPrint(await File(path).exists());
   runApp(ProviderScope(child: const MyApp()));
 }
 
@@ -29,8 +24,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: router,
-      title: 'Flutter Demo',
+      title: 'Naro - 미래의 나에게 쓰는 편지',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

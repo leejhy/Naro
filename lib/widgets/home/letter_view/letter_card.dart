@@ -45,7 +45,6 @@ class _LetterCardState extends ConsumerState<LetterCard> {
         borderRadius: BorderRadius.circular(8),
         onTap: () async{
           final username = await DatabaseHelper.getUserName();
-          debugPrint('username: $username');
           await analytics.logEvent(
             name: 'letter_card_open',
             parameters: {

@@ -8,7 +8,6 @@ class LetterIconBox extends StatelessWidget {
     required this.flex,
   });
 
-  /// true ➜ envelope is open (도착 완료), false ➜ closed (아직 도착 전)
   final bool isOpened;
   final int flex;
   final double widthFactor;

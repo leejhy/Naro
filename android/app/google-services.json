@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:37180299423:android:a595f50162fa6f5cca6aaa",
+        "mobilesdk_app_id": "1:37180299423:android:18d7098b8b4e497aca6aaa",
         "android_client_info": {
-          "package_name": "com.example.naro"
+          "package_name": "com.juhy.naro"
         }
       },
       "oauth_client": [],

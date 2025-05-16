@@ -35,7 +35,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   @override
   void initState() {
     super.initState();
-    AdManager.instance.loadRewardedAd();
     analytics = ref.read(firebaseAnalyticsProvider);
   }
   @override
@@ -47,7 +46,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       final animation = route is PageRoute ? route.animation : null;
 
       if (animation != null) {
-        // 애니메이션 상태 변화를 듣는다
         animation.addStatusListener((status) {
           if (status == AnimationStatus.completed && !_dialogShown) {
             _dialogShown = true;
@@ -79,7 +77,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
-          child: SelectDateDialog(), // 여기에 커스텀 다이얼로그 위젯
+          child: SelectDateDialog(),
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
@@ -98,7 +96,6 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       }
     });
   }
-
   Future<String> saveImageToLocal(XFile image, int idx) async {
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = 'Naro_${DateTime.now().millisecondsSinceEpoch.toString()}_$idx';
@@ -106,7 +103,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
     return '$fileName.jpg';
   }
 
-  Future<void> insertLetter() async {
+  Future<int> insertLetter() async {
     final images = imageController.images;
     final savedPaths = await Future.wait(
       images.asMap().entries.map((entry) {
@@ -123,19 +120,13 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
       'arrival_at': _arrivalDateController.text,
       'created_at': now ,
     };
-    //todo: admob
-    //todo 이거 치우기
     final id = await ref.read(letterNotifierProvider.notifier).addLetter(letter, savedPaths);
     final username = await DatabaseHelper.getUserName();
     analytics.logEvent(name: 'writing_confirm', parameters: {
       'username': username,
       'letter_id': id,
     });
-
-    print('letter id: $id');
-    if (mounted) {  // <<< 이거 추가
-      context.go('/result/$id');
-    }
+    return id;
   }
 
   @override
@@ -143,7 +134,8 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
 
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
-      appBar: AppBar(//todo add icon
+      appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
@@ -194,7 +186,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
               showDialog(
                 context: context,
                 builder: (context) => ConfirmDialog(
-                  onConfirm: () => insertLetter(),
+                  insertLetter: insertLetter,
                   ads: AdManager.instance.rewardedAd,
                 ),
               );
@@ -223,7 +215,6 @@ class TextWriting extends StatefulWidget {
 class _TextWritingState extends State<TextWriting> {
   final _titleFocus = FocusNode();
   final _contentFocus = FocusNode();
-  // 위 controller에 textField 값 저장됨 
 
   @override
   void dispose() {
@@ -234,9 +225,9 @@ class _TextWritingState extends State<TextWriting> {
 
   void _toggleFocus(FocusNode node) {
     if (node.hasFocus) {
-      node.unfocus();// 이미 열려 있으면키보드 닫기
+      node.unfocus();
     } else {
-      node.requestFocus();// 안 열려 있으면 → 키보드 열기
+      node.requestFocus();
     }
   }
 
@@ -253,11 +244,16 @@ class _TextWritingState extends State<TextWriting> {
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 22,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
               ),
               decoration: const InputDecoration(
                 counterText: '',
                 hintText: '제목을 입력하세요',
+                hintStyle: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF797979),
+                ),
                 border: InputBorder.none,
               ),
             ),
@@ -269,15 +265,20 @@ class _TextWritingState extends State<TextWriting> {
                 onTap: () => _toggleFocus(_contentFocus),
                 style: const TextStyle(
                   fontFamily: 'Inter',
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.w400,
                   fontSize: 16
                 ),
                 maxLength: 2000,
-                expands: true,// expands: true일때 maxLines: null 필수
-                maxLines: null, //무한 Lines
+                expands: true,
+                maxLines: null,
                 decoration: const InputDecoration(
                   counterText: '',
                   hintText: '본문을 작성하세요...',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF797979),
+                  ),
                   border: InputBorder.none,
                 ),
               ),
@@ -289,16 +290,44 @@ class _TextWritingState extends State<TextWriting> {
   }
 }
 
-
-class ConfirmDialog extends StatelessWidget {
+class ConfirmDialog extends StatefulWidget {
   const ConfirmDialog({
     super.key,
-    required this.onConfirm,
+    required this.insertLetter,
     required this.ads,
   });
 
-  final VoidCallback onConfirm;
+  final Future<int> Function() insertLetter;
   final RewardedAd? ads;
+
+  @override
+  State<ConfirmDialog> createState() => _ConfirmDialogState();
+}
+
+class _ConfirmDialogState extends State<ConfirmDialog> {
+  bool _isSubmitting = false;
+
+  void _handleSubmit() async {
+    if (_isSubmitting) return;
+    setState(() => _isSubmitting = true);
+    final id = await widget.insertLetter();
+
+    if (widget.ads == null) {
+      if (mounted) {
+        Navigator.pop(context);
+        context.go('/result/$id');
+      }
+      return ;
+    }
+    widget.ads!.show(
+      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        if (mounted) {
+          Navigator.pop(context);
+          context.go('/result/$id');
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,24 +365,14 @@ class ConfirmDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-            if (ads != null) {
-              ads!.show(
-                onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-                onConfirm();
-                debugPrint('유저가 보상을 받음: ${reward.amount} ${reward.type}');
-                },
-              );
-            } else {
-              debugPrint('Rewarded ad is not ready yet.');
-            }
-          },
-          child: const Text('저장', style: TextStyle(
+          onPressed: _handleSubmit,
+          child: _isSubmitting ? 
+            const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+          : const Text('저장', style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF444444),
+            color: Color.fromARGB(255, 17, 12, 12),
           )),
         ),
       ],

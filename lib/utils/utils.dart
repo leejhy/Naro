@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'dart:io';
 
 int calculateDday(DateTime arrivalAt) {
   DateTime now = DateTime.now();
   DateTime today = DateTime(now.year, now.month, now.day);
   Duration difference = arrivalAt.difference(today);
-  int dDay = difference.inDays;//하루추가
+  int dDay = difference.inDays;
 
   return dDay;
 }
@@ -57,7 +59,7 @@ Future<void> showAutoDismissDialog(BuildContext context, String message, {int du
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF444444),
                     fontFamily: 'Inter',
-                    decoration: TextDecoration.none,//
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ],
@@ -123,7 +125,7 @@ Future<void> showTextDialog(BuildContext context, String message, {int durationM
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF444444),
                     fontFamily: 'Inter',
-                    decoration: TextDecoration.none,//
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ],
@@ -145,4 +147,15 @@ Future<void> showTextDialog(BuildContext context, String message, {int durationM
       );
     },
   );
+}
+
+Future<void> initAppTracking() async {
+  if (!Platform.isIOS) {
+    return;
+  }
+  final TrackingStatus status =
+      await AppTrackingTransparency.trackingAuthorizationStatus;
+  if (status == TrackingStatus.notDetermined) {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+  }
 }

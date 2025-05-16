@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+5
 
 environment:
   sdk: ^3.7.2
@@ -53,6 +53,9 @@ dependencies:
   firebase_auth: ^5.5.3
   flutter_inappwebview: ^6.1.5
   url_launcher: ^6.3.1
+  device_info_plus: ^11.4.0
+  app_tracking_transparency: ^2.0.6+1
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
@@ -73,7 +76,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/
+    - assets/logo/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -98,7 +101,17 @@ flutter:
   fonts:
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf
+        - asset: assets/fonts/Inter/static/Inter_18pt-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter/static/Inter_18pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter/static/Inter_18pt-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter/static/Inter_18pt-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter/static/Inter_18pt-Light.ttf
+          weight: 300
+        
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
@@ -112,3 +125,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_native_splash:
+  color: "#8DB9CE" # 스플래시 화면의 배경색 설정
+  image: "assets/logo/naro_logo.png" # 스플래시 화면에 표시될 이미지 설정 (앱 로고)
+  android: true # 안드로이드 플랫폼에 스플래시 화면 적용
+  ios: true # iOS 플랫폼에 스플래시 화면 적용
+  android_12: # Android 12 이상을 위한 추가 설정
+    color: "#8DB9CE" # Android 12 이상 스플래시 화면의 배경색 (흰색)
+    image: "assets/logo/naro_logo.png" # Android 12 이상 스플래시 화면에 표시될 이미지

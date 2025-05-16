@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:naro/controllers/image_upload_controller.dart';
+import 'package:naro/utils/permisson_manager.dart';
 import 'package:naro/widgets/common/image_viewer.dart';
 
 class ImageUpload extends StatefulWidget {
@@ -25,7 +26,7 @@ class _PhotoUploadState extends State<ImageUpload> {
           child: Text('사진', style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           )),
         ),
         Container(
@@ -59,6 +60,10 @@ class _PhotoUploadState extends State<ImageUpload> {
   Widget _buildUploadButton() {
     return GestureDetector(
       onTap: () async {
+        final isGranted = await PermissionManager().requestCameraPermission(context);
+        if (!isGranted) {
+          return;
+        }
         final picked = await _picker.pickMultiImage(limit: 3);
         if (picked.isNotEmpty) {
           setState(() {
@@ -68,12 +73,12 @@ class _PhotoUploadState extends State<ImageUpload> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFEAEAEA),
+          color: const Color(0xFFE9E9E9),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.shade400),
         ),
         child: const Center(
-          child: Icon(Icons.add_photo_alternate_outlined, size: 40, color: Colors.grey),
+          child: Icon(Icons.add_photo_alternate_outlined, size: 40, color: Color(0xFF797979),),
         ),
       ),
     );

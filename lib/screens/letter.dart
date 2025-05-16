@@ -15,7 +15,7 @@ class LetterScreen extends StatefulWidget {
 }
 
 class _LetterScreenState extends State<LetterScreen> {
-  List<Map<String, Object?>>? _letter;
+  Map<String, Object?>? _letter;
   late final TextEditingController _titleController;
   late final TextEditingController _contentController;
   List<String> _imagePaths = [];
@@ -27,7 +27,6 @@ class _LetterScreenState extends State<LetterScreen> {
     _contentController = TextEditingController();
   
     _loadLetter();
-    debugPrint('letterㅁㄴㅇId: ${widget.letterId}');
   }
   @override
   void dispose() {
@@ -42,21 +41,19 @@ class _LetterScreenState extends State<LetterScreen> {
     final imagepath = await DatabaseHelper.getImagePaths(letterId);
 
     if (!mounted) return ;
+
     if (data.isNotEmpty) {
       final row = data.first;
       _titleController.text = row['title'] as String? ?? '';
       _contentController.text = row['content'] as String? ?? '';
     }
 
-
-    print('imagepath: $imagepath');
     if (imagepath.isNotEmpty) {
       _imagePaths = imagepath;
     }
 
-    setState(() => _letter = data);
+    setState(() => _letter = data.first);
   }
-
   @override
   Widget build(BuildContext context) {
     if (_letter == null) {
@@ -64,19 +61,30 @@ class _LetterScreenState extends State<LetterScreen> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    final letterRow = _letter!.first;
-    debugPrint('letterRow: $letterRow');
+    final String date = _letter?['arrival_at'] as String? ?? '';
+    String weekdayKor = '';
+    String formattedDate = '';
+
+    final parsed = DateTime.tryParse(date);
+    if (parsed != null) {
+      const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
+      weekdayKor = weekdays[(parsed.weekday - 1) % 7];
+      formattedDate = '${parsed.year}년 ${parsed.month}월 ${parsed.day}일 $weekdayKor요일';
+    } else {
+      formattedDate = date;
+    }
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xffffffff),
         surfaceTintColor: Color(0xffffffff),
         elevation: 1,
         shadowColor: Colors.black,
-        title: const Text('2024-01-01, 금요일', style: TextStyle(
+        title: Text(formattedDate, style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 20,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
         )),
       ),
       body: SingleChildScrollView(
@@ -178,7 +186,7 @@ class ImageGridView extends StatelessWidget {
               if (index < imagePaths.length) {
                 return _buildPhotoItem(context, imagePaths[index]);
               }
-              return Container(); // 빈 칸
+              return Container();
             }),
           ),
         ),

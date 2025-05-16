@@ -1,7 +1,7 @@
 import 'package:naro/services/database_helper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'letter_notifier.g.dart'; // 🔥 build_runner가 생성할 파일 연결
+part 'letter_notifier.g.dart';
 
 @riverpod
 class LetterNotifier extends _$LetterNotifier {
@@ -9,7 +9,6 @@ class LetterNotifier extends _$LetterNotifier {
   Future<List<Map<String, dynamic>>> build() async {
     return await DatabaseHelper.getAllLetters();
   }
-  // WritingScreen에서 편지 추가
   Future<int> addLetter(
     Map<String, dynamic> letter,
     List<String> imagesPath
@@ -39,10 +38,6 @@ class LetterNotifier extends _$LetterNotifier {
       (letter) => letter['id'] == letterId,
       orElse: () => {},
     );
-    // print('getter ${target['arrival_at']}');
     return target['arrival_at'];
   }
-  // void a() {
-  //   debugPrint('test a: ${state.value}');
-  // }
 }

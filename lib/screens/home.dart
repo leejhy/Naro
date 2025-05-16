@@ -7,6 +7,7 @@ import 'package:naro/widgets/home/letter_view/letter_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:naro/utils/ad_manager.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -22,12 +23,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     analytics = ref.read(firebaseAnalyticsProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await initAppTracking();
+      AdManager.instance.loadRewardedAd();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffffffff), //background
+      backgroundColor: Color(0xffffffff),
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(56),
         child: HomeAppBar(),
@@ -86,17 +91,10 @@ class HomeAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Naro', style: TextStyle(
-              fontSize: 22,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.bold,
-              //자간
-            )),
+            Image.asset('assets/logo/home_icon.png', width: 58, height: 38),
             IconButton(
               onPressed: () {
                 context.push('/setting');
-                // DatabaseHelper.deleteAllLetter();
-                print('appbar test');
               },
               icon: Icon(Icons.settings, size: 24)
             ),
@@ -120,7 +118,6 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    //todo modularization
     final letters = ref.watch(letterNotifierProvider);
 
     return letters.when(
@@ -169,7 +166,6 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
         );
       }
     );
-    // print('home: in build $letters');
   }
 }
 
@@ -235,7 +231,7 @@ class SortingButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: selected ? Colors.black : Colors.white,
         side: BorderSide(
-          color: selected ? Colors.black : Colors.grey.shade200,
+          color: selected ? Colors.black : Color.fromRGBO(191, 191, 191, 0.5),
           width: 1,
         ),
       ),

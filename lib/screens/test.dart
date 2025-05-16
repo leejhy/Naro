@@ -25,21 +25,17 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   late AnimationController _pulseController;
   late AnimationController _particleController;
   
-  // 편지 애니메이션
   late Animation<Offset> _positionAnimation;
   late Animation<double> _opacityAnimation;
   late Animation<double> _rotationAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
   
-  // 파티클 효과용 랜덤 생성기
   final Random _random = math.Random();
   
-  // 파티클 리스트
   final List<Particle> _particles = [];
   final int _particleCount = 15;
   
-  // 편지 상태
   bool _isResting = true;
   bool _showParticles = false;
 
@@ -47,7 +43,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   void initState() {
     super.initState();
 
-    // 메인 애니메이션 컨트롤러
     _mainController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2500),
@@ -63,19 +58,16 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startAnimation();
     });
-    // 맥박 효과 컨트롤러 (대기 상태에서 미세하게 움직임)
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
     
-    // 파티클 효과 컨트롤러
     _particleController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     );
 
-    // 베지어 곡선을 사용한 자연스러운 경로 애니메이션
     _positionAnimation = TweenSequence<Offset>([
       TweenSequenceItem(
         tween: Tween<Offset>(
@@ -100,7 +92,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
 
-    // 투명도 애니메이션 (끝에서 점점 투명하게)
     _opacityAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 1.0, end: 1.0)
@@ -114,7 +105,7 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
 
-    // 회전 애니메이션 (자연스러운 회전)
+  
     _rotationAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 0.0, end: 0.1)
@@ -133,7 +124,7 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
 
-    // 크기 애니메이션 (처음에 약간 커졌다가 날아가면서 작아짐)
+  
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 1.0, end: 1.1)
@@ -152,7 +143,7 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
     
-    // 그림자 높이 애니메이션
+  
     _elevationAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 2.0, end: 15.0)
@@ -166,7 +157,7 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       ),
     ]).animate(_mainController);
     
-    // 파티클 초기화
+  
     _initializeParticles();
   }
   
@@ -198,14 +189,14 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
   }
 
   void startAnimation() {
-    HapticFeedback.mediumImpact(); // 햅틱 피드백 추가
+    HapticFeedback.mediumImpact();
     
     setState(() {
       _isResting = false;
       _showParticles = true;
     });
     
-    _initializeParticles();//?
+    _initializeParticles();
     _mainController.reset();
     _mainController.forward();
     _particleController.reset();
@@ -234,7 +225,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 배경 그라데이션
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -245,7 +235,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
             ),
           ),
           
-          // 파티클 효과
           if (_showParticles)
             AnimatedBuilder(
               animation: _particleController,
@@ -259,7 +248,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
               },
             ),
           
-          // 메인 편지 애니메이션
           Center(
             child: AnimatedBuilder(
               animation: Listenable.merge([_mainController, _pulseController]),
@@ -300,7 +288,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
                   ),
                   child: Stack(
                     children: [
-                      // 편지 봉투 디자인
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: CustomPaint(
@@ -308,14 +295,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
                           painter: EnvelopePainter(),
                         ),
                       ),
-                      // 하트 아이콘
-                      // Center(
-                      //   child: Icon(
-                      //     Icons.favorite,
-                      //     size: 18,
-                      //     color: Colors.redAccent.withOpacity(0.8),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -323,7 +302,6 @@ class _FlyingLetterState extends State<FlyingLetter> with TickerProviderStateMix
             ),
           ),
           
-          // 버튼
           Positioned(
             bottom: 50,
             left: 0,

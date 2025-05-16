@@ -46,7 +46,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
     _textController.dispose();
     super.dispose();
   }
-//------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     ref.watch(letterNotifierProvider);
@@ -72,7 +72,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
             FlyingLetter(
               onCompleted: () {
                 setState(() => _showFlyingLetter = false );
-                _textController.forward(from: 0.0);//애니메이션 실행
+                _textController.forward(from: 0.0);
               },
             ),
         ],
@@ -101,7 +101,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.15),
 
-              // 1) 아이콘
               FadeTransition(
                 opacity: _fade1,
                 child: SlideTransition(
@@ -113,19 +112,21 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
 
               const SizedBox(height: 16),
 
-              // 2) “도착일”
               FadeTransition(
                 opacity: _fade2,
                 child: SlideTransition(
                   position: _slide2,
                   child: const Text('도착일',
-                    style: TextStyle(fontSize: 20, color: Colors.black54)),
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black54)),
                 ),
               ),
 
               const SizedBox(height: 4),
 
-              // 3) 날짜 + D-Day
               FadeTransition(
                 opacity: _fade3,
                 child: SlideTransition(
@@ -134,11 +135,14 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                     children: [
                       Text(arrivalDate ?? '',
                           style: const TextStyle(
-                              fontSize: 26, fontWeight: FontWeight.bold)),
+                              fontFamily: 'Inter',
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       Text('D-$dDay', style: TextStyle(
+                        fontFamily: 'Inter',
                         fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xFF4A90E2))),
                     ],
                   ),
@@ -147,7 +151,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
 
               const SizedBox(height: 20),
 
-              // 4) 멘트
               FadeTransition(
                 opacity: _fade4,
                 child: SlideTransition(
@@ -160,7 +163,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 20,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w600,
                         height: 1.6,
                         color: Colors.black87,
                       ),
@@ -170,7 +173,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
               ),
 
               const Spacer(),
-              // 버튼은 고정 (애니메이션 없어도 OK)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 child: SizedBox(
@@ -180,13 +182,17 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.blueGrey),
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      textStyle: const TextStyle(fontSize: 18),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      foregroundColor: Colors.blueGrey[700],
+                      foregroundColor: const Color.fromRGBO(69, 90, 100, 1),
                     ),
-                    child: const Text('나의 시간으로 돌아가기'),
+                    child: const Text('나의 시간으로 돌아가기', style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromRGBO(69, 90, 100, 1),
+                      fontSize: 18
+                    )),
                   ),
                 ),
               ),
