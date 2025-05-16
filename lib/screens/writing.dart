@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:naro/controllers/writing_logic.dart';
 import 'package:naro/styles/colors.dart';
 import 'package:naro/widgets/common/icon_fab.dart';
@@ -55,9 +56,10 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UIColors.backgroundGray,
-      appBar: WritingAppBar( //todo title만 따로 받기
+      appBar: WritingAppBar(
         arrivalDate: logic.arrivalDateController.text,
         onTapCalendar: () {
+          HapticFeedback.lightImpact();
           logic.analytics.logEvent(name: 'select_date_writing');
           logic.showDateDialog(context);
         },

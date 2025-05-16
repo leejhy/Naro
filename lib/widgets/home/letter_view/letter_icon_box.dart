@@ -21,7 +21,7 @@ class LetterIconBox extends StatelessWidget {
         widthFactor: widthFactor,
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xffF3F4F6),
+            color: UIColors.cardBackground,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(

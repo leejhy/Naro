@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/styles/colors.dart';
+import 'package:flutter/services.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -25,6 +26,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               Image.asset('assets/logo/home_icon.png', width: 58, height: 38),
               IconButton(
                 onPressed: () {
+                  HapticFeedback.lightImpact();
                   context.push('/setting');
                 },
                 icon: Icon(Icons.settings, size: 24)

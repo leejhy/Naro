@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:naro/styles/colors.dart';
+import 'package:flutter/services.dart';
 
 class IconFab extends StatelessWidget {
   const IconFab({
@@ -23,7 +24,10 @@ class IconFab extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
           ),
           backgroundColor: UIColors.black,
-          onPressed: onPressed,
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            onPressed();
+          },
           child: icon,
         ),
       ),
