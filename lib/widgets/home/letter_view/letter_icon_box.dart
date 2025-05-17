@@ -23,6 +23,13 @@ class LetterIconBox extends StatelessWidget {
           decoration: BoxDecoration(
             color: UIColors.cardBackground,
             borderRadius: BorderRadius.circular(8),
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: const Color.fromRGBO(0, 0, 0, 0.05),
+            //     blurRadius: 1,
+            //     offset: const Offset(0,2),
+            //   ),
+            // ],
           ),
           child: Icon(
             isOpened ? Icons.drafts_rounded : Icons.mail_rounded,

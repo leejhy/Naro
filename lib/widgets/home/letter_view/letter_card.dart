@@ -44,7 +44,7 @@ class _LetterCardState extends ConsumerState<LetterCard> {
       elevation: 3,
       child: InkWell(
         splashColor: const Color(0xFFBFE6F5),
-        highlightColor: const Color.fromRGBO(185, 255, 255, 0.103),
+        highlightColor: const Color.fromRGBO(185, 255, 255, 0.1),
         borderRadius: BorderRadius.circular(8),
         onTap: () async {
           final username = await DatabaseHelper.getUserName();

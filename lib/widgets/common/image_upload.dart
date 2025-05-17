@@ -23,15 +23,19 @@ class _PhotoUploadState extends State<ImageUpload> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-          child: Text('사진', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          )),
+        SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+            child: Text('사진', style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            )),
+          ),
         ),
         Container(
+          constraints: const BoxConstraints(maxWidth: 500),//
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: GridView.count(
             shrinkWrap: true,

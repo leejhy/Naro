@@ -16,6 +16,6 @@ class UIColors {
                           );
   static const Color appbarShadow = Color.fromRGBO(0, 0, 0, 0.2);
   static const Color cardShadow = Color.fromRGBO(0, 0, 0, 0.35);
-  static const Color cardBackground = Color.fromRGBO(230, 245, 252, 0.75);
+  static const Color cardBackground = Color(0xFFEBF6FB);
   
 }

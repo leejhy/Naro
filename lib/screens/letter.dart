@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/styles/colors.dart';
 import 'dart:io';
 import 'package:naro/widgets/common/image_viewer.dart';
+import 'package:naro/widgets/common/app_bar.dart';
 
 class LetterScreen extends StatefulWidget {
   final String letterId;
@@ -74,19 +76,8 @@ class _LetterScreenState extends State<LetterScreen> {
       formattedDate = date;
     }
     return Scaffold(
-      backgroundColor: Color(0xffF9FAFB),
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Color(0xffffffff),
-        surfaceTintColor: Color(0xffffffff),
-        elevation: 1,
-        shadowColor: Colors.black,
-        title: Text(formattedDate, style: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        )),
-      ),
+      backgroundColor: UIColors.backgroundGray,
+      appBar: TitleAppBar(title: formattedDate),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,7 +86,6 @@ class _LetterScreenState extends State<LetterScreen> {
               title: _titleController.text,
               content: _contentController.text,
             ),
-            
             ImageGridView(
               imagePaths: _imagePaths,
             ),
