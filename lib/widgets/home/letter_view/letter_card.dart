@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/widgets/home/letter_view/letter_icon_box.dart';
 import 'package:naro/widgets/home/letter_view/letter_info_box.dart';
@@ -6,6 +7,7 @@ import 'package:naro/utils/utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:naro/services/database_helper.dart';
+import 'package:naro/styles/colors.dart';
 
 class LetterCard extends ConsumerStatefulWidget {
   const LetterCard({
@@ -21,6 +23,7 @@ class LetterCard extends ConsumerStatefulWidget {
 class _LetterCardState extends ConsumerState<LetterCard> {
 
   void onTapLetter(bool isOpened) {
+    HapticFeedback.lightImpact();
     if (!isOpened) {
       showAutoDismissDialog(context, "편지가 도착하려면\n조금 더 시간이 필요해요");
       return;
@@ -36,14 +39,14 @@ class _LetterCardState extends ConsumerState<LetterCard> {
     const double cardWidth = 0.72;
 
     return Card(
-      color: const Color.fromARGB(255, 255, 255, 255),
-      shadowColor: const Color.fromARGB(82, 0, 0, 0),
-      elevation: 2,
+      color: UIColors.white,
+      shadowColor: UIColors.cardShadow,
+      elevation: 3,
       child: InkWell(
         splashColor: const Color(0xFFBFE6F5),
-        highlightColor: const Color.fromARGB(30, 0, 0, 0),
+        highlightColor: const Color.fromRGBO(185, 255, 255, 0.1),
         borderRadius: BorderRadius.circular(8),
-        onTap: () async{
+        onTap: () async {
           final username = await DatabaseHelper.getUserName();
           await analytics.logEvent(
             name: 'letter_card_open',

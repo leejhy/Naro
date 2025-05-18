@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:naro/styles/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:naro/utils/utils.dart';
 import 'package:naro/const.dart';
+import 'package:flutter/services.dart';
+
+//think about haptic feedback
+
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -20,10 +25,10 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
       appBar: AppBar(
-        backgroundColor: Color(0xffffffff),
-        surfaceTintColor: Color(0xffffffff),
-        elevation: 1,
-        shadowColor: const Color.fromARGB(50, 0, 0, 0),
+        backgroundColor: UIColors.white,
+        surfaceTintColor: UIColors.white,
+        elevation: 2,
+        shadowColor: UIColors.appbarShadow,
         title: const Text(
           '설정',
           style: TextStyle(
@@ -39,13 +44,17 @@ class SettingScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.mail_outline),
             title: const Text('의견 보내기'),
-            onTap: () => showDialog(context),
+            onTap: () {
+              HapticFeedback.lightImpact();
+              showDialog(context);
+            },
           ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.description_outlined),
             title: const Text('개인정보 처리방침'),
             onTap: () {
+              HapticFeedback.lightImpact();
               launchUrl(PRIVACY_URL_KR,
               mode: LaunchMode.inAppBrowserView);
             },
@@ -55,6 +64,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: const Text('이용약관'),
             onTap: () {
+              HapticFeedback.lightImpact();
               launchUrl(TERMS_URL_KR,
               mode: LaunchMode.inAppBrowserView
               );
@@ -65,6 +75,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.info_outline),
             title: const Text('앱 정보'),
             onTap: () {
+              HapticFeedback.lightImpact();
               showTextDialog(
                 context,
                 '앱정보: v1.0.0'
@@ -241,6 +252,8 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                 height: 56,
                 child: FloatingActionButton(
                   onPressed: () async {
+                    HapticFeedback.vibrate();
+                    //todo add fireworks animation
                     final contact = _emailController.text.trim();
                     final message = _messageController.text.trim();
                     if (contact.isEmpty || message.isEmpty) {

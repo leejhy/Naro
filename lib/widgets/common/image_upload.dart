@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:naro/controllers/image_upload_controller.dart';
+import 'package:naro/styles/colors.dart';
 import 'package:naro/utils/permisson_manager.dart';
 import 'package:naro/widgets/common/image_viewer.dart';
+import 'package:flutter/services.dart';
 
 class ImageUpload extends StatefulWidget {
   final ImageUploadController imageController;
@@ -21,15 +23,19 @@ class _PhotoUploadState extends State<ImageUpload> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-          child: Text('사진', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          )),
+        SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+            child: Text('사진', style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            )),
+          ),
         ),
         Container(
+          constraints: const BoxConstraints(maxWidth: 500),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: GridView.count(
             shrinkWrap: true,
@@ -58,8 +64,9 @@ class _PhotoUploadState extends State<ImageUpload> {
   }
 
   Widget _buildUploadButton() {
-    return GestureDetector(
+    return InkWell(
       onTap: () async {
+        HapticFeedback.lightImpact();
         final isGranted = await PermissionManager().requestCameraPermission(context);
         if (!isGranted) {
           return;
@@ -73,9 +80,9 @@ class _PhotoUploadState extends State<ImageUpload> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFE9E9E9),
+          color: UIColors.cardBackground,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade400),
+          border: Border.all(color: const Color.fromARGB(255, 181, 213, 244)),
         ),
         child: const Center(
           child: Icon(Icons.add_photo_alternate_outlined, size: 40, color: Color(0xFF797979),),
