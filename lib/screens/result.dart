@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:naro/styles/colors.dart';
 import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/result/flying_letter.dart';
 import 'package:naro/services/letter_notifier.dart';
@@ -137,6 +138,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                           style: const TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 26,
+                              color: UIColors.black,
                               fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       Text('D-$dDay', style: TextStyle(

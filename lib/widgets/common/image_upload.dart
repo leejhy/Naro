@@ -35,7 +35,7 @@ class _PhotoUploadState extends State<ImageUpload> {
           ),
         ),
         Container(
-          constraints: const BoxConstraints(maxWidth: 500),//
+          constraints: const BoxConstraints(maxWidth: 500),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: GridView.count(
             shrinkWrap: true,
