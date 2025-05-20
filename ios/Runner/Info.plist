@@ -15,7 +15,7 @@
 		<string>맞춤형 광고를 제공하기 위해 사용자의 앱 내 활동 정보를 수집하여 광고 콘텐츠를 사용자에게 적합하게 조정합니다.</string>
 		<!-- <string>We need to track your activity to provide personalized ads.</string> -->
 		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<string>ko</string>
 		<key>CFBundleDisplayName</key>
 		<string>Naro</string>
 		<key>CFBundleExecutable</key>
