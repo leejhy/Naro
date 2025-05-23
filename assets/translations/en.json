@@ -17,5 +17,26 @@
   "no_letter_6": "Why not leave a kind word for your future self\nwho might struggle someday?",
 
   "letter.arrived": "Arrived",
-  "letter.arrival_date": "Due {date}"
+  "letter.arrival_date": "Due {date}",
+
+  "result.arrival_label": "Arrival Date",
+  "result.d_day": "D-{day}",
+  "result.emotional_text": "I'm looking forward to the moment\nI read this letter.",
+  "result.back_button": "Return to Home",
+
+  "settings": {
+    "title": "Settings",
+    "send_feedback": "Send Feedback",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "app_info": "App Info",
+    "app_version": "App Version: v1.1.0",
+    "contact_label": "Contact",
+    "message_label": "Message",
+    "message_hint": "Feedback, bugs, suggestions, greetings, etc.",
+    "error_empty_input": "Please fill in all fields.",
+    "error_generic": "Something went wrong. Please try again later.",
+    "success_feedback_sent": "Feedback sent successfully!",
+    "submit_button": "Submit"
+  }
 }

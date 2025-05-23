@@ -1,6 +1,9 @@
 {
   "image": "사진",
-  
+  "all": "전체",
+  "arrived": "도착",
+  "upcoming": "배송중",
+
   "header.upcoming": "다가오는 편지",
   "header.d_day": "D-{day}",
   "header.arrival_date": "{year}년 {month}월 {day}일 도착 예정",
@@ -14,5 +17,26 @@
   "no_letter_6": "언젠가 힘들어할 나에게\n따뜻한 한마디를 남겨보는 건 어때요?",
   
   "letter.arrived": "도착완료",
-  "letter.arrival_date": "{date} 도착"
+  "letter.arrival_date": "{date} 도착",
+
+  "result.arrival_label": "도착일",
+  "result.d_day": "D-{day}",
+  "result.emotional_text": "이 편지를 읽을 순간이,\n벌써부터 궁금하고 기대돼요.",
+  "result.back_button": "나의 시간으로 돌아가기",
+
+  "settings": {
+    "title": "Settings",
+    "send_feedback": "Send Feedback",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "app_info": "App Info",
+    "app_version": "App Version: v1.1.0",
+    "contact_label": "Contact",
+    "message_label": "Message",
+    "message_hint": "Feedback, bugs, suggestions, greetings, etc.",
+    "error_empty_input": "Please fill in all fields.",
+    "error_generic": "Something went wrong. Please try again later.",
+    "success_feedback_sent": "Feedback sent successfully!",
+    "submit_button": "Submit"
+  }
 }
