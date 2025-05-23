@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naro/styles/text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:naro/utils/utils.dart';
 
 class LetterInfoBox extends StatelessWidget {
   const LetterInfoBox({
@@ -17,13 +19,14 @@ class LetterInfoBox extends StatelessWidget {
   final double? widthFactor;
   final int flex;
   String get dDayText {
-    if (dDay < 0) return '도착완료';
+    if (dDay < 0) return 'letter.arrived'.tr();
     if (dDay == 0) return 'D-Day';
     return 'D-$dDay';
   }
 
   @override
   Widget build(BuildContext context) {
+    final dateString = getLocalizedDateString(DateTime.parse(arrivalAt), context);
     return Expanded(
       flex: flex,
       child: Padding(
@@ -39,7 +42,9 @@ class LetterInfoBox extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
               ),
-              Text('$arrivalAt 도착', style: AppTextStyles.letterCardArrivalDateStyle,
+              Text(
+                'letter.arrival_date'.tr(namedArgs: {'date': dateString}),
+                style: AppTextStyles.letterCardArrivalDateStyle,
                 maxLines: 1,
                 overflow: TextOverflow.fade,
                 softWrap: false,

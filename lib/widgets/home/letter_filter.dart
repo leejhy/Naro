@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naro/models/letter_filter.dart';
 import 'package:naro/styles/colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LetterSortingButtons extends StatelessWidget {
   const LetterSortingButtons({
@@ -19,19 +20,19 @@ class LetterSortingButtons extends StatelessWidget {
       child: Row(
         children: [
           SortingButton(
-            label: '전체',
+            label: 'all'.tr(),
             selected: current == LetterFilter.all,
             onTap: () => onChanged(LetterFilter.all),
           ),
           const SizedBox(width: 8),
           SortingButton(
-            label: '도착',
+            label: 'arrived'.tr(),
             selected: current == LetterFilter.arrived,
             onTap: () => onChanged(LetterFilter.arrived),
           ),
           const SizedBox(width: 8),
           SortingButton(
-            label: '배송중',
+            label: 'upcoming'.tr(),
             selected: current == LetterFilter.inTransit,
             onTap: () => onChanged(LetterFilter.inTransit),
           ),

@@ -25,7 +25,7 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
 
     return letters.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('에러 발생: $error')),
+      error: (error, stack) => Center(child: Text('error: $error')),
       data: (letters) {
         final (nextDate: nextDate, dDay: dDay) = extractUpcomingLetterInfo(letters);
         final filtered = filterLetters(letters, _filter);

@@ -1,4 +1,6 @@
 {
+  "image": "사진",
+  
   "header.upcoming": "다가오는 편지",
   "header.d_day": "D-{day}",
   "header.arrival_date": "{year}년 {month}월 {day}일 도착 예정",
@@ -9,5 +11,8 @@
   "no_letter_3": "편지함이 고요해요.\n오늘의 감정을 남겨보는 건 어때요?",
   "no_letter_4": "지금의 내가, 미래의 나에게\n가장 큰 힘이 되어줄 수 있어요.",
   "no_letter_5": "언젠가 불안한 날의 내가\n오늘의 당신을 기억하게 될 거예요.",
-  "no_letter_6": "언젠가 힘들어할 나에게\n따뜻한 한마디를 남겨보는 건 어때요?"
+  "no_letter_6": "언젠가 힘들어할 나에게\n따뜻한 한마디를 남겨보는 건 어때요?",
+  
+  "letter.arrived": "도착완료",
+  "letter.arrival_date": "{date} 도착"
 }
