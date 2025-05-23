@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:naro/widgets/writing/text_field.dart';
 
@@ -47,7 +48,7 @@ class _TextWritingState extends State<WritingSection> {
               onTap: () {},
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              hintText: '제목을 입력하세요...',
+              hintText: 'writing.title_hint'.tr(),
               hintTextWeight: FontWeight.w700,
             ),
             SizedBox(
@@ -59,7 +60,7 @@ class _TextWritingState extends State<WritingSection> {
                 onTap: () => _toggleFocus(_contentFocus),
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                hintText: '본문을 작성하세요...',
+                hintText: 'writing.content_hint'.tr(),
                 hintTextWeight: FontWeight.w400,
                 expands: true,
               ),

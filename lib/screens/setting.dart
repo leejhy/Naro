@@ -292,12 +292,12 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                       return;
                     }
                     if (!mounted) return;
+                    Navigator.of(context).pop();
                     showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (context) {
                         Future.delayed(const Duration(milliseconds: 1200), () {
-                          Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         });
                         return AlertDialog(

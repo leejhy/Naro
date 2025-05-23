@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ConfirmButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
-  final String label;
+  // final String label;
 
   const ConfirmButton({
     super.key,
     required this.onPressed,
     this.isLoading = false,
-    this.label = '저장',
+    // this.label = 'confirm'.tr(),
   });
 
   @override
@@ -28,7 +29,7 @@ class ConfirmButton extends StatelessWidget {
           height: 18,
           child: CircularProgressIndicator(strokeWidth: 2)
         )
-      : Text(label, style: TextStyle(
+      : Text('confirm'.tr(), style: TextStyle(
         fontFamily: 'Inter',
         fontSize: 16,
         fontWeight: FontWeight.w600,
