@@ -10,15 +10,15 @@
 
   "header.upcoming": "Upcoming Letter",
   "header.d_day": "D-{day}",
-  "header.arrival_date": "Arrives on: {year}-{month}-{day}",
+  "header.arrival_date": "Arrives on {date}",
   "header.today_arrival": "You have a letter arriving today",
-  "no_letter_0": "No letters are coming.\nWhy not write one now?",
-  "no_letter_1": "No letters are scheduled.\nTry writing your thoughts today.",
-  "no_letter_2": "You haven't sent any letters yet.\nYour future self might be waiting.",
-  "no_letter_3": "The inbox is quiet.\nWhy not express your feelings today?",
-  "no_letter_4": "Your current self can be\nyour future self's greatest strength.",
-  "no_letter_5": "Someday, on a hard day,\nyou'll remember today's you.",
-  "no_letter_6": "Your future self might\nneed your kindness someday.",
+  "no_letter_0": "No letters are coming\nWhy not write one now?",
+  "no_letter_1": "No letters are scheduled\nTry writing your thoughts today",
+  "no_letter_2": "No letters are coming\nTry writing Goals to future self",
+  "no_letter_3": "You haven't sent any letters yet.\nYour future self might be waiting",
+  "no_letter_4": "You haven't sent any letters yet.\nYour future self might be waiting",
+  "no_letter_5": "Your current self can be\nyour future self's greatest strength",
+  "no_letter_6": "Commit to your dreams",
 
   "letter": {
     "arrived": "Arrived",

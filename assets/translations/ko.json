@@ -13,7 +13,7 @@
 
   "header.upcoming": "다가오는 편지",
   "header.d_day": "D-{day}",
-  "header.arrival_date": "{year}년 {month}월 {day}일 도착 예정",
+  "header.arrival_date": "{date} 도착 예정",
   "header.today_arrival": "오늘 도착한 편지가 있어요",
   "no_letter_0": "오고 있는 편지가 없어요.\n지금 이 순간을 담아보는 건 어때요?",
   "no_letter_1": "아직 도착 예정인 편지가 없어요.\n오늘의 마음을 기록해 보는 건 어때요?",
