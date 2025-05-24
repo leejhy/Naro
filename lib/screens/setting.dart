@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:naro/utils/utils.dart';
 import 'package:naro/const.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 //think about haptic feedback
 
@@ -29,8 +30,8 @@ class SettingScreen extends StatelessWidget {
         surfaceTintColor: UIColors.white,
         elevation: 2,
         shadowColor: UIColors.appbarShadow,
-        title: const Text(
-          '설정',
+        title: Text(
+          'settings.title'.tr(),
           style: TextStyle(
             fontSize: 20,
             fontFamily: 'Inter',
@@ -43,7 +44,13 @@ class SettingScreen extends StatelessWidget {
           const SizedBox(height: 12),
           ListTile(
             leading: const Icon(Icons.mail_outline),
-            title: const Text('의견 보내기'),
+            title: Text('settings.send_feedback'.tr(),
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             onTap: () {
               HapticFeedback.lightImpact();
               showDialog(context);
@@ -52,7 +59,13 @@ class SettingScreen extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.description_outlined),
-            title: const Text('개인정보 처리방침'),
+            title: Text('settings.privacy_policy'.tr(),
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             onTap: () {
               HapticFeedback.lightImpact();
               launchUrl(PRIVACY_URL_KR,
@@ -62,7 +75,13 @@ class SettingScreen extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.description_outlined),
-            title: const Text('이용약관'),
+            title: Text('settings.terms_of_service'.tr(),
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+               ),
+              ),
             onTap: () {
               HapticFeedback.lightImpact();
               launchUrl(TERMS_URL_KR,
@@ -73,12 +92,18 @@ class SettingScreen extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('앱 정보'),
+            title: Text('settings.app_info'.tr(),
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             onTap: () {
               HapticFeedback.lightImpact();
               showTextDialog(
                 context,
-                '앱정보: v1.0.0'
+                'settings.app_version'.tr(),
               );
             },
           ),
@@ -208,8 +233,8 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                       children: [
                         Align(
                           alignment: Alignment.center,
-                          child: const Text(
-                            '의견 보내기',
+                          child: Text(
+                            'settings.contact_label'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'Inter',
@@ -232,7 +257,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                         const SizedBox(height: 8),
                         settingTextField(
                           controller: _messageController,
-                          hintText: '피드백, 버그, 제안, 인사 등',
+                          hintText: 'settings.message_hint'.tr(),
                           maxLines: 10,
                           maxLength: 300,
                         ),
@@ -257,22 +282,22 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                     final contact = _emailController.text.trim();
                     final message = _messageController.text.trim();
                     if (contact.isEmpty || message.isEmpty) {
-                      showAutoDismissDialog(context, '모든 항목을 입력해주세요.');
+                      showAutoDismissDialog(context, 'settings.error_empty_input'.tr());
                       return ;
                     }
                     try {
                       await submitFeedback(contact, message);
                     } catch (e) {
-                      showAutoDismissDialog(context, '오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                      showAutoDismissDialog(context, 'settings.error_generic'.tr());
                       return;
                     }
                     if (!mounted) return;
+                    Navigator.of(context).pop();
                     showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (context) {
                         Future.delayed(const Duration(milliseconds: 1200), () {
-                          Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         });
                         return AlertDialog(
@@ -280,7 +305,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.check_circle_outline_rounded,
                                 color: Color(0xFF4A90E2),
@@ -288,7 +313,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                               ),
                               SizedBox(height: 8),
                               Text(
-                                '의견이 전송되었습니다!',
+                                'settings.success_feedback_sent'.tr(),
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -299,8 +324,8 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                   },
 
                   backgroundColor: const Color(0xFFE3F7FF),
-                  child: const Text(
-                    '전송',
+                  child: Text(
+                    'settings.submit_button'.tr(),
                     style: TextStyle(
                       fontFamily: 'Inter',
                       color: Colors.black,

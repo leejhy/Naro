@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naro/styles/text_styles.dart';
 import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 
 const List<String> noLetterMessages = [
   '오고 있는 편지가 없어요.\n지금 이 순간을 담아보는 건 어때요?',
@@ -29,12 +30,13 @@ class HeaderSection extends StatefulWidget {
 }
 
 class _HeaderSectionState extends State<HeaderSection> {
-  late final String randomMessage;
+  late final String randomKey;
 
   @override
   void initState() {
     super.initState();
-    randomMessage = noLetterMessages[Random().nextInt(noLetterMessages.length)];
+    final List<String> keys = List.generate(7, (i) => 'no_letter_$i');
+    randomKey = keys[Random().nextInt(keys.length)];
   }
 
   @override
@@ -65,19 +67,21 @@ class _HeaderSectionState extends State<HeaderSection> {
             mainAxisSize: MainAxisSize.max,
             children: [
               if (dDay > 0) ... [
-                Text('다가오는 편지', style: AppTextStyles.headingStyle),
-                Text('D-$dDay', style: AppTextStyles.dDayStyle),
+                Text('header.upcoming'.tr(), style: AppTextStyles.headingStyle),
+                Text('header.d_day'.tr(namedArgs: {'day': dDay.toString()}), style: AppTextStyles.dDayStyle),
                 SizedBox(height: 4),
-                Text('${arrivalDate.year}년 '
-                '${arrivalDate.month}월 '
-                '${arrivalDate.day}일 도착 예정', style: AppTextStyles.dateStyle),
+                Text('header.arrival_date'.tr(namedArgs: {
+                  'year': arrivalDate.year.toString(),
+                  'month': arrivalDate.month.toString(),
+                  'day': arrivalDate.day.toString(),
+                }), style: AppTextStyles.dateStyle),
               ] else if (dDay == 0)... [
                 Center(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '오늘 도착한 편지한 편지가 있어요',
+                      'header.today_arrival'.tr(),
                       style: AppTextStyles.arrivalStyle,
                     ),
                   ),
@@ -89,7 +93,7 @@ class _HeaderSectionState extends State<HeaderSection> {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      randomMessage,
+                      randomKey.tr(),
                       style: AppTextStyles.headerSectionStyle,
                     ),
                   ),

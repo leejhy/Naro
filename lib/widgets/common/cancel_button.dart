@@ -1,14 +1,15 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:naro/styles/colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CancelButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String label;
+  // final String label;
 
   const CancelButton({
     super.key,
     required this.onPressed,
-    this.label = '취소',
+    // this.label = '취소',
   });
 
   @override
@@ -21,7 +22,7 @@ class CancelButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Text(label, style: TextStyle(
+      child: Text('cancel'.tr(), style: TextStyle(
         fontFamily: 'Inter',
         fontSize: 16,
         fontWeight: FontWeight.w500,

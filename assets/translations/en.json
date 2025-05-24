@@ -1,0 +1,59 @@
+{
+  "image": "Images",
+  "all": "ALL",
+  "arrived": "Arrived",
+  "upcoming": "Upcoming",
+  "cancel": "Cancel",
+  "save": "Save",
+  "confirm": "Confirm",
+  "permission_request": "Please allow access\nto your photos",
+
+  "header.upcoming": "Upcoming Letter",
+  "header.d_day": "D-{day}",
+  "header.arrival_date": "Arrives on: {year}-{month}-{day}",
+  "header.today_arrival": "You have a letter arriving today",
+  "no_letter_0": "No letters are coming.\nWhy not write one now?",
+  "no_letter_1": "No letters are scheduled.\nTry writing your thoughts today.",
+  "no_letter_2": "You haven't sent any letters yet.\nYour future self might be waiting.",
+  "no_letter_3": "The inbox is quiet.\nWhy not express your feelings today?",
+  "no_letter_4": "Your current self can be\nyour future self's greatest strength.",
+  "no_letter_5": "Someday, on a hard day,\nyou'll remember today's you.",
+  "no_letter_6": "Your future self might\nneed your kindness someday.",
+
+  "letter": {
+    "arrived": "Arrived",
+    "arrival_date": "Due: {date}",
+    "arrival_pending": "The letter needs\na bit more time to arrive."
+  },
+  
+  "result.arrival_label": "Arrival Date",
+  "result.d_day": "D-{day}",
+  "result.emotional_text": "I'm looking forward to the moment\nI read this letter.",
+  "result.back_button": "Return to Home",
+
+  "settings": {
+    "title": "Settings",
+    "send_feedback": "Send Feedback",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "app_info": "App Version",
+    "app_version": "App Version: v1.1.0",
+    "contact_label": "Contact",
+    "message_label": "Message",
+    "message_hint": "Feedback, bugs, suggestions, greetings, etc.",
+    "error_empty_input": "Please fill in all fields.",
+    "error_generic": "Something went wrong. Please try again later.",
+    "success_feedback_sent": "Feedback sent successfully!",
+    "submit_button": "Submit"
+  },
+
+  "writing": {
+    "title": "Due: {date}",
+    "error_empty_input": "Please enter both\nthe title and the content.",
+    "select_date": "Select arrival date",
+    "title_hint": "Enter a title...",
+    "content_hint": "Enter your letter content...",
+    "save_title": "Do you want to save it?",
+    "save_message": "Your letter will be saved\nafter the ad finishes."
+  }
+}

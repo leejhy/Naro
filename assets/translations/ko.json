@@ -1,0 +1,58 @@
+{
+  "image": "사진",
+  "all": "전체",
+  "arrived": "도착",
+  "upcoming": "배송중",
+  "cancel": "취소",
+  "save": "저장",
+  "confirm": "확인",
+  "year": "년",
+  "month": "월",
+  "day": "일",
+  "permission_request": "권한을 허용해주세요.",
+
+  "header.upcoming": "다가오는 편지",
+  "header.d_day": "D-{day}",
+  "header.arrival_date": "{year}년 {month}월 {day}일 도착 예정",
+  "header.today_arrival": "오늘 도착한 편지가 있어요",
+  "no_letter_0": "오고 있는 편지가 없어요.\n지금 이 순간을 담아보는 건 어때요?",
+  "no_letter_1": "아직 도착 예정인 편지가 없어요.\n오늘의 마음을 기록해 보는 건 어때요?",
+  "no_letter_2": "아직 편지를 보내지 않았어요.\n미래의 내가 기다리고 있을지 몰라요.",
+  "no_letter_3": "편지함이 고요해요.\n오늘의 감정을 남겨보는 건 어때요?",
+  "no_letter_4": "지금의 내가, 미래의 나에게\n가장 큰 힘이 되어줄 수 있어요.",
+  "no_letter_5": "언젠가 불안한 날의 내가\n오늘의 당신을 기억하게 될 거예요.",
+  "no_letter_6": "언젠가 힘들어할 나에게\n따뜻한 한마디를 남겨보는 건 어때요?",
+  
+  "letter": {
+    "arrived": "도착완료",
+    "arrival_date": "{date} 도착",
+    "arrival_pending": "편지가 도착하려면\n조금 더 시간이 필요해요"
+  },
+
+  "result.arrival_label": "도착일",
+  "result.emotional_text": "이 편지를 읽을 순간이,\n벌써부터 궁금하고 기대돼요.",
+  "result.back_button": "나의 시간으로 돌아가기",
+
+  "settings": {
+    "title": "설정",
+    "send_feedback": "의견 보내기",
+    "privacy_policy": "개인정보 처리방침",
+    "terms_of_service": "이용약관",
+    "app_info": "앱 버전",
+    "app_version": "앱 버전: v1.1.0",
+    "message_hint": "피드백, 버그, 제안, 인사 등",
+    "error_empty_input": "모든 항목을 입력해주세요",
+    "error_generic": "Something went wrong. Please try again later.",
+    "success_feedback_sent": "의견이 전송 되었습니다!",
+    "submit_button": "전송"
+  },
+  "writing": {
+    "title": "도착: {date}",
+    "error_empty_input": "제목과 내용을 입력해주세요",
+    "select_date": "도착 날짜 선택",
+    "title_hint": "제목을 입력하세요...",
+    "content_hint": "편지 내용을 입력하세요...",
+    "save_title": "저장하시겠습니까?",
+    "save_message": "광고가 끝난 후 편지가 저장돼요."
+  }
+}

@@ -1,0 +1,4 @@
+"NSCameraUsageDescription" = "We need access to your camera to take pictures.";
+"NSMicrophoneUsageDescription" = "We need access to your microphone to record audio.";
+"NSPhotoLibraryUsageDescription" = "We need access to your photo library to attach images to your letters. Selected images will be saved and viewable only by you.";
+"NSUserTrackingUsageDescription" = "We use your in-app activity to deliver more relevant ads.";

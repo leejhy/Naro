@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:naro/styles/colors.dart';
 import 'dart:io';
 import 'package:naro/widgets/common/image_viewer.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ImageGridView extends StatelessWidget {
   const ImageGridView({super.key, required this.imagePaths});
@@ -14,7 +15,7 @@ class ImageGridView extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-          child: Text('사진', style: TextStyle(
+          child: Text('image'.tr(), style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 20,
             color: UIColors.black,

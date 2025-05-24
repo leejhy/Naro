@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:go_router/go_router.dart';
 import 'package:naro/widgets/common/cancel_button.dart';
 import 'package:naro/widgets/common/confirm_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ConfirmDialog extends StatefulWidget {
   const ConfirmDialog({
@@ -47,8 +48,8 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color.fromRGBO(240, 250, 255, 1),
-      title: const Text('저장하시겠습니까?'),
-      content: const Text('광고가 끝난 후 편지가 저장됩니다.', 
+      title: Text('writing.save_title'.tr()),
+      content: Text('writing.save_message'.tr(), 
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 17,
