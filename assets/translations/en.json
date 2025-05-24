@@ -6,7 +6,7 @@
   "cancel": "Cancel",
   "save": "Save",
   "confirm": "Confirm",
-
+  "permission_request": "Please allow access\nto your photos",
 
   "header.upcoming": "Upcoming Letter",
   "header.d_day": "D-{day}",
@@ -16,9 +16,9 @@
   "no_letter_1": "No letters are scheduled.\nTry writing your thoughts today.",
   "no_letter_2": "You haven't sent any letters yet.\nYour future self might be waiting.",
   "no_letter_3": "The inbox is quiet.\nWhy not express your feelings today?",
-  "no_letter_4": "Your current self can be your future self's greatest strength.",
+  "no_letter_4": "Your current self can be\nyour future self's greatest strength.",
   "no_letter_5": "Someday, on a hard day,\nyou'll remember today's you.",
-  "no_letter_6": "Why not leave a kind word for your future self\nwho might struggle someday?",
+  "no_letter_6": "Your future self might\nneed your kindness someday.",
 
   "letter": {
     "arrived": "Arrived",
