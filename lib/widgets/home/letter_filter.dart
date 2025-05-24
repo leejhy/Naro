@@ -65,7 +65,7 @@ class SortingButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: selected ? UIColors.black : UIColors.white,
         side: BorderSide(
-          color: selected ? UIColors.black : Color.fromRGBO(0, 149, 255, 0.316),
+          color: selected ? UIColors.black : Color.fromRGBO(0, 30, 255, 0.1),
           width: 1,
         ),
       ),
