@@ -28,7 +28,6 @@ class PermissionManager {
         status = await Permission.photos.request();
       }
     }
-    print('status: $status');
     if (status.isLimited) {
       return true;
     }

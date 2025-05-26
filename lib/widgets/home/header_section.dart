@@ -34,7 +34,6 @@ class _HeaderSectionState extends State<HeaderSection> {
   Widget build(BuildContext context) {
     final dDay = widget.dDay;
     final arrivalDate = getLocalizedDateString(widget.arrivalDate, context);
-    // print(getLocalizedDateString(widget.arrivalDate, context));
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverToBoxAdapter(
