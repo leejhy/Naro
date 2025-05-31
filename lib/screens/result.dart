@@ -5,6 +5,7 @@ import 'package:naro/styles/colors.dart';
 import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/result/flying_letter.dart';
 import 'package:naro/services/letter_notifier.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   final String letterId;
@@ -117,11 +118,11 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                 opacity: _fade2,
                 child: SlideTransition(
                   position: _slide2,
-                  child: const Text('도착일',
+                  child: Text('result.arrival_label'.tr(),
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 20,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black54)),
                 ),
               ),
@@ -157,16 +158,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                 opacity: _fade4,
                 child: SlideTransition(
                   position: _slide4,
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     child: Text(
-                      '이 편지를 읽을 순간이,\n벌써부터 궁금하고 기대돼요.',
+                      'result.emotional_text'.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        height: 1.6,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
                         color: Colors.black87,
                       ),
                     ),
@@ -189,12 +190,15 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                       ),
                       foregroundColor: const Color.fromRGBO(69, 90, 100, 1),
                     ),
-                    child: const Text('나의 시간으로 돌아가기', style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromRGBO(69, 90, 100, 1),
-                      fontSize: 18
-                    )),
+                    child: Text(
+                      'result.back_button'.tr(), 
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(69, 90, 100, 1),
+                        fontSize: 18
+                      )
+                    ),
                   ),
                 ),
               ),

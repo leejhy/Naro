@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 
 int calculateDday(DateTime arrivalAt) {
   DateTime now = DateTime.now();
@@ -157,5 +158,16 @@ Future<void> initAppTracking() async {
       await AppTrackingTransparency.trackingAuthorizationStatus;
   if (status == TrackingStatus.notDetermined) {
     await AppTrackingTransparency.requestTrackingAuthorization();
+  }
+}
+
+String getLocalizedDateString(DateTime date, BuildContext context) {
+  final locale = context.locale.languageCode;
+  final formatter = DateFormat.yMMMMd(locale);
+
+  if (locale == 'ko') {
+    return DateFormat('yyyy-MM-dd').format(date);
+  } else {
+    return formatter.format(date);
   }
 }

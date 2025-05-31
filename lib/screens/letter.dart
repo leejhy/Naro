@@ -4,6 +4,8 @@ import 'package:naro/styles/colors.dart';
 import 'package:naro/widgets/common/app_bar.dart';
 import 'package:naro/widgets/letter/text_writing.dart';
 import 'package:naro/widgets/letter/image_grid_view.dart';
+import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LetterScreen extends StatefulWidget {
   final String letterId;
@@ -64,14 +66,16 @@ class _LetterScreenState extends State<LetterScreen> {
       );
     }
     final String date = _letter?['arrival_at'] as String? ?? '';
-    String weekdayKor = '';
     String formattedDate = '';
-
     final parsed = DateTime.tryParse(date);
     if (parsed != null) {
-      const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
-      weekdayKor = weekdays[(parsed.weekday - 1) % 7];
-      formattedDate = '${parsed.year}년 ${parsed.month}월 ${parsed.day}일 $weekdayKor요일';
+      final locale = context.locale.toLanguageTag();
+      final weekday = DateFormat.EEEE(locale).format(parsed);
+      final datePart = DateFormat.yMMMMd(locale).format(parsed);
+
+      formattedDate = locale.startsWith('ko')
+                    ? '$datePart $weekday'
+                    : '$weekday, $datePart';
     } else {
       formattedDate = date;
     }

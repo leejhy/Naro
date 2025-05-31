@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
+// import 'package:intl/intl.dart';
 
 class SelectDateDialog extends StatefulWidget {
   const SelectDateDialog({super.key});
@@ -19,10 +20,11 @@ class _DateDialogState extends State<SelectDateDialog> {
   late FixedExtentScrollController _yearCtrl;
   late FixedExtentScrollController _monthCtrl;
   late FixedExtentScrollController _dayCtrl;
+  bool get _isKorean => context.locale.languageCode == 'ko';
 
   List<int> get _yearList =>
       List.generate(_maxYear - _today.year + 1, (i) => _today.year + i);
-  List<int> get _monthList {
+  List<int> get _monthList { 
     if (_year == _today.year) {
       return List.generate(12 - _today.month + 1, (i) => _today.month + i);
     }
@@ -67,115 +69,124 @@ class _DateDialogState extends State<SelectDateDialog> {
     _dayCtrl.dispose();
     super.dispose();
   }
+  static const _itemStyle = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: Color(0xFF444444),
+  );
+
+  static const _btnStyle = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF444444),
+  );
+
+  Widget _buildPicker(
+    FixedExtentScrollController ctrl,
+    List<int> items, {
+    String? suffixKey,            // null이면 suffix 없음
+    required ValueChanged<int> onChanged,
+    String Function(int)? label,  // label 커스터마이징(영문 월)
+  }) {
+    return Expanded(
+      child: CupertinoPicker(
+        scrollController: ctrl,
+        itemExtent: 32,
+        looping: false,
+        onSelectedItemChanged: onChanged,
+        children: items
+            .map((v) => Center(
+                  child: Text(
+                    label != null
+                        ? label(v)
+                        : suffixKey == null
+                            ? '$v'
+                            : '$v ${suffixKey.tr()}',
+                    style: _itemStyle,
+                  ),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  // ---------- 피커 순서 ----------
+  List<Widget> get _pickers {
+    // 연도
+    final yearPicker = _buildPicker(
+      _yearCtrl,
+      _yearList,
+      suffixKey: _isKorean ? 'year' : null,
+      onChanged: (i) {
+        setState(() {
+          _year = _yearList[i];
+          _clampSelections();
+        });
+      },
+    );
+
+    // 월
+    final monthPicker = _buildPicker(
+      _monthCtrl,
+      _monthList,
+      suffixKey: _isKorean ? 'month' : null,
+      label: _isKorean
+          ? null
+          : (m) => DateFormat('MMM', 'en').format(DateTime(0, m)), // Jan, Feb …
+      onChanged: (i) {
+        setState(() {
+          _month = _monthList[i];
+          _clampSelections();
+        });
+      },
+    );
+
+    // 일
+    final dayPicker = _buildPicker(
+      _dayCtrl,
+      _dayList,
+      suffixKey: _isKorean ? 'day' : null,
+      onChanged: (i) => setState(() => _day = _dayList[i]),
+    );
+
+    return _isKorean
+        ? [yearPicker, monthPicker, dayPicker]
+        : [monthPicker, dayPicker, yearPicker];
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 240, 250, 255),
-      title: const Text('도착 날짜 선택'),
+      title: Text('writing.select_date'.tr()),
       content: SizedBox(
         width: 400,
         height: 110,
-        child: Row(
-          children: [
-            Expanded(
-              child: CupertinoPicker(
-                scrollController: _yearCtrl,
-                itemExtent: 32,
-                looping: false,
-                onSelectedItemChanged: (i) {
-                  setState(() {
-                    _year = _yearList[i];
-                    _clampSelections();
-                  });
-                },
-                children: _yearList.map((y) => Center(
-                  child: Text('$y 년', style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF444444),
-                    ),
-                  ),
-                )).toList(),
-              ),
-            ),
-            Expanded(
-              child: CupertinoPicker(
-                scrollController: _monthCtrl,
-                itemExtent: 32,
-                looping: false,
-                onSelectedItemChanged: (i) {
-                  setState(() {
-                    _month = _monthList[i];
-                    _clampSelections();
-                  });
-                },
-                children: _monthList.map((m) => Center(
-                  child: Text('$m 월', style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF444444),
-                  )),
-                ))
-                .toList(),
-              ),
-            ),
-            Expanded(
-              child: CupertinoPicker(
-                scrollController: _dayCtrl,
-                itemExtent: 32,
-                looping: false,
-                onSelectedItemChanged: (i) {
-                  setState(() => _day = _dayList[i]);
-                },
-                children: _dayList.map((d) => Center(
-                  child: Text('$d 일', style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF444444),
-                  )),
-                ))
-                .toList(),
-              ),
-            ),
-          ],
-        ),
+        child: Row(children: _pickers),
       ),
       actions: [
         TextButton(
           style: TextButton.styleFrom(
             backgroundColor: const Color(0xFFE0EDF4),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () => Navigator.pop(context),
-          child: const Text('취소', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF444444),
-          )),
+          child: Text('cancel'.tr(), style: _btnStyle),
         ),
         TextButton(
           style: TextButton.styleFrom(
             backgroundColor: const Color(0xFFE0EDF4),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () {
-            final formatted = DateFormat('yyyy-MM-dd').format(DateTime(_year, _month, _day));
+            final formatted = DateFormat('yyyy-MM-dd').format(
+              DateTime(_year, _month, _day),
+            );
             Navigator.pop(context, formatted);
           },
-          child: const Text('저장', style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF444444),
-          )),
+          child: Text('save'.tr(), style: _btnStyle),
         ),
       ],
     );

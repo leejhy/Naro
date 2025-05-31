@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naro/services/firebase_provider.dart';
 import 'package:naro/services/database_helper.dart';
 import 'package:naro/styles/colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LetterCard extends ConsumerStatefulWidget {
   const LetterCard({
@@ -25,7 +26,7 @@ class _LetterCardState extends ConsumerState<LetterCard> {
   void onTapLetter(bool isOpened) {
     HapticFeedback.lightImpact();
     if (!isOpened) {
-      showAutoDismissDialog(context, "편지가 도착하려면\n조금 더 시간이 필요해요");
+      showAutoDismissDialog(context, "letter.arrival_pending".tr());
       return;
     }
     context.push('/letter/${widget.letter['id']}');

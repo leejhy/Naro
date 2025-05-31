@@ -9,6 +9,7 @@ import 'package:naro/utils/ad_manager.dart';
 import 'package:naro/utils/utils.dart';
 import 'package:naro/widgets/writing/app_bar.dart';
 import 'package:naro/widgets/writing/confirm_dialog.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WritingScreen extends ConsumerStatefulWidget {
   const WritingScreen({super.key});
@@ -72,7 +73,7 @@ class _WritingScreenState extends ConsumerState<WritingScreen> {
         icon: const Icon(Icons.check, color: UIColors.white, size: 30),
         onPressed: () {
           if (logic.titleController.text.isEmpty || logic.contentController.text.isEmpty) {
-            showAutoDismissDialog(context, '제목과 내용을 입력해주세요');
+            showAutoDismissDialog(context, 'writing.error_empty_input'.tr());
             return;
           }
           FocusScope.of(context).requestFocus(logic.blankFocus);

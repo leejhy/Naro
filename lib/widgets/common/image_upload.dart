@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:naro/controllers/image_upload_controller.dart';
 import 'package:naro/styles/colors.dart';
-import 'package:naro/utils/permisson_manager.dart';
+import 'package:naro/utils/permission_manager.dart';
 import 'package:naro/widgets/common/image_viewer.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ImageUpload extends StatefulWidget {
   final ImageUploadController imageController;
@@ -27,7 +28,7 @@ class _PhotoUploadState extends State<ImageUpload> {
           width: double.infinity,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-            child: Text('사진', style: TextStyle(
+            child: Text('image'.tr(), style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 20,
               fontWeight: FontWeight.w600,
