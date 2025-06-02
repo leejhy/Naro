@@ -30,7 +30,6 @@ class ConfirmButton extends StatelessWidget {
           child: CircularProgressIndicator(strokeWidth: 2)
         )
       : Text('confirm'.tr(), style: TextStyle(
-        fontFamily: 'Inter',
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: Color.fromRGBO(71, 114, 215, 1),

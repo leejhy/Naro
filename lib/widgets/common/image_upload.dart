@@ -29,7 +29,6 @@ class _PhotoUploadState extends State<ImageUpload> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
             child: Text('image'.tr(), style: TextStyle(
-              fontFamily: 'Inter',
               fontSize: 20,
               fontWeight: FontWeight.w600,
             )),

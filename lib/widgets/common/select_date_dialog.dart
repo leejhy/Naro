@@ -70,14 +70,12 @@ class _DateDialogState extends State<SelectDateDialog> {
     super.dispose();
   }
   static const _itemStyle = TextStyle(
-    fontFamily: 'Inter',
     fontSize: 20,
     fontWeight: FontWeight.w400,
     color: Color(0xFF444444),
   );
 
   static const _btnStyle = TextStyle(
-    fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: Color(0xFF444444),

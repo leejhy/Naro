@@ -12,7 +12,7 @@
   "permission_request": "권한을 허용해주세요.",
 
   "header.upcoming": "다가오는 편지",
-  "header.d_day": "D-{day}",
+  "header.d_day": "D - {day}",
   "header.arrival_date": "{date} 도착 예정",
   "header.today_arrival": "오늘 도착한 편지가 있어요",
   "no_letter_0": "오고 있는 편지가 없어요.\n지금 이 순간을 담아보는 건 어때요?",
@@ -39,7 +39,8 @@
     "privacy_policy": "개인정보 처리방침",
     "terms_of_service": "이용약관",
     "app_info": "앱 버전",
-    "app_version": "앱 버전: v1.1.0",
+    "app_version": "앱 버전: v1.1.1",
+    "contact_label": "의견 보내기",
     "message_hint": "피드백, 버그, 제안, 인사 등",
     "error_empty_input": "모든 항목을 입력해주세요",
     "error_generic": "Something went wrong. Please try again later.",
@@ -47,7 +48,7 @@
     "submit_button": "전송"
   },
   "writing": {
-    "title": "도착: {date}",
+    "title": "도착 : {date}",
     "error_empty_input": "제목과 내용을 입력해주세요",
     "select_date": "도착 날짜 선택",
     "title_hint": "제목을 입력하세요...",
