@@ -34,8 +34,7 @@ class SettingScreen extends StatelessWidget {
           'settings.title'.tr(),
           style: TextStyle(
             fontSize: 20,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -46,7 +45,6 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.mail_outline),
             title: Text('settings.send_feedback'.tr(),
               style: TextStyle(
-                fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -61,7 +59,6 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: Text('settings.privacy_policy'.tr(),
               style: TextStyle(
-                fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -77,7 +74,6 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: Text('settings.terms_of_service'.tr(),
               style: TextStyle(
-                fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                ),
@@ -94,7 +90,6 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.info_outline),
             title: Text('settings.app_info'.tr(),
               style: TextStyle(
-                fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -153,7 +148,6 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
       maxLines: maxLines,
       maxLength: maxLength,
       style: const TextStyle(
-        fontFamily: 'Inter',
         fontWeight: FontWeight.w300,
         color: Colors.black,
         fontSize: 16
@@ -162,7 +156,6 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
         counterText: '',
         hintText: hintText,
         hintStyle: const TextStyle(
-          fontFamily: 'Inter',
           fontWeight: FontWeight.w300,
           color: Color(0xFF797979),
           fontSize: 16
@@ -237,7 +230,6 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                             'settings.contact_label'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Inter',
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
                             ),
@@ -314,7 +306,7 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                               SizedBox(height: 8),
                               Text(
                                 'settings.success_feedback_sent'.tr(),
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -327,7 +319,6 @@ class _ContactModalState extends State<ContactModal> with SingleTickerProviderSt
                   child: Text(
                     'settings.submit_button'.tr(),
                     style: TextStyle(
-                      fontFamily: 'Inter',
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

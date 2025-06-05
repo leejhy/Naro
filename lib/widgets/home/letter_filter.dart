@@ -73,9 +73,8 @@ class SortingButton extends StatelessWidget {
         label,
         style: TextStyle(
           color: selected ? UIColors.white : UIColors.black,
-          fontFamily: 'Inter',
           fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           letterSpacing: -0.5,
         ),
       ),

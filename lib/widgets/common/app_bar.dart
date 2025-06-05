@@ -20,7 +20,6 @@ class TitleAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 2,
       shadowColor: UIColors.appbarShadow,
       title: Text(title, style: TextStyle(
-        fontFamily: 'Inter',
         fontSize: 20,
         fontWeight: FontWeight.w600,
       )),

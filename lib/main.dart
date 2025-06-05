@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       title: 'Naro - 미래의 나에게 쓰는 편지',
       theme: ThemeData(
+        fontFamily: context.locale.languageCode == 'ko' ? 'Pretendard' : 'Inter',
         primarySwatch: Colors.blue,
       ),
     );
