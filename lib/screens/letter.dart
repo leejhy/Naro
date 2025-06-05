@@ -4,7 +4,6 @@ import 'package:naro/styles/colors.dart';
 import 'package:naro/widgets/common/app_bar.dart';
 import 'package:naro/widgets/letter/text_writing.dart';
 import 'package:naro/widgets/letter/image_grid_view.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class LetterScreen extends StatefulWidget {

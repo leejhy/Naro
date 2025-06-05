@@ -9,7 +9,7 @@
   "permission_request": "Please allow access\nto your photos",
 
   "header.upcoming": "Upcoming Letter",
-  "header.d_day": "D-{day}",
+  "header.d_day": "D - {day}",
   "header.arrival_date": "Arrives on {date}",
   "header.today_arrival": "You have a letter arriving today",
   "no_letter_0": "No letters are coming\nWhy not write one now?",
@@ -23,12 +23,12 @@
   "letter": {
     "arrived": "Arrived",
     "arrival_date": "Due: {date}",
-    "arrival_pending": "The letter needs\na bit more time to arrive."
+    "arrival_pending": "The letter needs\na bit more time to arrive"
   },
   
   "result.arrival_label": "Arrival Date",
-  "result.d_day": "D-{day}",
-  "result.emotional_text": "I'm looking forward to the moment\nI read this letter.",
+  "result.d_day": "D - {day}",
+  "result.emotional_text": "I'm looking forward to the moment\nI read this letter",
   "result.back_button": "Return to Home",
 
   "settings": {
@@ -37,23 +37,23 @@
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service",
     "app_info": "App Version",
-    "app_version": "App Version: v1.1.0",
+    "app_version": "App Version: v1.1.1",
     "contact_label": "Contact",
     "message_label": "Message",
     "message_hint": "Feedback, bugs, suggestions, greetings, etc.",
-    "error_empty_input": "Please fill in all fields.",
-    "error_generic": "Something went wrong. Please try again later.",
+    "error_empty_input": "Please fill in all fields",
+    "error_generic": "Something went wrong. Please try again later",
     "success_feedback_sent": "Feedback sent successfully!",
     "submit_button": "Submit"
   },
 
   "writing": {
-    "title": "Due: {date}",
-    "error_empty_input": "Please enter both\nthe title and the content.",
+    "title": "Due : {date}",
+    "error_empty_input": "Please enter both\nthe title and the content",
     "select_date": "Select arrival date",
     "title_hint": "Enter a title...",
     "content_hint": "Enter your letter content...",
     "save_title": "Do you want to save it?",
-    "save_message": "Your letter will be saved\nafter the ad finishes."
+    "save_message": "Your letter will be saved\nafter the ad finishes"
   }
 }

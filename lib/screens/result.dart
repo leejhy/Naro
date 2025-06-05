@@ -101,7 +101,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.18),
 
               FadeTransition(
                 opacity: _fade1,
@@ -120,14 +120,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                   position: _slide2,
                   child: Text('result.arrival_label'.tr(),
                     style: TextStyle(
-                      fontFamily: 'Inter',
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: Colors.black54)),
                 ),
               ),
 
-              const SizedBox(height: 4),
+              const SizedBox(height: 18),
 
               FadeTransition(
                 opacity: _fade3,
@@ -137,22 +136,22 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                     children: [
                       Text(arrivalDate ?? '',
                           style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 26,
-                              color: UIColors.black,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 6),
-                      Text('D-$dDay', style: TextStyle(
-                        fontFamily: 'Inter',
+                            fontSize: 24,
+                            color: UIColors.black,
+                            fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 2),
+                      Text('D - $dDay', style: TextStyle(
                         fontSize: 22,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                        wordSpacing: -5,
                         color: Color(0xFF4A90E2))),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
               FadeTransition(
                 opacity: _fade4,
@@ -164,9 +163,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                       'result.emotional_text'.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Inter',
                         fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                         height: 1.2,
                         color: Colors.black87,
                       ),
@@ -193,7 +191,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> with SingleTickerPr
                     child: Text(
                       'result.back_button'.tr(), 
                       style: TextStyle(
-                        fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         color: Color.fromRGBO(69, 90, 100, 1),
                         fontSize: 18

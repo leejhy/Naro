@@ -23,7 +23,6 @@ class CancelButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Text('cancel'.tr(), style: TextStyle(
-        fontFamily: 'Inter',
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: UIColors.textSubtle,

@@ -51,7 +51,6 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
       title: Text('writing.save_title'.tr()),
       content: Text('writing.save_message'.tr(), 
         style: TextStyle(
-          fontFamily: 'Inter',
           fontSize: 17,
           fontWeight: FontWeight.w500,
           color: Color(0xFF444444),

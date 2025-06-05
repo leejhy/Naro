@@ -31,7 +31,6 @@ class WritingTextField extends StatelessWidget {
       focusNode: focusNode,
       onTap: onTap,
       style: TextStyle(
-        fontFamily: 'Inter',
         fontWeight: fontWeight,
         fontSize: fontSize,
       ),
@@ -42,7 +41,6 @@ class WritingTextField extends StatelessWidget {
         counterText: '',
         hintText: hintText,
         hintStyle: TextStyle(
-          fontFamily: 'Inter',
           fontSize: fontSize,
           fontWeight: hintTextWeight,
           color: UIColors.hintText

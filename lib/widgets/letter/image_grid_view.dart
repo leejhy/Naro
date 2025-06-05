@@ -16,10 +16,9 @@ class ImageGridView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
           child: Text('image'.tr(), style: TextStyle(
-            fontFamily: 'Inter',
             fontSize: 20,
             color: UIColors.black,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           )),
         ),
         Padding(

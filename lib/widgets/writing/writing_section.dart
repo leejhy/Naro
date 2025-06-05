@@ -47,9 +47,9 @@ class _TextWritingState extends State<WritingSection> {
               maxLength: 40,
               onTap: () {},
               fontSize: 22,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
               hintText: 'writing.title_hint'.tr(),
-              hintTextWeight: FontWeight.w700,
+              hintTextWeight: FontWeight.w600,
             ),
             SizedBox(
               height: 400,

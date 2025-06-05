@@ -19,9 +19,8 @@ class TextWriting extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontFamily: 'Inter',
               fontSize: 22,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
             maxLines: 2,
             overflow: TextOverflow.visible,
@@ -37,7 +36,6 @@ class TextWriting extends StatelessWidget {
               child: Text(
                 content,
                 style: const TextStyle(
-                  fontFamily: 'Inter',
                   fontSize: 17,
                 ),
               ),
